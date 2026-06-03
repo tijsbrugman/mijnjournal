@@ -3,1112 +3,554 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hemera Journal</title>
+<title>Dagboek</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink: #1a1612;
-    --paper: #f5f0e8;
-    --paper-dark: #ede6d6;
-    --accent: #c4651a;
-    --accent-light: #e8a96a;
-    --muted: #8a7e6e;
-    --line: #d4c9b2;
-    --gold: #b8962e;
-    --success: #4a7c59;
-    --danger: #9b3a3a;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--ink);
-    color: var(--ink);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* ─── HEADER ─────────────────────────────── */
-  #app-header {
-    background: var(--ink);
-    color: var(--paper);
-    padding: 18px 32px;
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    border-bottom: 1px solid #2e2820;
-  }
-
-  #app-header h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.6rem;
-    letter-spacing: 0.08em;
-    color: var(--accent-light);
-  }
-
-  #app-header .tagline {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-top: 2px;
-  }
-
-  /* ─── TABS ────────────────────────────────── */
-  #tab-bar {
-    background: var(--ink);
-    display: flex;
-    gap: 4px;
-    padding: 0 32px;
-    border-bottom: 2px solid var(--accent);
-  }
-
-  .tab-btn {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    background: none;
-    border: none;
-    color: var(--muted);
-    padding: 12px 20px;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -2px;
-    transition: all 0.2s;
-  }
-
-  .tab-btn:hover { color: var(--paper); }
-
-  .tab-btn.active {
-    color: var(--accent-light);
-    border-bottom: 2px solid var(--accent-light);
-    background: rgba(196,101,26,0.08);
-  }
-
-  /* ─── MAIN CONTENT ───────────────────────── */
-  #content {
-    flex: 1;
-    background: var(--paper);
-    padding: 32px;
-    overflow-y: auto;
-  }
-
-  .view { display: none; }
-  .view.active { display: block; }
-
-  /* ─── SECTION TITLE ──────────────────────── */
-  .section-header {
-    display: flex;
-    align-items: baseline;
-    gap: 16px;
-    margin-bottom: 28px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .section-header h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
-    color: var(--ink);
-  }
-
-  .section-header .meta {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  /* ─── NAV ROW ─────────────────────────────── */
-  .nav-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 28px;
-    flex-wrap: wrap;
-  }
-
-  .nav-btn {
-    background: var(--ink);
-    color: var(--paper);
-    border: none;
-    padding: 7px 16px;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    cursor: pointer;
-    border-radius: 2px;
-    transition: background 0.2s;
-  }
-
-  .nav-btn:hover { background: var(--accent); }
-
-  .nav-btn.secondary {
-    background: transparent;
-    color: var(--ink);
-    border: 1px solid var(--line);
-  }
-
-  .nav-btn.secondary:hover { border-color: var(--accent); color: var(--accent); }
-
-  .nav-select {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.75rem;
-    padding: 7px 12px;
-    border: 1px solid var(--line);
-    background: var(--paper-dark);
-    color: var(--ink);
-    border-radius: 2px;
-    cursor: pointer;
-  }
-
-  /* ─── CARDS GRID ─────────────────────────── */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 12px;
-    margin-bottom: 32px;
-  }
-
-  .card {
-    background: var(--paper-dark);
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    padding: 16px;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-
-  .card:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  }
-
-  .card .card-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1rem;
-    margin-bottom: 6px;
-  }
-
-  .card .card-sub {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .card .card-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--line);
-    display: inline-block;
-    margin-right: 6px;
-  }
-
-  .card .card-dot.filled { background: var(--accent); }
-
-  /* ─── FORM ELEMENTS ──────────────────────── */
-  .journal-form {
-    max-width: 780px;
-  }
-
-  .form-section {
-    background: white;
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    padding: 24px;
-    margin-bottom: 20px;
-  }
-
-  .form-section h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-    margin-bottom: 4px;
-    color: var(--ink);
-  }
-
-  .form-section .form-desc {
-    font-size: 0.78rem;
-    color: var(--muted);
-    margin-bottom: 16px;
-    font-style: italic;
-  }
-
-  .form-group {
-    margin-bottom: 16px;
-  }
-
-  label {
-    display: block;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-
-  textarea, input[type="text"], input[type="number"] {
-    width: 100%;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem;
-    padding: 10px 14px;
-    border: 1px solid var(--line);
-    background: var(--paper);
-    color: var(--ink);
-    border-radius: 3px;
-    resize: vertical;
-    transition: border-color 0.2s;
-    line-height: 1.5;
-  }
-
-  textarea:focus, input:focus {
-    outline: none;
-    border-color: var(--accent);
-    background: white;
-  }
-
-  textarea { min-height: 80px; }
-
-  .score-row {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .score-btn {
-    width: 36px; height: 36px;
-    border: 1px solid var(--line);
-    background: var(--paper-dark);
-    color: var(--ink);
-    font-family: 'DM Mono', monospace;
-    font-size: 0.85rem;
-    cursor: pointer;
-    border-radius: 3px;
-    transition: all 0.15s;
-  }
-
-  .score-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .score-btn.selected { background: var(--accent); color: white; border-color: var(--accent); }
-
-  .three-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 12px;
-  }
-
-  @media (max-width: 600px) {
-    .three-col { grid-template-columns: 1fr; }
-    #content { padding: 16px; }
-    #tab-bar { padding: 0 16px; }
-    #app-header { padding: 14px 16px; }
-  }
-
-  .two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-
-  @media (max-width: 500px) { .two-col { grid-template-columns: 1fr; } }
-
-  /* ─── SAVE BUTTON ─────────────────────────── */
-  .save-bar {
-    position: sticky;
-    bottom: 0;
-    background: var(--ink);
-    padding: 14px 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin: 0 -32px -32px -32px;
-    border-top: 1px solid #2e2820;
-  }
-
-  .save-btn {
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 10px 28px;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    cursor: pointer;
-    border-radius: 2px;
-    transition: background 0.2s;
-  }
-
-  .save-btn:hover { background: var(--accent-light); color: var(--ink); }
-
-  .save-status {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    color: var(--muted);
-    letter-spacing: 0.08em;
-  }
-
-  /* ─── OVERVIEW STATS ─────────────────────── */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 12px;
-    margin-bottom: 28px;
-  }
-
-  .stat-box {
-    background: var(--paper-dark);
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    padding: 16px;
-    text-align: center;
-  }
-
-  .stat-box .stat-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 2rem;
-    color: var(--accent);
-    line-height: 1;
-  }
-
-  .stat-box .stat-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.62rem;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-top: 6px;
-  }
-
-  /* ─── WEEK VIEW ───────────────────────────── */
-  .week-days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 8px;
-    margin-bottom: 24px;
-  }
-
-  @media (max-width: 700px) { .week-days { grid-template-columns: 1fr 1fr; } }
-
-  .week-day-card {
-    background: var(--paper-dark);
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    padding: 12px;
-    cursor: pointer;
-    transition: all 0.15s;
-    min-height: 90px;
-  }
-
-  .week-day-card:hover { border-color: var(--accent); }
-  .week-day-card.today { border-color: var(--gold); background: #fffbf0; }
-  .week-day-card.has-data { border-left: 3px solid var(--accent); }
-
-  .week-day-card .wdc-name {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.6rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-  }
-
-  .week-day-card .wdc-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5rem;
-    color: var(--ink);
-    line-height: 1.1;
-  }
-
-  .wdc-score {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--accent);
-    margin-top: 4px;
-  }
-
-  /* ─── SEPARATORS ──────────────────────────── */
-  .sep {
-    height: 1px;
-    background: var(--line);
-    margin: 24px 0;
-  }
-
-  /* ─── BACK LINK ───────────────────────────── */
-  .back-link {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 20px;
-    transition: color 0.2s;
-  }
-
-  .back-link:hover { color: var(--accent); }
-
-  /* ─── DOELEN / GOALS ──────────────────────── */
-  .goal-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .goal-checkbox {
-    width: 18px; height: 18px;
-    border: 1.5px solid var(--muted);
-    border-radius: 2px;
-    flex-shrink: 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 2px;
-    transition: all 0.15s;
-    background: white;
-  }
-
-  .goal-checkbox.checked {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: white;
-  }
-
-  /* ─── KVARTAAL VIEW ───────────────────────── */
-  .quarter-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: 24px;
-  }
-
-  @media (max-width: 600px) { .quarter-grid { grid-template-columns: 1fr 1fr; } }
-
-  .quarter-card {
-    background: var(--paper-dark);
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    padding: 14px;
-    cursor: pointer;
-    transition: all 0.15s;
-    text-align: center;
-  }
-
-  .quarter-card:hover { border-color: var(--accent); }
-  .quarter-card.active-q { border-color: var(--gold); background: #fffbf0; }
-
-  .quarter-card .q-label {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-  }
-
-  .quarter-card .q-months {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.6rem;
-    color: var(--muted);
-    margin-top: 4px;
-  }
-
-  /* ─── HABIT TRACKER ──────────────────────── */
-  .habit-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
-  }
-
-  .habit-label {
-    font-size: 0.85rem;
-    min-width: 100px;
-  }
-
-  .habit-dots {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-  }
-
-  .habit-dot {
-    width: 16px; height: 16px;
-    border-radius: 50%;
-    border: 1.5px solid var(--line);
-    cursor: pointer;
-    transition: all 0.15s;
-    background: white;
-  }
-
-  .habit-dot.on { background: var(--accent); border-color: var(--accent); }
-
-  /* ─── TAG BADGE ───────────────────────────── */
-  .tag {
-    display: inline-block;
-    background: var(--paper-dark);
-    border: 1px solid var(--line);
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    font-size: 0.62rem;
-    letter-spacing: 0.08em;
-    padding: 3px 8px;
-    border-radius: 20px;
-    text-transform: uppercase;
-  }
-
-  .tag.accent { background: rgba(196,101,26,0.1); border-color: var(--accent-light); color: var(--accent); }
-
-  /* ─── EMPTY STATE ─────────────────────────── */
-  .empty-state {
-    text-align: center;
-    padding: 48px 24px;
-    color: var(--muted);
-  }
-
-  .empty-state .empty-icon {
-    font-size: 2.5rem;
-    margin-bottom: 12px;
-    opacity: 0.4;
-  }
-
-  .empty-state p {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  /* ─── PARETO MATRIX ──────────────────────── */
-  .pareto-list {
-    list-style: none;
-  }
-
-  .pareto-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    border: 1px solid var(--line);
-    border-radius: 3px;
-    margin-bottom: 8px;
-    background: white;
-  }
-
-  .pareto-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.2rem;
-    color: var(--accent);
-    min-width: 28px;
-  }
-
-  /* ─── ENERGY SLIDER ──────────────────────── */
-  input[type="range"] {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 4px;
-    background: var(--line);
-    border-radius: 2px;
-    outline: none;
-  }
-
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    background: var(--accent);
-    cursor: pointer;
-  }
-
-  .slider-labels {
-    display: flex;
-    justify-content: space-between;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.62rem;
-    color: var(--muted);
-    margin-top: 4px;
-  }
-
-  /* ─── YEAR CALENDAR MINI ─────────────────── */
-  .year-calendar {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 6px;
-    margin-bottom: 28px;
-  }
-
-  @media (max-width: 700px) { .year-calendar { grid-template-columns: repeat(6, 1fr); } }
-
-  .month-mini {
-    background: var(--paper-dark);
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    padding: 10px 8px;
-    cursor: pointer;
-    transition: all 0.15s;
-    text-align: center;
-  }
-
-  .month-mini:hover { border-color: var(--accent); }
-  .month-mini.current-m { border-color: var(--gold); background: #fffbf0; }
-  .month-mini.has-entries { border-left: 3px solid var(--accent); }
-
-  .month-mini .mm-name {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.62rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--muted);
-  }
-
-  .month-mini .mm-count {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-    color: var(--ink);
-    line-height: 1.2;
-  }
+:root {
+  --ink: #1a1612; --paper: #f5f0e8; --paper-dark: #ede6d6;
+  --accent: #c4651a; --accent-light: #e8a96a; --muted: #8a7e6e;
+  --line: #d4c9b2; --gold: #b8962e; --success: #4a7c59; --danger: #9b3a3a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--ink); color: var(--ink); min-height: 100vh; display: flex; flex-direction: column; }
+
+/* HEADER */
+#app-header { background: var(--ink); color: var(--paper); padding: 14px 28px; display: flex; align-items: center; gap: 20px; border-bottom: 1px solid #2e2820; }
+#app-header h1 { font-family: 'Playfair Display', serif; font-size: 1.5rem; letter-spacing: 0.08em; color: var(--accent-light); }
+#app-header .tagline { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 2px; }
+
+/* TABS */
+#tab-bar { background: var(--ink); display: flex; gap: 2px; padding: 0 28px; border-bottom: 2px solid var(--accent); overflow-x: auto; }
+.tab-btn { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; background: none; border: none; color: var(--muted); padding: 11px 16px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; white-space: nowrap; }
+.tab-btn:hover { color: var(--paper); }
+.tab-btn.active { color: var(--accent-light); border-bottom: 2px solid var(--accent-light); background: rgba(196,101,26,0.08); }
+
+/* CONTENT */
+#content { flex: 1; background: var(--paper); padding: 28px; overflow-y: auto; }
+.view { display: none; }
+.view.active { display: block; }
+
+/* SECTION HEADER */
+.section-header { display: flex; align-items: baseline; gap: 16px; margin-bottom: 24px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+.section-header h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--ink); }
+.section-header .meta { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* NAV ROW */
+.nav-row { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+.nav-btn { background: var(--ink); color: var(--paper); border: none; padding: 7px 16px; font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; cursor: pointer; border-radius: 2px; transition: background 0.2s; }
+.nav-btn:hover { background: var(--accent); }
+.nav-btn.secondary { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.nav-btn.secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+/* FORM */
+.journal-form { max-width: 820px; }
+.form-section { background: white; border: 1px solid var(--line); border-radius: 6px; padding: 20px; margin-bottom: 16px; }
+.form-section h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; margin-bottom: 4px; color: var(--ink); }
+.form-section .form-desc { font-size: 0.75rem; color: var(--muted); margin-bottom: 14px; font-style: italic; }
+.form-group { margin-bottom: 14px; }
+label { display: block; font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+textarea, input[type="text"], input[type="number"] { width: 100%; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; padding: 9px 12px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 3px; resize: vertical; transition: border-color 0.2s; line-height: 1.5; }
+textarea:focus, input:focus { outline: none; border-color: var(--accent); background: white; }
+textarea { min-height: 70px; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+@media(max-width:600px) { .two-col,.three-col { grid-template-columns: 1fr; } #content { padding: 14px; } }
+
+/* SCORE BUTTONS */
+.score-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.score-btn { width: 34px; height: 34px; border: 1px solid var(--line); background: var(--paper-dark); color: var(--ink); font-family: 'DM Mono', monospace; font-size: 0.82rem; cursor: pointer; border-radius: 3px; transition: all 0.15s; }
+.score-btn:hover { border-color: var(--accent); color: var(--accent); }
+.score-btn.selected { background: var(--accent); color: white; border-color: var(--accent); }
+
+/* CHECKBOX ROW */
+.check-row { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 4px; margin-bottom: 8px; background: var(--paper); cursor: pointer; transition: all 0.15s; }
+.check-row:hover { border-color: var(--accent-light); }
+.check-row.done { background: rgba(74,124,89,0.06); border-color: var(--success); }
+.check-box { width: 20px; height: 20px; border: 1.5px solid var(--muted); border-radius: 3px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; transition: all 0.15s; background: white; }
+.check-box.checked { background: var(--success); border-color: var(--success); color: white; }
+.check-label { flex: 1; font-size: 0.88rem; }
+.check-pts { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--accent); font-weight: 500; }
+
+/* POINTS DISPLAY */
+.pts-display { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--accent); line-height: 1; }
+.pts-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+
+/* STATS ROW */
+.stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 10px; margin-bottom: 24px; }
+.stat-box { background: var(--paper-dark); border: 1px solid var(--line); border-radius: 4px; padding: 14px; text-align: center; }
+.stat-box .stat-num { font-family: 'Playfair Display', serif; font-size: 1.9rem; color: var(--accent); line-height: 1; }
+.stat-box .stat-label { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 5px; }
+
+/* CARDS */
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px,1fr)); gap: 10px; margin-bottom: 24px; }
+.card { background: var(--paper-dark); border: 1px solid var(--line); border-radius: 4px; padding: 14px; cursor: pointer; transition: all 0.15s; }
+.card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.card .card-title { font-family: 'Playfair Display', serif; font-size: 0.95rem; margin-bottom: 5px; }
+.card .card-sub { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* WEEK DAYS */
+.week-days { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; margin-bottom: 20px; }
+@media(max-width:700px) { .week-days { grid-template-columns: 1fr 1fr; } }
+.week-day-card { background: var(--paper-dark); border: 1px solid var(--line); border-radius: 4px; padding: 10px; cursor: pointer; transition: all 0.15s; min-height: 80px; }
+.week-day-card:hover { border-color: var(--accent); }
+.week-day-card.today { border-color: var(--gold); background: #fffbf0; }
+.week-day-card.has-data { border-left: 3px solid var(--accent); }
+.wdc-name { font-family: 'DM Mono', monospace; font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+.wdc-num { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--ink); line-height: 1.1; }
+.wdc-score { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--accent); margin-top: 3px; }
+
+/* YEAR CALENDAR */
+.year-calendar { display: grid; grid-template-columns: repeat(12,1fr); gap: 5px; margin-bottom: 24px; }
+@media(max-width:700px) { .year-calendar { grid-template-columns: repeat(6,1fr); } }
+.month-mini { background: var(--paper-dark); border: 1px solid var(--line); border-radius: 4px; padding: 9px 7px; cursor: pointer; transition: all 0.15s; text-align: center; }
+.month-mini:hover { border-color: var(--accent); }
+.month-mini.current-m { border-color: var(--gold); background: #fffbf0; }
+.month-mini.has-entries { border-left: 3px solid var(--accent); }
+.mm-name { font-family: 'DM Mono', monospace; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.mm-count { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--ink); line-height: 1.2; }
+
+/* QUARTER */
+.quarter-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 7px; margin-bottom: 20px; }
+@media(max-width:600px) { .quarter-grid { grid-template-columns: 1fr 1fr; } }
+.quarter-card { background: var(--paper-dark); border: 1px solid var(--line); border-radius: 4px; padding: 12px; cursor: pointer; transition: all 0.15s; text-align: center; }
+.quarter-card:hover { border-color: var(--accent); }
+.quarter-card.active-q { border-color: var(--gold); background: #fffbf0; }
+.q-label { font-family: 'Playfair Display', serif; font-size: 1.05rem; }
+.q-months { font-family: 'DM Mono', monospace; font-size: 0.58rem; color: var(--muted); margin-top: 3px; }
+
+/* SAVE BAR */
+.save-bar { position: sticky; bottom: 0; background: var(--ink); padding: 12px 22px; display: flex; align-items: center; gap: 14px; margin: 0 -28px -28px -28px; border-top: 1px solid #2e2820; }
+.save-btn { background: var(--accent); color: white; border: none; padding: 9px 26px; font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border-radius: 2px; transition: background 0.2s; }
+.save-btn:hover { background: var(--accent-light); color: var(--ink); }
+.save-status { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); letter-spacing: 0.08em; }
+
+/* SEPARATOR */
+.sep { height: 1px; background: var(--line); margin: 20px 0; }
+
+/* MANTRA */
+.mantra-item { background: white; border: 1px solid var(--line); border-radius: 6px; padding: 16px; margin-bottom: 10px; display: flex; align-items: flex-start; gap: 10px; }
+.mantra-text { flex: 1; font-family: 'Playfair Display', serif; font-size: 1rem; font-style: italic; line-height: 1.6; color: var(--ink); border: none; background: transparent; resize: none; min-height: 50px; }
+.mantra-text:focus { outline: none; }
+.mantra-del { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.1rem; padding: 4px; transition: color 0.2s; flex-shrink: 0; }
+.mantra-del:hover { color: var(--danger); }
+.mantra-num { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); min-width: 24px; margin-top: 4px; }
+
+/* LEVENSWIEL */
+.levenswiel-wrap { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+.levenswiel-sliders { flex: 1; min-width: 220px; }
+.lw-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.lw-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; min-width: 90px; color: var(--ink); }
+.lw-slider { flex: 1; }
+.lw-val { font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--accent); min-width: 20px; text-align: right; }
+input[type="range"] { -webkit-appearance: none; width: 100%; height: 4px; background: var(--line); border-radius: 2px; outline: none; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); cursor: pointer; }
+
+/* WEEK SCHEDULE */
+.week-schedule-wrap { overflow-x: auto; margin-bottom: 20px; }
+.week-schedule { border-collapse: collapse; min-width: 600px; width: 100%; font-size: 0.75rem; }
+.week-schedule th { background: var(--ink); color: var(--paper); font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 6px; text-align: center; position: sticky; top: 0; z-index: 2; }
+.week-schedule th.time-col { min-width: 52px; background: var(--ink); }
+.week-schedule td { border: 1px solid var(--line); padding: 0; vertical-align: top; }
+.week-schedule td.time-lbl { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); padding: 2px 6px; background: var(--paper-dark); text-align: right; white-space: nowrap; vertical-align: middle; }
+.week-schedule td.time-lbl.hour { font-weight: 600; color: var(--ink); border-top: 1px solid var(--line); }
+.sched-input { width: 100%; border: none; background: transparent; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; padding: 2px 5px; color: var(--ink); resize: none; min-height: 22px; line-height: 1.3; display: block; }
+.sched-input:focus { outline: none; background: rgba(196,101,26,0.05); }
+.week-schedule tr.hour-row td { border-top: 1px solid #b8a990; }
+
+/* GOAL CARD */
+.goal-card { background: white; border: 1px solid var(--line); border-radius: 6px; padding: 16px; margin-bottom: 14px; }
+.goal-card h4 { font-family: 'Playfair Display', serif; font-size: 0.95rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.goal-card h4 span { font-size: 1.1rem; }
+
+/* DASHBOARD */
+.dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+@media(max-width:700px) { .dash-grid { grid-template-columns: 1fr; } }
+.dash-card { background: white; border: 1px solid var(--line); border-radius: 6px; padding: 18px; }
+.dash-card h3 { font-family: 'Playfair Display', serif; font-size: 1rem; margin-bottom: 14px; color: var(--ink); }
+.todo-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 0.82rem; }
+.todo-item:last-child { border-bottom: none; }
+.todo-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.todo-dot.done { background: var(--success); }
+.todo-dot.open { background: var(--danger); }
+
+/* RADIO-like voeding */
+.voeding-opts { display: flex; gap: 8px; flex-wrap: wrap; }
+.voeding-btn { padding: 8px 16px; border: 1px solid var(--line); background: var(--paper-dark); border-radius: 3px; font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.06em; cursor: pointer; transition: all 0.15s; }
+.voeding-btn:hover { border-color: var(--accent); }
+.voeding-btn.selected { background: var(--accent); color: white; border-color: var(--accent); }
+
+/* PUNTEN TOTAAL */
+.punten-totaal { background: var(--ink); color: var(--paper); border-radius: 6px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.punten-totaal .big { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--accent-light); line-height: 1; }
+.punten-totaal .lbl { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+
+/* SMALL TAG */
+.tag { display: inline-block; background: var(--paper-dark); border: 1px solid var(--line); color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.08em; padding: 2px 7px; border-radius: 20px; text-transform: uppercase; }
+.tag.accent { background: rgba(196,101,26,0.1); border-color: var(--accent-light); color: var(--accent); }
 </style>
 </head>
 <body>
 
 <div id="app-header">
   <div>
-    <h1>HEMERA</h1>
+    <h1>DAGBOEK</h1>
     <div class="tagline">Alleen vandaag &nbsp;·&nbsp; Digitale Journal</div>
   </div>
-  <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
-    <button class="nav-btn secondary" onclick="exportData()" style="color:var(--paper-dark); border-color:#3a3228;">↓ Exporteer</button>
-    <button class="nav-btn secondary" onclick="importData()" style="color:var(--paper-dark); border-color:#3a3228;">↑ Importeer</button>
+  <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
+    <button class="nav-btn secondary" onclick="exportData()" style="color:var(--paper-dark);border-color:#3a3228;">↓ Export</button>
+    <button class="nav-btn secondary" onclick="importData()" style="color:var(--paper-dark);border-color:#3a3228;">↑ Import</button>
     <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)">
   </div>
 </div>
 
 <div id="tab-bar">
-  <button class="tab-btn active" data-view="jaar" onclick="switchTab('jaar',this)">Jaar</button>
+  <button class="tab-btn active" data-view="dashboard" onclick="switchTab('dashboard',this)">Dashboard</button>
+  <button class="tab-btn" data-view="jaar" onclick="switchTab('jaar',this)">Jaar</button>
   <button class="tab-btn" data-view="kwartaal" onclick="switchTab('kwartaal',this)">Kwartaal</button>
   <button class="tab-btn" data-view="maand" onclick="switchTab('maand',this)">Maand</button>
   <button class="tab-btn" data-view="week" onclick="switchTab('week',this)">Week</button>
   <button class="tab-btn" data-view="dag" onclick="switchTab('dag',this)">Dag</button>
+  <button class="tab-btn" data-view="mantras" onclick="switchTab('mantras',this)">Mantra's</button>
 </div>
 
 <div id="content">
 
-  <!-- ══════════ JAAR ══════════ -->
-  <div class="view active" id="view-jaar">
-    <div class="nav-row">
-      <button class="nav-btn" onclick="changeYear(-1)">← Vorig</button>
-      <span id="jaar-titel" style="font-family:'Playfair Display',serif;font-size:1.4rem;"></span>
-      <button class="nav-btn" onclick="changeYear(1)">Volgend →</button>
-      <button class="nav-btn secondary" onclick="goToday('jaar')">Huidig jaar</button>
+<!-- ══ DASHBOARD ══ -->
+<div class="view active" id="view-dashboard">
+  <div class="section-header">
+    <h2 id="dash-date-title"></h2>
+    <span class="meta">Overzicht</span>
+  </div>
+
+  <div id="dash-punten-today" class="punten-totaal" style="max-width:820px;">
+    <div><div class="big" id="dash-pts-num">0</div><div class="lbl">Punten vandaag</div></div>
+    <div style="text-align:right;"><div class="big" id="dash-pts-week-num">0</div><div class="lbl">Punten deze week</div></div>
+  </div>
+
+  <div class="dash-grid" style="max-width:820px;">
+    <div class="dash-card">
+      <h3>📋 Nog te doen vandaag</h3>
+      <div id="dash-todo"></div>
     </div>
-
-    <div id="jaar-stats" class="stats-row"></div>
-
-    <div class="section-header">
-      <h2>Jaarkalender</h2>
-      <span class="meta">Klik op een maand om in te zoomen</span>
-    </div>
-
-    <div class="year-calendar" id="jaar-kalender"></div>
-
-    <div class="sep"></div>
-
-    <div class="form-section">
-      <h3>Jaardoelen</h3>
-      <p class="form-desc">Wat zijn jouw 3 grote doelen dit jaar?</p>
-      <div class="form-group">
-        <label>Doel 1</label>
-        <input type="text" id="jaar-doel-1" placeholder="Bijv. Omzet verdubbelen" onchange="saveJaarData()">
-      </div>
-      <div class="form-group">
-        <label>Doel 2</label>
-        <input type="text" id="jaar-doel-2" placeholder="Bijv. 10kg afvallen" onchange="saveJaarData()">
-      </div>
-      <div class="form-group">
-        <label>Doel 3</label>
-        <input type="text" id="jaar-doel-3" placeholder="Bijv. Reis naar Japan" onchange="saveJaarData()">
-      </div>
-    </div>
-
-    <div class="form-section">
-      <h3>Jaarreflectie</h3>
-      <div class="two-col">
-        <div class="form-group">
-          <label>Waar ben ik trots op?</label>
-          <textarea id="jaar-trots" placeholder="..." rows="4" onchange="saveJaarData()"></textarea>
-        </div>
-        <div class="form-group">
-          <label>Wat wil ik volgend jaar anders?</label>
-          <textarea id="jaar-anders" placeholder="..." rows="4" onchange="saveJaarData()"></textarea>
-        </div>
-      </div>
+    <div class="dash-card">
+      <h3>🎯 Kwartaaldoelen</h3>
+      <div id="dash-kwdoelen"></div>
     </div>
   </div>
 
-  <!-- ══════════ KWARTAAL ══════════ -->
-  <div class="view" id="view-kwartaal">
-    <div class="nav-row">
-      <button class="nav-btn" onclick="changeQuarter(-1)">← Vorig</button>
-      <span id="kwartaal-titel" style="font-family:'Playfair Display',serif;font-size:1.4rem;"></span>
-      <button class="nav-btn" onclick="changeQuarter(1)">Volgend →</button>
-      <button class="nav-btn secondary" onclick="goToday('kwartaal')">Huidig kwartaal</button>
+  <div style="max-width:820px;">
+    <div class="dash-card" style="margin-bottom:16px;">
+      <h3>📊 Dagpunten deze week</h3>
+      <svg id="chart-week" width="100%" height="160"></svg>
     </div>
-
-    <div class="quarter-grid" id="kwartaal-nav"></div>
-
-    <div class="form-section">
-      <h3>Kwartaaldoelen</h3>
-      <p class="form-desc">3 grote doelen voor dit kwartaal — zakelijk én privé</p>
-      <div class="form-group">
-        <label>Doel 1 — Zakelijk</label>
-        <input type="text" id="kw-doel-1" placeholder="Bijv. 5 nieuwe klanten binnenhalen" onchange="saveKwartaalData()">
-      </div>
-      <div class="form-group">
-        <label>Doel 2 — Gezondheid / Vitaliteit</label>
-        <input type="text" id="kw-doel-2" placeholder="Bijv. 3x per week sporten" onchange="saveKwartaalData()">
-      </div>
-      <div class="form-group">
-        <label>Doel 3 — Persoonlijk / Relaties</label>
-        <input type="text" id="kw-doel-3" placeholder="Bijv. Elke week 1 avond alleen met partner" onchange="saveKwartaalData()">
-      </div>
+    <div class="dash-card">
+      <h3>📈 Maandpunten (12 maanden)</h3>
+      <svg id="chart-months" width="100%" height="140"></svg>
     </div>
+  </div>
+</div>
 
-    <div class="form-section">
-      <h3>Kwartaalreview</h3>
-      <div class="two-col">
-        <div class="form-group">
-          <label>Wat ging goed?</label>
-          <textarea id="kw-goed" rows="4" placeholder="..." onchange="saveKwartaalData()"></textarea>
-        </div>
-        <div class="form-group">
-          <label>Wat kan beter?</label>
-          <textarea id="kw-beter" rows="4" placeholder="..." onchange="saveKwartaalData()"></textarea>
-        </div>
-      </div>
-      <div class="form-group" style="margin-top:12px;">
-        <label>Focus voor volgend kwartaal</label>
-        <textarea id="kw-focus" rows="3" placeholder="..." onchange="saveKwartaalData()"></textarea>
-      </div>
+<!-- ══ JAAR ══ -->
+<div class="view" id="view-jaar">
+  <div class="nav-row">
+    <button class="nav-btn" onclick="changeYear(-1)">← Vorig</button>
+    <span id="jaar-titel" style="font-family:'Playfair Display',serif;font-size:1.4rem;"></span>
+    <button class="nav-btn" onclick="changeYear(1)">Volgend →</button>
+    <button class="nav-btn secondary" onclick="goToday('jaar')">Huidig jaar</button>
+  </div>
+  <div id="jaar-stats" class="stats-row"></div>
+  <div class="section-header"><h2>Jaarkalender</h2><span class="meta">Klik op een maand</span></div>
+  <div class="year-calendar" id="jaar-kalender"></div>
+  <div class="sep"></div>
+  <div class="form-section">
+    <h3>Jaardoelen</h3>
+    <p class="form-desc">Wat zijn jouw 3 grote doelen dit jaar?</p>
+    <div class="form-group"><label>Doel 1</label><input type="text" id="jaar-doel-1" onchange="saveJaarData()"></div>
+    <div class="form-group"><label>Doel 2</label><input type="text" id="jaar-doel-2" onchange="saveJaarData()"></div>
+    <div class="form-group"><label>Doel 3</label><input type="text" id="jaar-doel-3" onchange="saveJaarData()"></div>
+  </div>
+  <div class="form-section">
+    <h3>Jaarreflectie</h3>
+    <div class="two-col">
+      <div class="form-group"><label>Waar ben ik trots op?</label><textarea id="jaar-trots" rows="4" onchange="saveJaarData()"></textarea></div>
+      <div class="form-group"><label>Wat wil ik volgend jaar anders?</label><textarea id="jaar-anders" rows="4" onchange="saveJaarData()"></textarea></div>
     </div>
+  </div>
+</div>
 
-    <div class="form-section">
-      <h3>Hemera Punten dit kwartaal</h3>
-      <p class="form-desc">Totaal verdiende punten</p>
-      <div style="display:flex; align-items:center; gap:16px;">
-        <input type="number" id="kw-punten" style="width:120px;" min="0" placeholder="0" onchange="saveKwartaalData()">
-        <span id="kw-punten-label" style="font-family:'DM Mono',monospace; font-size:0.75rem; color:var(--muted);">punten</span>
-      </div>
+<!-- ══ KWARTAAL ══ -->
+<div class="view" id="view-kwartaal">
+  <div class="nav-row">
+    <button class="nav-btn" onclick="changeQuarter(-1)">← Vorig</button>
+    <span id="kwartaal-titel" style="font-family:'Playfair Display',serif;font-size:1.4rem;"></span>
+    <button class="nav-btn" onclick="changeQuarter(1)">Volgend →</button>
+    <button class="nav-btn secondary" onclick="goToday('kwartaal')">Huidig kwartaal</button>
+  </div>
+  <div class="quarter-grid" id="kwartaal-nav"></div>
+
+  <!-- Levenswiel -->
+  <div class="form-section">
+    <h3>🕸️ Levenswiel</h3>
+    <p class="form-desc">Geef per levensgebied een score van 1–10. Vul dit elke 3 maanden in.</p>
+    <div class="levenswiel-wrap">
+      <div class="levenswiel-sliders" id="lw-sliders"></div>
+      <svg id="lw-svg" width="280" height="280" style="flex-shrink:0;"></svg>
     </div>
   </div>
 
-  <!-- ══════════ MAAND ══════════ -->
-  <div class="view" id="view-maand">
-    <div class="nav-row">
-      <button class="nav-btn" onclick="changeMonth(-1)">← Vorig</button>
-      <span id="maand-titel" style="font-family:'Playfair Display',serif;font-size:1.4rem;"></span>
-      <button class="nav-btn" onclick="changeMonth(1)">Volgend →</button>
-      <button class="nav-btn secondary" onclick="goToday('maand')">Deze maand</button>
+  <!-- Kwartaaldoelen -->
+  <div class="section-header" style="margin-top:8px;"><h2>Kwartaaldoelen</h2><span class="meta">Werk · Training · Ontspanning · Verbinding</span></div>
+
+  <div id="kw-doelen-container"></div>
+
+  <!-- Review -->
+  <div class="form-section">
+    <h3>Kwartaalreview</h3>
+    <div class="two-col">
+      <div class="form-group"><label>Wat ging goed?</label><textarea id="kw-goed" rows="4" onchange="saveKwartaalData()"></textarea></div>
+      <div class="form-group"><label>Wat kan beter?</label><textarea id="kw-beter" rows="4" onchange="saveKwartaalData()"></textarea></div>
     </div>
+    <div class="form-group" style="margin-top:10px;"><label>Focus voor volgend kwartaal</label><textarea id="kw-focus" rows="3" onchange="saveKwartaalData()"></textarea></div>
+  </div>
+</div>
 
-    <div id="maand-stats" class="stats-row"></div>
-
-    <div class="form-section">
-      <h3>Maanddoelen</h3>
-      <p class="form-desc">Wat moet er deze maand absoluut af?</p>
-      <div class="form-group">
-        <label>Zakelijk</label>
-        <textarea id="maand-zakelijk" rows="3" placeholder="..." onchange="saveMaandData()"></textarea>
-      </div>
-      <div class="form-group">
-        <label>Gezondheid / Vitaliteit</label>
-        <textarea id="maand-gezondheid" rows="2" placeholder="..." onchange="saveMaandData()"></textarea>
-      </div>
-      <div class="form-group">
-        <label>Relaties / Persoonlijk</label>
-        <textarea id="maand-relaties" rows="2" placeholder="..." onchange="saveMaandData()"></textarea>
-      </div>
+<!-- ══ MAAND ══ -->
+<div class="view" id="view-maand">
+  <div class="nav-row">
+    <button class="nav-btn" onclick="changeMonth(-1)">← Vorig</button>
+    <span id="maand-titel" style="font-family:'Playfair Display',serif;font-size:1.4rem;"></span>
+    <button class="nav-btn" onclick="changeMonth(1)">Volgend →</button>
+    <button class="nav-btn secondary" onclick="goToday('maand')">Deze maand</button>
+  </div>
+  <div id="maand-stats" class="stats-row"></div>
+  <div class="form-section">
+    <h3>Maanddoelen</h3>
+    <div class="form-group"><label>Zakelijk</label><textarea id="maand-zakelijk" rows="3" onchange="saveMaandData()"></textarea></div>
+    <div class="form-group"><label>Gezondheid / Vitaliteit</label><textarea id="maand-gezondheid" rows="2" onchange="saveMaandData()"></textarea></div>
+    <div class="form-group"><label>Relaties / Persoonlijk</label><textarea id="maand-relaties" rows="2" onchange="saveMaandData()"></textarea></div>
+  </div>
+  <div class="section-header" style="margin-top:20px;"><h2>Weken</h2><span class="meta">Klik om in te zoomen</span></div>
+  <div class="cards-grid" id="maand-weken"></div>
+  <div class="form-section">
+    <h3>Maandreflectie</h3>
+    <div class="two-col">
+      <div class="form-group"><label>Hoogtepunten</label><textarea id="maand-highs" rows="4" onchange="saveMaandData()"></textarea></div>
+      <div class="form-group"><label>Lessen geleerd</label><textarea id="maand-lessen" rows="4" onchange="saveMaandData()"></textarea></div>
     </div>
-
-    <div class="section-header" style="margin-top:24px;">
-      <h2>Weken</h2>
-      <span class="meta">Klik op een week om in te zoomen</span>
+    <div class="form-group" style="margin-top:10px;">
+      <label>Gevoel over deze maand (1–10)</label>
+      <div class="score-row" id="maand-score-btns"></div>
     </div>
+  </div>
+</div>
 
-    <div class="cards-grid" id="maand-weken"></div>
+<!-- ══ WEEK ══ -->
+<div class="view" id="view-week">
+  <div class="nav-row">
+    <button class="nav-btn" onclick="changeWeek(-1)">← Vorig</button>
+    <span id="week-titel" style="font-family:'Playfair Display',serif;font-size:1.4rem;"></span>
+    <button class="nav-btn" onclick="changeWeek(1)">Volgend →</button>
+    <button class="nav-btn secondary" onclick="goToday('week')">Deze week</button>
+  </div>
 
-    <div class="form-section">
-      <h3>Maandreflectie</h3>
-      <div class="two-col">
-        <div class="form-group">
-          <label>Hoogtepunten</label>
-          <textarea id="maand-highs" rows="4" placeholder="..." onchange="saveMaandData()"></textarea>
-        </div>
-        <div class="form-group">
-          <label>Lessen geleerd</label>
-          <textarea id="maand-lessen" rows="4" placeholder="..." onchange="saveMaandData()"></textarea>
-        </div>
-      </div>
-      <div class="form-group" style="margin-top:12px;">
-        <label>Gevoel over deze maand (1–10)</label>
-        <div class="score-row" id="maand-score-btns"></div>
-      </div>
+  <!-- Dagpunten overzicht -->
+  <div id="week-dag-punten" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:20px;max-width:820px;"></div>
+
+  <!-- Weekschema -->
+  <div class="form-section" style="padding:14px;">
+    <h3>Weekschema</h3>
+    <p class="form-desc">Plan je week op kwartierbasis — klik in een cel om te typen</p>
+    <div class="week-schedule-wrap">
+      <table class="week-schedule" id="week-schedule-table"></table>
     </div>
   </div>
 
-  <!-- ══════════ WEEK ══════════ -->
-  <div class="view" id="view-week">
-    <div class="nav-row">
-      <button class="nav-btn" onclick="changeWeek(-1)">← Vorig</button>
-      <span id="week-titel" style="font-family:'Playfair Display',serif;font-size:1.4rem;"></span>
-      <button class="nav-btn" onclick="changeWeek(1)">Volgend →</button>
-      <button class="nav-btn secondary" onclick="goToday('week')">Deze week</button>
+  <!-- Reflectie vorige week -->
+  <div class="form-section">
+    <h3>Reflectie vorige week</h3>
+    <p class="form-desc">Terugblik — hoeveel heb je geïnvesteerd? (1–5)</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:16px;">
+      <div><label>Werk</label><div class="score-row" id="refl-werk-btns" style="gap:4px;"></div></div>
+      <div><label>Training</label><div class="score-row" id="refl-training-btns" style="gap:4px;"></div></div>
+      <div><label>Ontspanning</label><div class="score-row" id="refl-ontsp-btns" style="gap:4px;"></div></div>
+      <div><label>Verbinding</label><div class="score-row" id="refl-verb-btns" style="gap:4px;"></div></div>
     </div>
-
-    <div class="week-days" id="week-dagen"></div>
-
-    <div class="form-section">
-      <h3>Weekplanning</h3>
-      <p class="form-desc">Wat zijn de 3 grootste prioriteiten deze week?</p>
-      <div class="form-group">
-        <label>Prioriteit 1</label>
-        <input type="text" id="week-p1" placeholder="..." onchange="saveWeekData()">
-      </div>
-      <div class="form-group">
-        <label>Prioriteit 2</label>
-        <input type="text" id="week-p2" placeholder="..." onchange="saveWeekData()">
-      </div>
-      <div class="form-group">
-        <label>Prioriteit 3</label>
-        <input type="text" id="week-p3" placeholder="..." onchange="saveWeekData()">
-      </div>
-    </div>
-
-    <div class="form-section">
-      <h3>Weekreview</h3>
-      <div class="two-col">
-        <div class="form-group">
-          <label>Wat ging goed?</label>
-          <textarea id="week-goed" rows="4" placeholder="..." onchange="saveWeekData()"></textarea>
-        </div>
-        <div class="form-group">
-          <label>Wat wil ik anders?</label>
-          <textarea id="week-anders" rows="4" placeholder="..." onchange="saveWeekData()"></textarea>
-        </div>
-      </div>
-      <div class="form-group" style="margin-top:12px;">
-        <label>Gevoel over deze week (1–10)</label>
-        <div class="score-row" id="week-score-btns"></div>
-      </div>
+    <div class="form-group">
+      <label>3 Lessen van vorige week</label>
+      <textarea id="week-lessen" rows="3" placeholder="1. &#10;2. &#10;3. " onchange="saveWeekData()"></textarea>
     </div>
   </div>
 
-  <!-- ══════════ DAG ══════════ -->
-  <div class="view" id="view-dag">
-    <div class="nav-row">
-      <button class="nav-btn" onclick="changeDay(-1)">← Gisteren</button>
-      <span id="dag-titel" style="font-family:'Playfair Display',serif;font-size:1.4rem;"></span>
-      <button class="nav-btn" onclick="changeDay(1)">Morgen →</button>
-      <button class="nav-btn secondary" onclick="goToday('dag')">Vandaag</button>
-    </div>
-
-    <div class="journal-form">
-
-      <!-- OCHTEND PROTOCOL -->
-      <div class="form-section" style="border-left:3px solid var(--gold);">
-        <h3>☀️ Ochtendprotocol</h3>
-        <p class="form-desc">Begin je dag sterk. Vul dit 's ochtends in.</p>
-
-        <div class="form-group">
-          <label>Intentie van de dag — in één zin</label>
-          <input type="text" id="dag-intentie" placeholder="Vandaag is het een goede dag als..." onchange="saveDagData()">
-        </div>
-
-        <div class="form-group">
-          <label>Pareto — Top 3 taken (grootste impact vandaag)</label>
-          <ul class="pareto-list">
-            <li class="pareto-item">
-              <span class="pareto-num">1</span>
-              <input type="text" id="dag-pareto-1" placeholder="De meest impactvolle taak..." onchange="saveDagData()" style="border:none;background:transparent;padding:0;font-size:0.9rem;">
-            </li>
-            <li class="pareto-item">
-              <span class="pareto-num">2</span>
-              <input type="text" id="dag-pareto-2" placeholder="" onchange="saveDagData()" style="border:none;background:transparent;padding:0;font-size:0.9rem;">
-            </li>
-            <li class="pareto-item">
-              <span class="pareto-num">3</span>
-              <input type="text" id="dag-pareto-3" placeholder="" onchange="saveDagData()" style="border:none;background:transparent;padding:0;font-size:0.9rem;">
-            </li>
-          </ul>
-        </div>
-
-        <div class="form-group">
-          <label>Energieniveau ochtend</label>
-          <input type="range" id="dag-energie-och" min="1" max="10" value="5" oninput="updateSliderLabel('dag-energie-och','energie-och-val'); saveDagData()">
-          <div class="slider-labels">
-            <span>Uitgeput</span>
-            <span id="energie-och-val" style="color:var(--accent);font-weight:500;">5</span>
-            <span>Vol energie</span>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Waarvoor ben ik vandaag dankbaar?</label>
-          <textarea id="dag-dankbaar" rows="2" placeholder="Drie kleine of grote dingen..." onchange="saveDagData()"></textarea>
-        </div>
-      </div>
-
-      <!-- DAGPLANNING -->
-      <div class="form-section">
-        <h3>📋 Dagplanning</h3>
-        <p class="form-desc">Plan zakelijke én privétaken in één overzicht</p>
-
-        <div class="two-col">
-          <div class="form-group">
-            <label>Zakelijke taken</label>
-            <textarea id="dag-taken-zakelijk" rows="6" placeholder="- Taak 1&#10;- Taak 2&#10;- ..." onchange="saveDagData()"></textarea>
-          </div>
-          <div class="form-group">
-            <label>Privé / Persoonlijk</label>
-            <textarea id="dag-taken-prive" rows="6" placeholder="- Sporten&#10;- Bellen met..." onchange="saveDagData()"></textarea>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Notities / Ideeën</label>
-          <textarea id="dag-notities" rows="4" placeholder="Vrije ruimte..." onchange="saveDagData()"></textarea>
-        </div>
-      </div>
-
-      <!-- VITALITEIT -->
-      <div class="form-section">
-        <h3>💪 Vitaliteit</h3>
-        <p class="form-desc">Log je training, voeding en ontspanning</p>
-
-        <div class="three-col">
-          <div class="form-group">
-            <label>Training</label>
-            <textarea id="dag-training" rows="3" placeholder="Bijv. 45 min hardlopen..." onchange="saveDagData()"></textarea>
-          </div>
-          <div class="form-group">
-            <label>Voeding highlights</label>
-            <textarea id="dag-voeding" rows="3" placeholder="Bijv. Geen suiker, goed gegeten..." onchange="saveDagData()"></textarea>
-          </div>
-          <div class="form-group">
-            <label>Ontspanning</label>
-            <textarea id="dag-ontspanning" rows="3" placeholder="Bijv. 20 min meditatie..." onchange="saveDagData()"></textarea>
-          </div>
-        </div>
-
-        <div class="two-col">
-          <div class="form-group">
-            <label>Slaap (uren)</label>
-            <input type="number" id="dag-slaap" min="0" max="24" step="0.5" placeholder="7.5" onchange="saveDagData()" style="width:120px;">
-          </div>
-          <div class="form-group">
-            <label>Water (glazen)</label>
-            <input type="number" id="dag-water" min="0" max="20" placeholder="8" onchange="saveDagData()" style="width:120px;">
-          </div>
-        </div>
-      </div>
-
-      <!-- RELATIES -->
-      <div class="form-section">
-        <h3>❤️ Verbinding</h3>
-        <p class="form-desc">Relaties en betekenisvolle momenten</p>
-
-        <div class="form-group">
-          <label>Met wie had ik contact?</label>
-          <input type="text" id="dag-contact" placeholder="Bijv. Partner, vriend X, klant Y..." onchange="saveDagData()">
-        </div>
-
-        <div class="form-group">
-          <label>Betekenisvol moment van vandaag</label>
-          <textarea id="dag-moment" rows="3" placeholder="Eén moment dat telt..." onchange="saveDagData()"></textarea>
-        </div>
-      </div>
-
-      <!-- AVOND PROTOCOL -->
-      <div class="form-section" style="border-left:3px solid var(--accent);">
-        <h3>🌙 Avondprotocol</h3>
-        <p class="form-desc">Sluit je dag bewust af. Vul dit 's avonds in.</p>
-
-        <div class="form-group">
-          <label>Zijn de top 3 taken afgerond?</label>
-          <div id="dag-pareto-check" style="margin-top:8px;"></div>
-        </div>
-
-        <div class="form-group">
-          <label>Hoe succesvol was deze dag? (1–10)</label>
-          <div class="score-row" id="dag-succes-btns"></div>
-        </div>
-
-        <div class="form-group">
-          <label>Hoe voldaan voel ik me? (1–10)</label>
-          <div class="score-row" id="dag-voldaan-btns"></div>
-        </div>
-
-        <div class="form-group">
-          <label>Energieniveau avond</label>
-          <input type="range" id="dag-energie-av" min="1" max="10" value="5" oninput="updateSliderLabel('dag-energie-av','energie-av-val'); saveDagData()">
-          <div class="slider-labels">
-            <span>Uitgeput</span>
-            <span id="energie-av-val" style="color:var(--accent);font-weight:500;">5</span>
-            <span>Vol energie</span>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Hemera Punten vandaag</label>
-          <input type="number" id="dag-punten" min="0" placeholder="0" onchange="saveDagData()" style="width:120px;">
-          <p style="font-size:0.75rem;color:var(--muted);margin-top:4px;">Tel alle punten op en noteer het totaal</p>
-        </div>
-
-        <div class="form-group">
-          <label>Reflectie — Wat maakte vandaag de moeite waard?</label>
-          <textarea id="dag-reflectie" rows="4" placeholder="Vrijschrijven..." onchange="saveDagData()"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label>Morgen begin ik met...</label>
-          <input type="text" id="dag-morgen" placeholder="De eerste actie van morgen" onchange="saveDagData()">
-        </div>
-      </div>
-
-    </div><!-- end journal-form -->
-
-    <div class="save-bar">
-      <button class="save-btn" onclick="saveDagData(true)">Opslaan</button>
-      <span class="save-status" id="save-status">Wijzigingen worden automatisch opgeslagen</span>
-    </div>
+  <!-- Weekplanning -->
+  <div class="form-section">
+    <h3>5 Belangrijkste taken deze week</h3>
+    <div class="form-group"><label>Taak 1</label><input type="text" id="week-p1" onchange="saveWeekData()"></div>
+    <div class="form-group"><label>Taak 2</label><input type="text" id="week-p2" onchange="saveWeekData()"></div>
+    <div class="form-group"><label>Taak 3</label><input type="text" id="week-p3" onchange="saveWeekData()"></div>
+    <div class="form-group"><label>Taak 4</label><input type="text" id="week-p4" onchange="saveWeekData()"></div>
+    <div class="form-group"><label>Taak 5</label><input type="text" id="week-p5" onchange="saveWeekData()"></div>
   </div>
+</div>
+
+<!-- ══ DAG ══ -->
+<div class="view" id="view-dag">
+  <div class="nav-row">
+    <button class="nav-btn" onclick="changeDay(-1)">← Gisteren</button>
+    <span id="dag-titel" style="font-family:'Playfair Display',serif;font-size:1.4rem;"></span>
+    <button class="nav-btn" onclick="changeDay(1)">Morgen →</button>
+    <button class="nav-btn secondary" onclick="goToday('dag')">Vandaag</button>
+  </div>
+
+  <div id="dag-punten-top" class="punten-totaal" style="max-width:820px;margin-bottom:20px;">
+    <div><div class="big" id="dag-pts-display">0</div><div class="lbl">Dagscore</div></div>
+    <div style="text-align:right;font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);line-height:1.8;" id="dag-pts-breakdown"></div>
+  </div>
+
+  <div class="journal-form">
+
+    <!-- START STERK -->
+    <div class="form-section" style="border-left:3px solid var(--gold);">
+      <h3>⭐ Start Sterk <span class="tag accent" style="margin-left:8px;">max 10 pts</span></h3>
+      <p class="form-desc">Begin je dag sterk — vink af wat je hebt gedaan</p>
+      <div id="ss-checks"></div>
+    </div>
+
+    <!-- WERK -->
+    <div class="form-section">
+      <h3>💼 Werk <span class="tag accent" style="margin-left:8px;">max 40 pts</span></h3>
+      <p class="form-desc">Stel je leerdoel, je één grote taak en je grote drie in</p>
+
+      <div class="form-group">
+        <label>Leren — Doel voor vandaag (10 pts)</label>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="text" id="werk-leren-doel" placeholder="Bijv. Hoofdstuk 3 lezen..." onchange="saveDagData()" style="flex:1;">
+          <div class="check-row" id="werk-leren-check" onclick="toggleDagCheck('werk_leren')" style="width:auto;padding:8px 14px;margin-bottom:0;">
+            <div class="check-box" id="cb-werk_leren"></div>
+            <span style="font-size:0.8rem;">Gedaan</span>
+            <span class="check-pts">+10</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>EEN — Belangrijkste zakelijke taak (15 pts)</label>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="text" id="werk-een-taak" placeholder="De meest impactvolle taak..." onchange="saveDagData()" style="flex:1;">
+          <div class="check-row" id="werk-een-check" onclick="toggleDagCheck('werk_een')" style="width:auto;padding:8px 14px;margin-bottom:0;">
+            <div class="check-box" id="cb-werk_een"></div>
+            <span style="font-size:0.8rem;">Gedaan</span>
+            <span class="check-pts">+15</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Grote Drie — 3 taken (elk 5 pts)</label>
+        <div id="grote-drie-list"></div>
+      </div>
+
+      <div class="form-group">
+        <label>De Rest — overige taken (geen punten)</label>
+        <textarea id="werk-rest" rows="3" placeholder="- Taak A&#10;- Taak B" onchange="saveDagData()"></textarea>
+      </div>
+    </div>
+
+    <!-- TRAINING -->
+    <div class="form-section">
+      <h3>🏋️ Training <span class="tag accent" style="margin-left:8px;">10 pts per doel</span></h3>
+      <p class="form-desc">Stel 1–3 trainingsdoelen en vink af als gedaan</p>
+      <div id="training-list"></div>
+      <button class="nav-btn secondary" onclick="addDagGoal('training')" style="margin-top:4px;font-size:0.68rem;" id="training-add-btn">+ Voeg doel toe</button>
+    </div>
+
+    <!-- ONTSPANNING -->
+    <div class="form-section">
+      <h3>🧘 Diepe Ontspanning <span class="tag accent" style="margin-left:8px;">10 pts per doel</span></h3>
+      <p class="form-desc">Stel 1–3 ontspanningsdoelen en vink af als gedaan</p>
+      <div id="ontspanning-list"></div>
+      <button class="nav-btn secondary" onclick="addDagGoal('ontspanning')" style="margin-top:4px;font-size:0.68rem;" id="ontspanning-add-btn">+ Voeg doel toe</button>
+    </div>
+
+    <!-- VERBINDING -->
+    <div class="form-section">
+      <h3>❤️ Echte Verbinding <span class="tag accent" style="margin-left:8px;">10 pts per doel</span></h3>
+      <p class="form-desc">Stel 1–3 verbindingsdoelen en vink af als gedaan</p>
+      <div id="verbinding-list"></div>
+      <button class="nav-btn secondary" onclick="addDagGoal('verbinding')" style="margin-top:4px;font-size:0.68rem;" id="verbinding-add-btn">+ Voeg doel toe</button>
+    </div>
+
+    <!-- VOEDING -->
+    <div class="form-section">
+      <h3>🥗 Voeding</h3>
+      <p class="form-desc">Hoe heb je gegeten vandaag?</p>
+      <div class="voeding-opts" id="voeding-opts">
+        <button class="voeding-btn" onclick="setVoeding('')">Niet gelogd</button>
+        <button class="voeding-btn" onclick="setVoeding('gezond')">Gezond gegeten (80/20) +7 pts</button>
+        <button class="voeding-btn" onclick="setVoeding('getrackt')">Gezond + getrackt +10 pts</button>
+      </div>
+    </div>
+
+    <!-- AVOND REFLECTIE -->
+    <div class="form-section" style="border-left:3px solid var(--accent);">
+      <h3>🌙 Avondreflectie <span class="tag accent" style="margin-left:8px;">max 10 pts</span></h3>
+      <p class="form-desc">Sluit je dag bewust af</p>
+
+      <div class="form-group">
+        <label>Inzicht van de dag</label>
+        <textarea id="dag-inzicht" rows="3" placeholder="Wat heb ik vandaag geleerd of ontdekt?" onchange="saveDagData()"></textarea>
+      </div>
+
+      <label style="margin-bottom:10px;display:block;">Eindig voldaan</label>
+      <div id="av-checks"></div>
+
+      <div class="form-group" style="margin-top:16px;">
+        <label>Succes (1–5)</label>
+        <div class="score-row" id="dag-succes-btns"></div>
+      </div>
+      <div class="form-group">
+        <label>Voldoening (1–5)</label>
+        <div class="score-row" id="dag-voldaan-btns"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="save-bar">
+    <button class="save-btn" onclick="saveDagData(true)">Opslaan</button>
+    <span class="save-status" id="save-status">Wijzigingen worden automatisch opgeslagen</span>
+  </div>
+</div>
+
+<!-- ══ MANTRA'S ══ -->
+<div class="view" id="view-mantras">
+  <div class="section-header">
+    <h2>Mantra's & Leefregels</h2>
+    <span class="meta">Jouw persoonlijke ankers</span>
+  </div>
+  <p style="font-size:0.85rem;color:var(--muted);margin-bottom:20px;font-style:italic;">Spreuken en leefregels die jij elke ochtend terug wilt lezen. Klik op de tekst om te bewerken.</p>
+  <div id="mantra-list"></div>
+  <button class="nav-btn" onclick="addMantra()" style="margin-top:8px;">+ Nieuwe mantra toevoegen</button>
+</div>
 
 </div><!-- end #content -->
 
 <script>
-// ─── STATE ─────────────────────────────────────────────────────
+// ── STATE ──────────────────────────────────────────────────────────
 const today = new Date();
-let curYear  = today.getFullYear();
-let curMonth = today.getMonth();    // 0-11
-let curWeek  = getWeekNumber(today);
-let curDay   = new Date(today);
-let curQuarter = Math.floor(today.getMonth() / 3); // 0-3
+let curYear    = today.getFullYear();
+let curMonth   = today.getMonth();
+let curWeek    = getWeekNumber(today);
+let curDay     = new Date(today);
+let curQuarter = Math.floor(today.getMonth() / 3);
 
-// ─── STORAGE HELPERS ────────────────────────────────────────────
+// ── STORAGE ────────────────────────────────────────────────────────
 function key(type, ...parts) { return `hemera_${type}_${parts.join('_')}`; }
 function save(k, obj) { try { localStorage.setItem(k, JSON.stringify(obj)); } catch(e){} }
 function load(k) { try { const d = localStorage.getItem(k); return d ? JSON.parse(d) : {}; } catch(e){ return {}; } }
+function loadArr(k) { try { const d = localStorage.getItem(k); return d ? JSON.parse(d) : []; } catch(e){ return []; } }
 
-// ─── TAB SWITCHING ───────────────────────────────────────────────
+// ── TABS ───────────────────────────────────────────────────────────
 function switchTab(view, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -1116,16 +558,21 @@ function switchTab(view, btn) {
   document.getElementById('view-' + view).classList.add('active');
   renderView(view);
 }
-
+function switchTabById(view) {
+  const btn = document.querySelector(`[data-view="${view}"]`);
+  if (btn) switchTab(view, btn);
+}
 function renderView(view) {
-  if (view === 'jaar')     renderJaar();
-  if (view === 'kwartaal') renderKwartaal();
-  if (view === 'maand')    renderMaand();
-  if (view === 'week')     renderWeek();
-  if (view === 'dag')      renderDag();
+  if (view === 'dashboard') renderDashboard();
+  if (view === 'jaar')      renderJaar();
+  if (view === 'kwartaal')  renderKwartaal();
+  if (view === 'maand')     renderMaand();
+  if (view === 'week')      renderWeek();
+  if (view === 'dag')       renderDag();
+  if (view === 'mantras')   renderMantras();
 }
 
-// ─── NAVIGATION ─────────────────────────────────────────────────
+// ── NAVIGATION ─────────────────────────────────────────────────────
 function goToday(view) {
   const t = new Date();
   if (view === 'jaar')     { curYear = t.getFullYear(); renderJaar(); }
@@ -1134,23 +581,19 @@ function goToday(view) {
   if (view === 'week')     { curYear = t.getFullYear(); curWeek = getWeekNumber(t); renderWeek(); }
   if (view === 'dag')      { curDay = new Date(t); renderDag(); }
 }
-
 function changeYear(d) { curYear += d; renderJaar(); }
-
 function changeQuarter(d) {
   curQuarter += d;
   if (curQuarter > 3) { curQuarter = 0; curYear++; }
   if (curQuarter < 0) { curQuarter = 3; curYear--; }
   renderKwartaal();
 }
-
 function changeMonth(d) {
   curMonth += d;
   if (curMonth > 11) { curMonth = 0; curYear++; }
   if (curMonth < 0)  { curMonth = 11; curYear--; }
   renderMaand();
 }
-
 function changeWeek(d) {
   const date = weekStart(curYear, curWeek);
   date.setDate(date.getDate() + d * 7);
@@ -1158,17 +601,14 @@ function changeWeek(d) {
   curWeek = getWeekNumber(date);
   renderWeek();
 }
+function changeDay(d) { curDay.setDate(curDay.getDate() + d); renderDag(); }
 
-function changeDay(d) {
-  curDay.setDate(curDay.getDate() + d);
-  renderDag();
-}
-
-// ─── UTILITY ────────────────────────────────────────────────────
+// ── UTILS ──────────────────────────────────────────────────────────
 const MAANDEN = ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
 const MAANDEN_SHORT = ['Jan','Feb','Mrt','Apr','Mei','Jun','Jul','Aug','Sep','Okt','Nov','Dec'];
 const DAGEN = ['Zondag','Maandag','Dinsdag','Woensdag','Donderdag','Vrijdag','Zaterdag'];
 const DAGEN_SHORT = ['Zo','Ma','Di','Wo','Do','Vr','Za'];
+const DAG_COLS = ['Ma','Di','Wo','Do','Vr','Za','Zo'];
 
 function getWeekNumber(d) {
   d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
@@ -1176,7 +616,6 @@ function getWeekNumber(d) {
   const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
   return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
 }
-
 function weekStart(year, week) {
   const d = new Date(year, 0, 1 + (week - 1) * 7);
   const day = d.getDay();
@@ -1184,494 +623,890 @@ function weekStart(year, week) {
   d.setDate(d.getDate() + diff);
   return d;
 }
-
 function weekEnd(year, week) {
   const ws = weekStart(year, week);
-  const we = new Date(ws);
-  we.setDate(we.getDate() + 6);
-  return we;
+  const we = new Date(ws); we.setDate(we.getDate() + 6); return we;
 }
-
 function formatDate(d) {
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
-
 function isToday(d) { return formatDate(d) === formatDate(today); }
-
 function weeksInMonth(year, month) {
-  const first = new Date(year, month, 1);
-  const last = new Date(year, month+1, 0);
+  const first = new Date(year, month, 1), last = new Date(year, month+1, 0);
   const weeks = new Set();
-  for (let d = new Date(first); d <= last; d.setDate(d.getDate()+1)) {
-    weeks.add(getWeekNumber(new Date(d)));
-  }
+  for (let d = new Date(first); d <= last; d.setDate(d.getDate()+1)) weeks.add(getWeekNumber(new Date(d)));
   return [...weeks];
 }
+function getValue(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+function setValue(id, val) { const el = document.getElementById(id); if (el) el.value = val||''; }
 
-function updateSliderLabel(sliderId, labelId) {
-  const val = document.getElementById(sliderId)?.value;
-  const lbl = document.getElementById(labelId);
-  if (lbl && val) lbl.textContent = val;
-}
-
-// ─── SCORE BUTTONS ──────────────────────────────────────────────
-function makeScoreBtns(containerId, field, saveFunc) {
-  const c = document.getElementById(containerId);
-  if (!c) return;
+// ── SCORE BUTTONS (1-10 or 1-5) ───────────────────────────────────
+function makeScoreBtns(containerId, max, onSelect) {
+  const c = document.getElementById(containerId); if (!c) return;
   c.innerHTML = '';
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= max; i++) {
     const b = document.createElement('button');
-    b.className = 'score-btn';
-    b.textContent = i;
+    b.className = 'score-btn'; b.textContent = i;
     b.onclick = () => {
       c.querySelectorAll('.score-btn').forEach(x => x.classList.remove('selected'));
-      b.classList.add('selected');
-      b.dataset.val = i;
-      saveFunc(false, field, i);
+      b.classList.add('selected'); onSelect(i);
     };
     c.appendChild(b);
   }
 }
-
 function setScoreBtns(containerId, val) {
-  const c = document.getElementById(containerId);
-  if (!c || !val) return;
-  c.querySelectorAll('.score-btn').forEach(b => {
-    b.classList.toggle('selected', parseInt(b.textContent) === parseInt(val));
-  });
+  const c = document.getElementById(containerId); if (!c || !val) return;
+  c.querySelectorAll('.score-btn').forEach(b => b.classList.toggle('selected', parseInt(b.textContent) === parseInt(val)));
 }
 
-// ─── JAAR VIEW ──────────────────────────────────────────────────
+// ── PUNTEN CALC ────────────────────────────────────────────────────
+function calcDagScore(data) {
+  let pts = 0, breakdown = {};
+  // Start Sterk
+  let ss = 0;
+  if (data.ss_slaap)    ss += 4;
+  if (data.ss_water)    ss += 1;
+  if (data.ss_mediteren) ss += 2;
+  if (data.ss_stretchen) ss += 2;
+  pts += ss; breakdown.startSterk = ss;
+  // Werk
+  let werk = 0;
+  if (data.werk_leren && data.werk_lerenDoel) werk += 10;
+  if (data.werk_een) werk += 15;
+  (data.groteDrie || []).forEach(t => { if (t.gedaan) werk += 5; });
+  pts += werk; breakdown.werk = werk;
+  // Training
+  let tr = 0; (data.training || []).forEach(t => { if (t.gedaan) tr += 10; });
+  pts += tr; breakdown.training = tr;
+  // Ontspanning
+  let on = 0; (data.ontspanning || []).forEach(t => { if (t.gedaan) on += 10; });
+  pts += on; breakdown.ontspanning = on;
+  // Verbinding
+  let vb = 0; (data.verbinding || []).forEach(t => { if (t.gedaan) vb += 10; });
+  pts += vb; breakdown.verbinding = vb;
+  // Voeding
+  let vo = data.voeding === 'getrackt' ? 10 : data.voeding === 'gezond' ? 7 : 0;
+  pts += vo; breakdown.voeding = vo;
+  // Avond
+  let av = 0;
+  if (data.av_schermLoos) av += 4;
+  if (data.av_planning)   av += 2;
+  if (data.av_levenswiel) av += 2;
+  if (data.av_doelen)     av += 2;
+  pts += av; breakdown.avond = av;
+  return { pts, breakdown };
+}
+
+function getWeekPunten(year, week) {
+  const ws = weekStart(year, week);
+  let total = 0;
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(ws); d.setDate(d.getDate() + i);
+    const dd = formatDate(d);
+    const data = load(key('dag', dd));
+    total += calcDagScore(data).pts;
+  }
+  return total;
+}
+
+function getDagPts(dd) {
+  return calcDagScore(load(key('dag', dd))).pts;
+}
+
+// ── DASHBOARD ──────────────────────────────────────────────────────
+function renderDashboard() {
+  const dd = formatDate(today);
+  document.getElementById('dash-date-title').textContent =
+    `${DAGEN[today.getDay()]} ${today.getDate()} ${MAANDEN[today.getMonth()]} ${today.getFullYear()}`;
+
+  const todayData = load(key('dag', dd));
+  const { pts, breakdown } = calcDagScore(todayData);
+  document.getElementById('dash-pts-num').textContent = pts;
+  document.getElementById('dash-pts-week-num').textContent = getWeekPunten(today.getFullYear(), getWeekNumber(today));
+
+  // Todo today
+  const todoEl = document.getElementById('dash-todo');
+  const todos = [
+    { label: '8 uur slaap', done: !!todayData.ss_slaap },
+    { label: '3 glazen water', done: !!todayData.ss_water },
+    { label: 'Mediteren', done: !!todayData.ss_mediteren },
+    { label: 'Stretchen', done: !!todayData.ss_stretchen },
+    { label: 'Leerdoel ingevuld', done: !!(todayData.werk_lerenDoel) },
+    { label: 'Leren afgevinkt', done: !!todayData.werk_leren },
+    { label: 'EEN taak afgevinkt', done: !!todayData.werk_een },
+    { label: 'Voeding gelogd', done: !!todayData.voeding },
+    { label: '1u schermvrij', done: !!todayData.av_schermLoos },
+    { label: 'Planning morgen', done: !!todayData.av_planning },
+    { label: 'Levenswiel bekeken', done: !!todayData.av_levenswiel },
+    { label: 'Doelen bekeken', done: !!todayData.av_doelen },
+    { label: 'Succes gescoord', done: !!todayData.succes },
+    { label: 'Voldoening gescoord', done: !!todayData.voldoening },
+  ];
+  const open = todos.filter(t => !t.done);
+  const done = todos.filter(t => t.done);
+  todoEl.innerHTML = (open.length === 0 ? '<p style="color:var(--success);font-family:DM Mono,monospace;font-size:0.75rem;">✓ Alles afgerond vandaag!</p>' : '') +
+    [...open, ...done].map(t => `
+      <div class="todo-item">
+        <div class="todo-dot ${t.done?'done':'open'}"></div>
+        <span style="${t.done?'color:var(--muted);text-decoration:line-through;':''}">${t.label}</span>
+      </div>`).join('');
+
+  // Kwartaaldoelen
+  const kwEl = document.getElementById('dash-kwdoelen');
+  const q = Math.floor(today.getMonth()/3);
+  const kwData = load(key('kwartaal', today.getFullYear(), q));
+  const kwDoel = kwData.doelen || {};
+  const cats = ['werk','training','ontspanning','verbinding'];
+  const catLabels = {'werk':'💼 Werk','training':'🏋️ Training','ontspanning':'🧘 Ontspanning','verbinding':'❤️ Verbinding'};
+  kwEl.innerHTML = cats.map(c => {
+    const d = kwDoel[c] || {};
+    return d.doel ? `<div class="todo-item"><div class="todo-dot" style="background:var(--accent);"></div><div><div style="font-size:0.78rem;font-weight:500;">${catLabels[c]}</div><div style="font-size:0.75rem;color:var(--muted);">${d.doel}</div></div></div>` : '';
+  }).join('') || '<p style="font-size:0.78rem;color:var(--muted);font-style:italic;">Stel je kwartaaldoelen in</p>';
+
+  // Chart: week punten
+  renderWeekChart();
+  renderMonthChart();
+}
+
+function renderWeekChart() {
+  const svg = document.getElementById('chart-week');
+  if (!svg) return;
+  const W = svg.clientWidth || 600, H = 160;
+  const ws = weekStart(today.getFullYear(), getWeekNumber(today));
+  const wsLast = weekStart(today.getFullYear(), getWeekNumber(today)-1 < 1 ? 1 : getWeekNumber(today)-1);
+  const thisWeekPts = [], lastWeekPts = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(ws); d.setDate(d.getDate()+i);
+    const dl = new Date(wsLast); dl.setDate(dl.getDate()+i);
+    thisWeekPts.push(getDagPts(formatDate(d)));
+    lastWeekPts.push(getDagPts(formatDate(dl)));
+  }
+  const maxVal = Math.max(...thisWeekPts, ...lastWeekPts, 1);
+  const pad = 36, barW = Math.floor((W - pad - 10) / 7 * 0.55);
+  const chartH = H - 40;
+  let html = '';
+  // bars this week
+  for (let i = 0; i < 7; i++) {
+    const x = pad + i * ((W - pad - 10) / 7) + 4;
+    const barH = Math.round((thisWeekPts[i] / maxVal) * chartH);
+    const y = H - 24 - barH;
+    html += `<rect x="${x}" y="${y}" width="${barW}" height="${barH}" fill="#c4651a" opacity="0.85" rx="2"/>`;
+    html += `<text x="${x + barW/2}" y="${H-8}" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a7e6e">${DAG_COLS[i]}</text>`;
+    if (thisWeekPts[i] > 0) html += `<text x="${x + barW/2}" y="${y-3}" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#c4651a">${thisWeekPts[i]}</text>`;
+  }
+  // line last week
+  const linePoints = lastWeekPts.map((v,i) => {
+    const x = pad + i * ((W - pad - 10) / 7) + 4 + barW/2;
+    const y = H - 24 - Math.round((v / maxVal) * chartH);
+    return `${x},${y}`;
+  }).join(' ');
+  if (lastWeekPts.some(v=>v>0)) {
+    html += `<polyline points="${linePoints}" fill="none" stroke="#b8962e" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.7"/>`;
+    lastWeekPts.forEach((v,i) => {
+      if (v > 0) {
+        const x = pad + i * ((W - pad - 10) / 7) + 4 + barW/2;
+        const y = H - 24 - Math.round((v / maxVal) * chartH);
+        html += `<circle cx="${x}" cy="${y}" r="3" fill="#b8962e" opacity="0.7"/>`;
+      }
+    });
+  }
+  // legend
+  html += `<rect x="${pad}" y="6" width="10" height="8" fill="#c4651a" rx="1"/><text x="${pad+14}" y="14" font-family="DM Mono,monospace" font-size="9" fill="#8a7e6e">Deze week</text>`;
+  html += `<line x1="${pad+80}" y1="10" x2="${pad+92}" y2="10" stroke="#b8962e" stroke-width="1.5" stroke-dasharray="4,3"/><circle cx="${pad+86}" cy="10" r="2.5" fill="#b8962e"/><text x="${pad+96}" y="14" font-family="DM Mono,monospace" font-size="9" fill="#8a7e6e">Vorige week</text>`;
+  svg.innerHTML = html;
+  svg.setAttribute('height', H);
+}
+
+function renderMonthChart() {
+  const svg = document.getElementById('chart-months');
+  if (!svg) return;
+  const W = svg.clientWidth || 600, H = 140;
+  const months = [];
+  for (let i = 11; i >= 0; i--) {
+    let m = today.getMonth() - i, y = today.getFullYear();
+    if (m < 0) { m += 12; y--; }
+    let pts = 0;
+    const days = new Date(y, m+1, 0).getDate();
+    for (let d = 1; d <= days; d++) {
+      const dd = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      pts += getDagPts(dd);
+    }
+    months.push({ label: MAANDEN_SHORT[m], pts });
+  }
+  const maxVal = Math.max(...months.map(m=>m.pts), 1);
+  const pad = 10, barW = Math.floor((W - pad*2) / 12 * 0.7);
+  const chartH = H - 36;
+  let html = '';
+  months.forEach((m,i) => {
+    const x = pad + i * ((W - pad*2) / 12) + 2;
+    const barH = Math.round((m.pts / maxVal) * chartH);
+    const y = H - 24 - barH;
+    html += `<rect x="${x}" y="${y}" width="${barW}" height="${barH}" fill="#c4651a" opacity="${0.4 + 0.6*(i/11)}" rx="2"/>`;
+    html += `<text x="${x + barW/2}" y="${H-8}" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#8a7e6e">${m.label}</text>`;
+    if (m.pts > 0) html += `<text x="${x + barW/2}" y="${y-3}" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#c4651a">${m.pts}</text>`;
+  });
+  svg.innerHTML = html;
+  svg.setAttribute('height', H);
+}
+
+// ── JAAR ───────────────────────────────────────────────────────────
 function renderJaar() {
   document.getElementById('jaar-titel').textContent = curYear;
   const data = load(key('jaar', curYear));
-  setValue('jaar-doel-1', data.doel1 || '');
-  setValue('jaar-doel-2', data.doel2 || '');
-  setValue('jaar-doel-3', data.doel3 || '');
-  setValue('jaar-trots', data.trots || '');
-  setValue('jaar-anders', data.anders || '');
-
-  // Year calendar
-  const cal = document.getElementById('jaar-kalender');
-  cal.innerHTML = '';
+  setValue('jaar-doel-1', data.doel1); setValue('jaar-doel-2', data.doel2); setValue('jaar-doel-3', data.doel3);
+  setValue('jaar-trots', data.trots); setValue('jaar-anders', data.anders);
+  const cal = document.getElementById('jaar-kalender'); cal.innerHTML = '';
   for (let m = 0; m < 12; m++) {
-    const dayCount = countDagEntries(curYear, m);
+    const dc = countDagEntries(curYear, m);
     const div = document.createElement('div');
-    div.className = 'month-mini' + (curYear===today.getFullYear()&&m===today.getMonth()?' current-m':'') + (dayCount>0?' has-entries':'');
-    div.innerHTML = `<div class="mm-name">${MAANDEN_SHORT[m]}</div><div class="mm-count">${dayCount||'·'}</div>`;
+    div.className = 'month-mini' + (curYear===today.getFullYear()&&m===today.getMonth()?' current-m':'') + (dc>0?' has-entries':'');
+    div.innerHTML = `<div class="mm-name">${MAANDEN_SHORT[m]}</div><div class="mm-count">${dc||'·'}</div>`;
     div.onclick = () => { curMonth = m; switchTabById('maand'); };
     cal.appendChild(div);
   }
-
-  // Stats
   const totalDays = countAllDagEntries(curYear);
   const avgScore = getAvgScore(curYear);
   const totalPts = getTotalPunten(curYear);
   document.getElementById('jaar-stats').innerHTML = `
     <div class="stat-box"><div class="stat-num">${totalDays}</div><div class="stat-label">Dagen gelogd</div></div>
     <div class="stat-box"><div class="stat-num">${avgScore||'—'}</div><div class="stat-label">Gem. voldoening</div></div>
-    <div class="stat-box"><div class="stat-num">${totalPts}</div><div class="stat-label">Hemera punten</div></div>
-  `;
+    <div class="stat-box"><div class="stat-num">${totalPts}</div><div class="stat-label">Totaal punten</div></div>`;
 }
-
 function saveJaarData() {
   save(key('jaar', curYear), {
-    doel1: getValue('jaar-doel-1'),
-    doel2: getValue('jaar-doel-2'),
-    doel3: getValue('jaar-doel-3'),
-    trots: getValue('jaar-trots'),
-    anders: getValue('jaar-anders'),
+    doel1: getValue('jaar-doel-1'), doel2: getValue('jaar-doel-2'), doel3: getValue('jaar-doel-3'),
+    trots: getValue('jaar-trots'), anders: getValue('jaar-anders')
   });
 }
 
-// ─── KWARTAAL VIEW ───────────────────────────────────────────────
+// ── KWARTAAL ──────────────────────────────────────────────────────
+const LW_DIMS = ['werk','plezier','sociaal','geven','geld','groei','gezondheid','liefde'];
+const LW_LABELS = ['Werk','Plezier','Sociaal','Geven','Geld','Groei','Gezondheid','Liefde'];
+const KW_CATS = ['werk','training','ontspanning','verbinding'];
+const KW_CAT_LABELS = { werk:'💼 Werk', training:'🏋️ Training', ontspanning:'🧘 Ontspanning', verbinding:'❤️ Verbinding' };
+
 function renderKwartaal() {
   const qNames = ['Q1','Q2','Q3','Q4'];
   const qMonths = ['Jan–Mrt','Apr–Jun','Jul–Sep','Okt–Dec'];
   document.getElementById('kwartaal-titel').textContent = `${qNames[curQuarter]} ${curYear}`;
-
-  // Quarter nav
-  const nav = document.getElementById('kwartaal-nav');
-  nav.innerHTML = '';
+  const nav = document.getElementById('kwartaal-nav'); nav.innerHTML = '';
   for (let q = 0; q < 4; q++) {
-    const div = document.createElement('div');
     const isNow = curYear===today.getFullYear() && q===Math.floor(today.getMonth()/3);
-    div.className = 'quarter-card' + (q===curQuarter?' active-q':'') + (isNow?' active-q':'');
+    const div = document.createElement('div');
+    div.className = 'quarter-card' + (q===curQuarter||isNow ? ' active-q' : '');
     div.innerHTML = `<div class="q-label">${qNames[q]}</div><div class="q-months">${qMonths[q]}</div>`;
     div.onclick = () => { curQuarter = q; renderKwartaal(); };
     nav.appendChild(div);
   }
 
   const data = load(key('kwartaal', curYear, curQuarter));
-  setValue('kw-doel-1', data.doel1||'');
-  setValue('kw-doel-2', data.doel2||'');
-  setValue('kw-doel-3', data.doel3||'');
-  setValue('kw-goed', data.goed||'');
-  setValue('kw-beter', data.beter||'');
-  setValue('kw-focus', data.focus||'');
-  setValue('kw-punten', data.punten||'');
+  const lwVals = data.levenswiel || {};
+
+  // Levenswiel sliders
+  const sliderEl = document.getElementById('lw-sliders'); sliderEl.innerHTML = '';
+  LW_DIMS.forEach((dim, i) => {
+    const val = lwVals[dim] || 5;
+    const row = document.createElement('div');
+    row.className = 'lw-row';
+    row.innerHTML = `
+      <span class="lw-label">${LW_LABELS[i]}</span>
+      <input type="range" class="lw-slider" min="1" max="10" value="${val}" data-dim="${dim}"
+        oninput="this.nextElementSibling.textContent=this.value; updateLevenswiel()">
+      <span class="lw-val">${val}</span>`;
+    sliderEl.appendChild(row);
+  });
+  drawLevenswiel(LW_DIMS.map(d => lwVals[d] || 5));
+
+  // Kwartaaldoelen
+  const doelen = data.doelen || {};
+  const cont = document.getElementById('kw-doelen-container'); cont.innerHTML = '';
+  KW_CATS.forEach(cat => {
+    const d = doelen[cat] || {};
+    const card = document.createElement('div');
+    card.className = 'goal-card';
+    card.innerHTML = `
+      <h4><span>${KW_CAT_LABELS[cat]}</span></h4>
+      <div class="form-group"><label>Doel</label>
+        <input type="text" id="kw-${cat}-doel" value="${d.doel||''}" placeholder="Wat wil je bereiken?" onchange="saveKwartaalData()"></div>
+      <div class="two-col">
+        <div class="form-group"><label>Wat levert het je op?</label>
+          <textarea id="kw-${cat}-opbrengst" rows="2" onchange="saveKwartaalData()">${d.opbrengst||''}</textarea></div>
+        <div class="form-group"><label>Gevolgen als je dit niet haalt?</label>
+          <textarea id="kw-${cat}-gevolgen" rows="2" onchange="saveKwartaalData()">${d.gevolgen||''}</textarea></div>
+      </div>
+      <div class="form-group"><label>Beloning als je het haalt 🎁</label>
+        <input type="text" id="kw-${cat}-beloning" value="${d.beloning||''}" placeholder="Bijv. Etentje, dag vrij..." onchange="saveKwartaalData()"></div>`;
+    cont.appendChild(card);
+  });
+
+  setValue('kw-goed', data.goed); setValue('kw-beter', data.beter); setValue('kw-focus', data.focus);
+}
+
+function updateLevenswiel() {
+  const vals = LW_DIMS.map(dim => {
+    const sl = document.querySelector(`[data-dim="${dim}"]`);
+    return sl ? parseInt(sl.value) : 5;
+  });
+  drawLevenswiel(vals);
+  saveKwartaalData();
+}
+
+function drawLevenswiel(vals) {
+  const svg = document.getElementById('lw-svg');
+  const cx = 140, cy = 140, r = 110, n = 8;
+  const colors = ['#c4651a','#b8962e','#4a7c59','#5a7a9b','#9b5a7a','#7a5a9b','#7a9b5a','#9b7a5a'];
+  let html = '';
+  // Gridlines
+  for (let ring = 2; ring <= 10; ring += 2) {
+    const pts = Array.from({length:n}, (_,i) => {
+      const a = i * 2*Math.PI/n - Math.PI/2;
+      return `${cx + r*(ring/10)*Math.cos(a)},${cy + r*(ring/10)*Math.sin(a)}`;
+    }).join(' ');
+    html += `<polygon points="${pts}" fill="none" stroke="#d4c9b2" stroke-width="${ring===10?1.5:0.7}"/>`;
+  }
+  // Axes
+  for (let i = 0; i < n; i++) {
+    const a = i * 2*Math.PI/n - Math.PI/2;
+    html += `<line x1="${cx}" y1="${cy}" x2="${cx + r*Math.cos(a)}" y2="${cy + r*Math.sin(a)}" stroke="#d4c9b2" stroke-width="1"/>`;
+    const lx = cx + (r+18)*Math.cos(a), ly = cy + (r+18)*Math.sin(a);
+    html += `<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a7e6e">${LW_LABELS[i]}</text>`;
+  }
+  // Data polygon
+  const dataPts = vals.map((v,i) => {
+    const a = i * 2*Math.PI/n - Math.PI/2;
+    return `${cx + r*(Math.max(v,1)/10)*Math.cos(a)},${cy + r*(Math.max(v,1)/10)*Math.sin(a)}`;
+  }).join(' ');
+  html += `<polygon points="${dataPts}" fill="rgba(196,101,26,0.18)" stroke="#c4651a" stroke-width="2"/>`;
+  // Dots
+  vals.forEach((v,i) => {
+    const a = i * 2*Math.PI/n - Math.PI/2;
+    const px = cx + r*(Math.max(v,1)/10)*Math.cos(a), py = cy + r*(Math.max(v,1)/10)*Math.sin(a);
+    html += `<circle cx="${px}" cy="${py}" r="4" fill="${colors[i]}" stroke="white" stroke-width="1.5"/>`;
+    html += `<text x="${px}" y="${py-8}" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="${colors[i]}" font-weight="600">${v}</text>`;
+  });
+  svg.innerHTML = html;
 }
 
 function saveKwartaalData() {
+  const lwVals = {};
+  LW_DIMS.forEach(dim => {
+    const sl = document.querySelector(`[data-dim="${dim}"]`);
+    if (sl) lwVals[dim] = parseInt(sl.value);
+  });
+  const doelen = {};
+  KW_CATS.forEach(cat => {
+    doelen[cat] = {
+      doel: getValue(`kw-${cat}-doel`),
+      opbrengst: getValue(`kw-${cat}-opbrengst`),
+      gevolgen: getValue(`kw-${cat}-gevolgen`),
+      beloning: getValue(`kw-${cat}-beloning`),
+    };
+  });
   save(key('kwartaal', curYear, curQuarter), {
-    doel1: getValue('kw-doel-1'),
-    doel2: getValue('kw-doel-2'),
-    doel3: getValue('kw-doel-3'),
-    goed: getValue('kw-goed'),
-    beter: getValue('kw-beter'),
-    focus: getValue('kw-focus'),
-    punten: getValue('kw-punten'),
+    levenswiel: lwVals, doelen,
+    goed: getValue('kw-goed'), beter: getValue('kw-beter'), focus: getValue('kw-focus')
   });
 }
 
-// ─── MAAND VIEW ──────────────────────────────────────────────────
+// ── MAAND ────────────────────────────────────────────────────────
 function renderMaand() {
   document.getElementById('maand-titel').textContent = `${MAANDEN[curMonth]} ${curYear}`;
   const data = load(key('maand', curYear, curMonth));
-  setValue('maand-zakelijk', data.zakelijk||'');
-  setValue('maand-gezondheid', data.gezondheid||'');
-  setValue('maand-relaties', data.relaties||'');
-  setValue('maand-highs', data.highs||'');
-  setValue('maand-lessen', data.lessen||'');
-
-  // Score buttons
-  makeScoreBtns('maand-score-btns', 'score', (_, __, v) => {
-    const d = load(key('maand', curYear, curMonth));
-    d.score = v;
+  setValue('maand-zakelijk', data.zakelijk); setValue('maand-gezondheid', data.gezondheid);
+  setValue('maand-relaties', data.relaties); setValue('maand-highs', data.highs); setValue('maand-lessen', data.lessen);
+  makeScoreBtns('maand-score-btns', 10, v => {
+    const d = load(key('maand', curYear, curMonth)); d.score = v;
     save(key('maand', curYear, curMonth), d);
   });
   setScoreBtns('maand-score-btns', data.score);
-
-  // Weeks
   const weeks = weeksInMonth(curYear, curMonth);
-  const weekGrid = document.getElementById('maand-weken');
-  weekGrid.innerHTML = '';
+  const weekGrid = document.getElementById('maand-weken'); weekGrid.innerHTML = '';
   weeks.forEach(w => {
-    const ws = weekStart(curYear, w);
-    const we = weekEnd(curYear, w);
+    const ws = weekStart(curYear, w), we = weekEnd(curYear, w);
     const wData = load(key('week', curYear, w));
-    const hasData = wData.p1||wData.goed;
+    const hasData = wData.p1||wData.lessen;
+    const pts = getWeekPunten(curYear, w);
     const div = document.createElement('div');
     div.className = 'card';
-    div.innerHTML = `
-      <div class="card-title">Week ${w}</div>
-      <div class="card-sub">${String(ws.getDate()).padStart(2,'0')} ${MAANDEN_SHORT[ws.getMonth()]} – ${String(we.getDate()).padStart(2,'0')} ${MAANDEN_SHORT[we.getMonth()]}</div>
-      <div style="margin-top:8px;"><span class="card-dot ${hasData?'filled':''}"></span><span style="font-size:0.72rem;color:var(--muted);font-family:'DM Mono',monospace;">${hasData?'Ingevuld':'Leeg'}</span></div>
-    `;
+    div.innerHTML = `<div class="card-title">Week ${w}</div>
+      <div class="card-sub">${ws.getDate()} ${MAANDEN_SHORT[ws.getMonth()]} – ${we.getDate()} ${MAANDEN_SHORT[we.getMonth()]}</div>
+      ${pts > 0 ? `<div style="margin-top:6px;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);">${pts} punten</div>` : ''}
+      <div style="margin-top:6px;"><span style="font-size:0.72rem;color:var(--muted);font-family:'DM Mono',monospace;">${hasData?'✓ Ingevuld':'Leeg'}</span></div>`;
     div.onclick = () => { curWeek = w; switchTabById('week'); };
     weekGrid.appendChild(div);
   });
-
-  // Stats
   const dayCount = countDagEntries(curYear, curMonth);
-  const avgS = getAvgScoreMonth(curYear, curMonth);
+  const totalPts = getMonthPunten(curYear, curMonth);
   document.getElementById('maand-stats').innerHTML = `
     <div class="stat-box"><div class="stat-num">${dayCount}</div><div class="stat-label">Dagen gelogd</div></div>
-    <div class="stat-box"><div class="stat-num">${avgS||'—'}</div><div class="stat-label">Gem. voldoening</div></div>
-    <div class="stat-box"><div class="stat-num">${weeks.length}</div><div class="stat-label">Weken</div></div>
-  `;
+    <div class="stat-box"><div class="stat-num">${totalPts}</div><div class="stat-label">Maandpunten</div></div>
+    <div class="stat-box"><div class="stat-num">${weeks.length}</div><div class="stat-label">Weken</div></div>`;
 }
-
 function saveMaandData() {
   const d = load(key('maand', curYear, curMonth));
-  d.zakelijk = getValue('maand-zakelijk');
-  d.gezondheid = getValue('maand-gezondheid');
-  d.relaties = getValue('maand-relaties');
-  d.highs = getValue('maand-highs');
-  d.lessen = getValue('maand-lessen');
+  d.zakelijk = getValue('maand-zakelijk'); d.gezondheid = getValue('maand-gezondheid');
+  d.relaties = getValue('maand-relaties'); d.highs = getValue('maand-highs'); d.lessen = getValue('maand-lessen');
   save(key('maand', curYear, curMonth), d);
 }
 
-// ─── WEEK VIEW ───────────────────────────────────────────────────
+// ── WEEK ──────────────────────────────────────────────────────────
+const SCHEDULE_TIMES = [];
+(function() {
+  for (let h = 6; h <= 22; h++) {
+    for (let m = 0; m < 60; m += 15) {
+      SCHEDULE_TIMES.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);
+    }
+  }
+  SCHEDULE_TIMES.push('23:00');
+})();
+
 function renderWeek() {
   const ws = weekStart(curYear, curWeek);
   const we = weekEnd(curYear, curWeek);
   document.getElementById('week-titel').textContent =
-    `Week ${curWeek} · ${String(ws.getDate()).padStart(2,'0')} ${MAANDEN_SHORT[ws.getMonth()]} – ${String(we.getDate()).padStart(2,'0')} ${MAANDEN_SHORT[we.getMonth()]} ${curYear}`;
+    `Week ${curWeek} · ${ws.getDate()} ${MAANDEN_SHORT[ws.getMonth()]} – ${we.getDate()} ${MAANDEN_SHORT[we.getMonth()]} ${curYear}`;
 
   const data = load(key('week', curYear, curWeek));
-  setValue('week-p1', data.p1||'');
-  setValue('week-p2', data.p2||'');
-  setValue('week-p3', data.p3||'');
-  setValue('week-goed', data.goed||'');
-  setValue('week-anders', data.anders||'');
+  setValue('week-p1', data.p1); setValue('week-p2', data.p2); setValue('week-p3', data.p3);
+  setValue('week-p4', data.p4); setValue('week-p5', data.p5);
+  setValue('week-lessen', data.lessen);
 
-  makeScoreBtns('week-score-btns', 'score', (_, __, v) => {
-    const d = load(key('week', curYear, curWeek));
-    d.score = v;
-    save(key('week', curYear, curWeek), d);
-  });
-  setScoreBtns('week-score-btns', data.score);
-
-  // Day cards
-  const dagGrid = document.getElementById('week-dagen');
-  dagGrid.innerHTML = '';
-  // Ma-Zo
-  const dayOrder = [1,2,3,4,5,6,0];
+  // Dag punten overzicht
+  const dpEl = document.getElementById('week-dag-punten'); dpEl.innerHTML = '';
   for (let i = 0; i < 7; i++) {
-    const d = new Date(ws);
-    d.setDate(d.getDate() + i);
+    const d = new Date(ws); d.setDate(d.getDate()+i);
     const dd = formatDate(d);
-    const dagData = load(key('dag', dd));
-    const hasData = dagData.intentie || dagData.pareto1;
-    const score = dagData.voldaan;
+    const pts = getDagPts(dd);
+    const isTod = isToday(d);
     const div = document.createElement('div');
-    div.className = 'week-day-card' + (isToday(d)?' today':'') + (hasData?' has-data':'');
-    div.innerHTML = `
-      <div class="wdc-name">${DAGEN_SHORT[d.getDay()]}</div>
-      <div class="wdc-num">${d.getDate()}</div>
-      ${score ? `<div class="wdc-score">★ ${score}/10</div>` : ''}
-    `;
+    div.style.cssText = `background:${isTod?'#fffbf0':'white'};border:1px solid ${isTod?'var(--gold)':'var(--line)'};border-radius:4px;padding:10px;text-align:center;cursor:pointer;`;
+    div.innerHTML = `<div style="font-family:'DM Mono',monospace;font-size:0.6rem;text-transform:uppercase;color:var(--muted);">${DAG_COLS[i]}</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.2rem;">${d.getDate()}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--accent);margin-top:2px;">${pts} pts</div>`;
     div.onclick = () => { curDay = new Date(d); switchTabById('dag'); };
-    dagGrid.appendChild(div);
+    dpEl.appendChild(div);
   }
+
+  // Reflectie scores (1-5)
+  ['werk','training','ontsp','verb'].forEach((k,i) => {
+    const btnId = ['refl-werk-btns','refl-training-btns','refl-ontsp-btns','refl-verb-btns'][i];
+    const field = ['reflWerk','reflTraining','reflOntsp','reflVerb'][i];
+    makeScoreBtns(btnId, 5, v => {
+      const d = load(key('week', curYear, curWeek)); d[field] = v;
+      save(key('week', curYear, curWeek), d);
+    });
+    setScoreBtns(btnId, data[field]);
+  });
+
+  // Week schedule table
+  renderWeekSchedule(ws, data.schedule || {});
 }
 
-function saveWeekData(manual, field, val) {
-  const d = load(key('week', curYear, curWeek));
-  if (field) { d[field] = val; }
-  else {
-    d.p1 = getValue('week-p1');
-    d.p2 = getValue('week-p2');
-    d.p3 = getValue('week-p3');
-    d.goed = getValue('week-goed');
-    d.anders = getValue('week-anders');
+function renderWeekSchedule(ws, schedData) {
+  const table = document.getElementById('week-schedule-table');
+  // Header
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(ws); d.setDate(d.getDate()+i);
+    days.push(d);
   }
+  let html = `<thead><tr><th class="time-col">Tijd</th>${days.map((d,i) => `<th>${DAG_COLS[i]}<br><span style="font-size:0.58rem;font-weight:300;">${d.getDate()} ${MAANDEN_SHORT[d.getMonth()]}</span></th>`).join('')}</tr></thead><tbody>`;
+
+  SCHEDULE_TIMES.forEach(t => {
+    const isHour = t.endsWith(':00');
+    html += `<tr${isHour?' class="hour-row"':''}>`;
+    html += `<td class="time-lbl${isHour?' hour':''}">${isHour ? t : '<span style="color:#c9bfae">'+t+'</span>'}</td>`;
+    for (let di = 0; di < 7; di++) {
+      const cellKey = `${di}_${t}`;
+      const val = (schedData[cellKey]||'').replace(/"/g,'&quot;');
+      html += `<td><textarea class="sched-input" data-cell="${cellKey}" rows="1" onchange="saveSchedCell(this)" onfocus="this.rows=2" onblur="this.rows=1">${schedData[cellKey]||''}</textarea></td>`;
+    }
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  table.innerHTML = html;
+}
+
+function saveSchedCell(el) {
+  const data = load(key('week', curYear, curWeek));
+  if (!data.schedule) data.schedule = {};
+  const cellKey = el.dataset.cell;
+  if (el.value) data.schedule[cellKey] = el.value;
+  else delete data.schedule[cellKey];
+  save(key('week', curYear, curWeek), data);
+}
+
+function saveWeekData() {
+  const d = load(key('week', curYear, curWeek));
+  d.p1 = getValue('week-p1'); d.p2 = getValue('week-p2'); d.p3 = getValue('week-p3');
+  d.p4 = getValue('week-p4'); d.p5 = getValue('week-p5');
+  d.lessen = getValue('week-lessen');
   save(key('week', curYear, curWeek), d);
 }
 
-// ─── DAG VIEW ────────────────────────────────────────────────────
+// ── DAG ───────────────────────────────────────────────────────────
+const SS_CHECKS = [
+  { key: 'ss_slaap',     label: '8 uur slaap',  pts: 4 },
+  { key: 'ss_water',     label: '3 glazen water', pts: 1 },
+  { key: 'ss_mediteren', label: 'Mediteren',      pts: 2 },
+  { key: 'ss_stretchen', label: 'Stretchen',      pts: 2 },
+];
+const AV_CHECKS = [
+  { key: 'av_schermLoos', label: '1 uur schermvrij voor slapen', pts: 4 },
+  { key: 'av_planning',   label: 'Planning morgen gemaakt',       pts: 2 },
+  { key: 'av_levenswiel', label: 'Levenswiel bekeken',            pts: 2 },
+  { key: 'av_doelen',     label: 'Doelen bekeken',                pts: 2 },
+];
+
 function renderDag() {
   const dd = formatDate(curDay);
-  const dagNaam = DAGEN[curDay.getDay()];
-  const isTodayFlag = isToday(curDay);
   document.getElementById('dag-titel').textContent =
-    `${dagNaam} ${curDay.getDate()} ${MAANDEN[curDay.getMonth()]} ${curDay.getFullYear()}${isTodayFlag?' — Vandaag':''}`;
+    `${DAGEN[curDay.getDay()]} ${curDay.getDate()} ${MAANDEN[curDay.getMonth()]} ${curDay.getFullYear()}${isToday(curDay)?' — Vandaag':''}`;
 
   const data = load(key('dag', dd));
-  setValue('dag-intentie', data.intentie||'');
-  setValue('dag-pareto-1', data.pareto1||'');
-  setValue('dag-pareto-2', data.pareto2||'');
-  setValue('dag-pareto-3', data.pareto3||'');
-  setValue('dag-dankbaar', data.dankbaar||'');
-  setValue('dag-taken-zakelijk', data.takenZakelijk||'');
-  setValue('dag-taken-prive', data.takenPrive||'');
-  setValue('dag-notities', data.notities||'');
-  setValue('dag-training', data.training||'');
-  setValue('dag-voeding', data.voeding||'');
-  setValue('dag-ontspanning', data.ontspanning||'');
-  setValue('dag-slaap', data.slaap||'');
-  setValue('dag-water', data.water||'');
-  setValue('dag-contact', data.contact||'');
-  setValue('dag-moment', data.moment||'');
-  setValue('dag-reflectie', data.reflectie||'');
-  setValue('dag-morgen', data.morgen||'');
-  setValue('dag-punten', data.punten||'');
 
-  const engOch = data.energieOch||5;
-  const engAv = data.energieAv||5;
-  setVal('dag-energie-och', engOch); document.getElementById('energie-och-val').textContent = engOch;
-  setVal('dag-energie-av', engAv);  document.getElementById('energie-av-val').textContent = engAv;
+  // Start Sterk checks
+  const ssEl = document.getElementById('ss-checks'); ssEl.innerHTML = '';
+  SS_CHECKS.forEach(c => {
+    const row = makeCheckRow(c.key, c.label, c.pts, data[c.key], () => toggleDagCheck(c.key));
+    ssEl.appendChild(row);
+  });
+
+  // Werk
+  setValue('werk-leren-doel', data.werk_lerenDoel);
+  setValue('werk-een-taak', data.werk_eenTaak);
+  setValue('werk-rest', data.werkRest);
+  updateCheckBox('cb-werk_leren', data.werk_leren);
+  updateCheckBox('cb-werk_een', data.werk_een);
+
+  // Grote Drie
+  const gdEl = document.getElementById('grote-drie-list'); gdEl.innerHTML = '';
+  const groteDrie = data.groteDrie || [{taak:'',gedaan:false},{taak:'',gedaan:false},{taak:'',gedaan:false}];
+  groteDrie.forEach((t, i) => {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex;gap:8px;align-items:center;margin-bottom:8px;';
+    wrap.innerHTML = `
+      <span style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--accent);min-width:20px;">${i+1}</span>
+      <input type="text" id="gd-taak-${i}" value="${(t.taak||'').replace(/"/g,'&quot;')}" placeholder="Taak ${i+1}..." onchange="saveGroteDrie()" style="flex:1;">
+      <div class="check-row" onclick="toggleGroteDrie(${i})" style="width:auto;padding:7px 12px;margin-bottom:0;">
+        <div class="check-box ${t.gedaan?'checked':''}" id="cb-gd-${i}">${t.gedaan?'✓':''}</div>
+        <span style="font-size:0.78rem;">Gedaan</span>
+        <span class="check-pts">+5</span>
+      </div>`;
+    gdEl.appendChild(wrap);
+  });
+
+  // Training / Ontspanning / Verbinding
+  renderDagGoals('training', data.training || []);
+  renderDagGoals('ontspanning', data.ontspanning || []);
+  renderDagGoals('verbinding', data.verbinding || []);
+
+  // Voeding
+  const vOpts = document.querySelectorAll('.voeding-btn');
+  vOpts.forEach(b => b.classList.remove('selected'));
+  const voedingMap = {'':'button:first-child', 'gezond':'', 'getrackt':''};
+  document.querySelectorAll('.voeding-btn').forEach(b => {
+    if ((data.voeding||'') === '' && b.textContent.includes('Niet')) b.classList.add('selected');
+    if (data.voeding === 'gezond' && b.textContent.includes('80/20')) b.classList.add('selected');
+    if (data.voeding === 'getrackt' && b.textContent.includes('getrackt')) b.classList.add('selected');
+  });
+
+  // Avond
+  setValue('dag-inzicht', data.inzicht);
+  const avEl = document.getElementById('av-checks'); avEl.innerHTML = '';
+  AV_CHECKS.forEach(c => {
+    const row = makeCheckRow(c.key, c.label, c.pts, data[c.key], () => toggleDagCheck(c.key));
+    avEl.appendChild(row);
+  });
 
   // Score buttons
-  makeScoreBtns('dag-succes-btns', 'succes', saveDagScore);
+  makeScoreBtns('dag-succes-btns', 5, v => { const d2 = load(key('dag',dd)); d2.succes=v; save(key('dag',dd),d2); updateDagPts(); });
   setScoreBtns('dag-succes-btns', data.succes);
-  makeScoreBtns('dag-voldaan-btns', 'voldaan', saveDagScore);
-  setScoreBtns('dag-voldaan-btns', data.voldaan);
+  makeScoreBtns('dag-voldaan-btns', 5, v => { const d2 = load(key('dag',dd)); d2.voldoening=v; save(key('dag',dd),d2); updateDagPts(); });
+  setScoreBtns('dag-voldaan-btns', data.voldoening);
 
-  // Pareto check
-  const pc = document.getElementById('dag-pareto-check');
-  pc.innerHTML = '';
-  const tasks = [data.pareto1, data.pareto2, data.pareto3].filter(Boolean);
-  if (tasks.length === 0) {
-    pc.innerHTML = '<span style="font-size:0.8rem;color:var(--muted);font-style:italic;">Vul eerst de top 3 taken in hierboven</span>';
-  } else {
-    tasks.forEach((t, i) => {
-      const checked = (data.paretoCheck || [])[i];
-      const row = document.createElement('div');
-      row.className = 'goal-item';
-      row.innerHTML = `
-        <div class="goal-checkbox ${checked?'checked':''}">
-          ${checked?'✓':''}
-        </div>
-        <span style="font-size:0.9rem;${checked?'text-decoration:line-through;color:var(--muted)':''}">${t}</span>
-      `;
-      row.querySelector('.goal-checkbox').onclick = () => {
-        const d2 = load(key('dag', dd));
-        if (!d2.paretoCheck) d2.paretoCheck = [false,false,false];
-        d2.paretoCheck[i] = !d2.paretoCheck[i];
-        save(key('dag', dd), d2);
-        renderDag();
-      };
-      pc.appendChild(row);
-    });
-  }
+  updateDagPts();
+
+  // Show/hide add buttons
+  updateGoalAddBtns('training', data.training||[]);
+  updateGoalAddBtns('ontspanning', data.ontspanning||[]);
+  updateGoalAddBtns('verbinding', data.verbinding||[]);
 }
 
-function saveDagScore(manual, field, val) {
+function makeCheckRow(k, label, pts, checked, onToggle) {
+  const row = document.createElement('div');
+  row.className = 'check-row' + (checked?' done':'');
+  row.innerHTML = `<div class="check-box ${checked?'checked':''}">${checked?'✓':''}</div>
+    <span class="check-label" style="${checked?'text-decoration:line-through;color:var(--muted);':''}">${label}</span>
+    <span class="check-pts">+${pts} pts</span>`;
+  row.onclick = onToggle;
+  return row;
+}
+
+function updateCheckBox(id, val) {
+  const el = document.getElementById(id); if (!el) return;
+  el.className = 'check-box' + (val?' checked':'');
+  el.textContent = val ? '✓' : '';
+}
+
+function toggleDagCheck(field) {
   const dd = formatDate(curDay);
   const d = load(key('dag', dd));
-  d[field] = val;
+  d[field] = !d[field];
   save(key('dag', dd), d);
+  renderDag();
+}
+
+function toggleGroteDrie(i) {
+  const dd = formatDate(curDay);
+  const d = load(key('dag', dd));
+  if (!d.groteDrie) d.groteDrie = [{taak:'',gedaan:false},{taak:'',gedaan:false},{taak:'',gedaan:false}];
+  d.groteDrie[i].gedaan = !d.groteDrie[i].gedaan;
+  save(key('dag', dd), d);
+  renderDag();
+}
+
+function saveGroteDrie() {
+  const dd = formatDate(curDay);
+  const d = load(key('dag', dd));
+  if (!d.groteDrie) d.groteDrie = [{taak:'',gedaan:false},{taak:'',gedaan:false},{taak:'',gedaan:false}];
+  for (let i = 0; i < 3; i++) {
+    d.groteDrie[i] = d.groteDrie[i] || {taak:'',gedaan:false};
+    d.groteDrie[i].taak = getValue(`gd-taak-${i}`);
+  }
+  save(key('dag', dd), d);
+  updateDagPts();
+}
+
+function renderDagGoals(type, goals) {
+  const el = document.getElementById(`${type}-list`); if (!el) return;
+  el.innerHTML = '';
+  if (goals.length === 0) {
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `<p style="font-size:0.8rem;color:var(--muted);font-style:italic;margin-bottom:8px;">Nog geen doelen — voeg er één toe</p>`;
+    el.appendChild(wrap);
+    return;
+  }
+  goals.forEach((g, i) => {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex;gap:8px;align-items:center;margin-bottom:8px;';
+    wrap.innerHTML = `
+      <input type="text" id="${type}-goal-${i}" value="${(g.doel||'').replace(/"/g,'&quot;')}" placeholder="Beschrijf je doel..." onchange="saveDagGoal('${type}',${i})" style="flex:1;">
+      <div class="check-row" onclick="toggleDagGoal('${type}',${i})" style="width:auto;padding:7px 12px;margin-bottom:0;">
+        <div class="check-box ${g.gedaan?'checked':''}">${g.gedaan?'✓':''}</div>
+        <span style="font-size:0.78rem;">Gedaan</span>
+        <span class="check-pts">+10</span>
+      </div>
+      <button onclick="removeDagGoal('${type}',${i})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:4px;" title="Verwijder">✕</button>`;
+    el.appendChild(wrap);
+  });
+}
+
+function updateGoalAddBtns(type, goals) {
+  const btn = document.getElementById(`${type}-add-btn`);
+  if (btn) btn.style.display = goals.length >= 3 ? 'none' : 'inline-block';
+}
+
+function addDagGoal(type) {
+  const dd = formatDate(curDay);
+  const d = load(key('dag', dd));
+  if (!d[type]) d[type] = [];
+  if (d[type].length >= 3) return;
+  d[type].push({ doel: '', gedaan: false });
+  save(key('dag', dd), d);
+  renderDag();
+}
+
+function removeDagGoal(type, i) {
+  const dd = formatDate(curDay);
+  const d = load(key('dag', dd));
+  if (!d[type]) return;
+  d[type].splice(i, 1);
+  save(key('dag', dd), d);
+  renderDag();
+}
+
+function saveDagGoal(type, i) {
+  const dd = formatDate(curDay);
+  const d = load(key('dag', dd));
+  if (!d[type] || !d[type][i]) return;
+  d[type][i].doel = getValue(`${type}-goal-${i}`);
+  save(key('dag', dd), d);
+  updateDagPts();
+}
+
+function toggleDagGoal(type, i) {
+  const dd = formatDate(curDay);
+  const d = load(key('dag', dd));
+  if (!d[type] || !d[type][i]) return;
+  d[type][i].gedaan = !d[type][i].gedaan;
+  save(key('dag', dd), d);
+  renderDag();
+}
+
+function setVoeding(val) {
+  const dd = formatDate(curDay);
+  const d = load(key('dag', dd));
+  d.voeding = val;
+  save(key('dag', dd), d);
+  document.querySelectorAll('.voeding-btn').forEach(b => {
+    b.classList.remove('selected');
+    if (val === '' && b.textContent.includes('Niet')) b.classList.add('selected');
+    if (val === 'gezond' && b.textContent.includes('80/20')) b.classList.add('selected');
+    if (val === 'getrackt' && b.textContent.includes('getrackt')) b.classList.add('selected');
+  });
+  updateDagPts();
 }
 
 function saveDagData(manual) {
   const dd = formatDate(curDay);
   const existing = load(key('dag', dd));
-  const newData = {
-    ...existing,
-    intentie: getValue('dag-intentie'),
-    pareto1: getValue('dag-pareto-1'),
-    pareto2: getValue('dag-pareto-2'),
-    pareto3: getValue('dag-pareto-3'),
-    dankbaar: getValue('dag-dankbaar'),
-    takenZakelijk: getValue('dag-taken-zakelijk'),
-    takenPrive: getValue('dag-taken-prive'),
-    notities: getValue('dag-notities'),
-    training: getValue('dag-training'),
-    voeding: getValue('dag-voeding'),
-    ontspanning: getValue('dag-ontspanning'),
-    slaap: getValue('dag-slaap'),
-    water: getValue('dag-water'),
-    contact: getValue('dag-contact'),
-    moment: getValue('dag-moment'),
-    reflectie: getValue('dag-reflectie'),
-    morgen: getValue('dag-morgen'),
-    punten: getValue('dag-punten'),
-    energieOch: document.getElementById('dag-energie-och')?.value || 5,
-    energieAv: document.getElementById('dag-energie-av')?.value || 5,
-  };
-  save(key('dag', dd), newData);
+  existing.werk_lerenDoel = getValue('werk-leren-doel');
+  existing.werk_eenTaak   = getValue('werk-een-taak');
+  existing.werkRest       = getValue('werk-rest');
+  existing.inzicht        = getValue('dag-inzicht');
+  save(key('dag', dd), existing);
+  // Save grote drie text
+  saveGroteDrie();
+  updateDagPts();
   if (manual) {
     const s = document.getElementById('save-status');
-    s.textContent = '✓ Opgeslagen om ' + new Date().toLocaleTimeString('nl-NL', {hour:'2-digit',minute:'2-digit'});
-    setTimeout(() => { s.textContent = 'Wijzigingen worden automatisch opgeslagen'; }, 3000);
+    s.textContent = '✓ Opgeslagen om ' + new Date().toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'});
+    setTimeout(()=>{ s.textContent='Wijzigingen worden automatisch opgeslagen'; }, 3000);
   }
 }
 
-// ─── HELPERS ────────────────────────────────────────────────────
-function getValue(id) {
-  const el = document.getElementById(id);
-  return el ? el.value : '';
+function updateDagPts() {
+  const dd = formatDate(curDay);
+  const data = load(key('dag', dd));
+  const { pts, breakdown } = calcDagScore(data);
+  const el = document.getElementById('dag-pts-display'); if (el) el.textContent = pts;
+  const br = document.getElementById('dag-pts-breakdown');
+  if (br) {
+    br.innerHTML = [
+      `Start Sterk: ${breakdown.startSterk||0}`,
+      `Werk: ${breakdown.werk||0}`,
+      `Training: ${breakdown.training||0}`,
+      `Ontspanning: ${breakdown.ontspanning||0}`,
+      `Verbinding: ${breakdown.verbinding||0}`,
+      `Voeding: ${breakdown.voeding||0}`,
+      `Avond: ${breakdown.avond||0}`,
+    ].join('<br>');
+  }
 }
 
-function setValue(id, val) {
-  const el = document.getElementById(id);
-  if (el) el.value = val;
+// ── MANTRA'S ───────────────────────────────────────────────────────
+function renderMantras() {
+  const mantras = loadArr('hemera_mantras');
+  const el = document.getElementById('mantra-list'); el.innerHTML = '';
+  if (mantras.length === 0) {
+    el.innerHTML = '<p style="color:var(--muted);font-style:italic;font-size:0.85rem;margin-bottom:16px;">Voeg je eerste mantra toe — een spreuk of leefregel die jou inspireert.</p>';
+  }
+  mantras.forEach((m, i) => {
+    const div = document.createElement('div');
+    div.className = 'mantra-item';
+    div.innerHTML = `<span class="mantra-num">${i+1}.</span>
+      <textarea class="mantra-text" rows="2" onchange="saveMantra(${i}, this.value)">${m}</textarea>
+      <button class="mantra-del" onclick="deleteMantra(${i})" title="Verwijder">✕</button>`;
+    el.appendChild(div);
+  });
+}
+function addMantra() {
+  const mantras = loadArr('hemera_mantras');
+  mantras.push('');
+  localStorage.setItem('hemera_mantras', JSON.stringify(mantras));
+  renderMantras();
+  // focus last
+  setTimeout(() => {
+    const areas = document.querySelectorAll('.mantra-text');
+    if (areas.length) areas[areas.length-1].focus();
+  }, 50);
+}
+function saveMantra(i, val) {
+  const mantras = loadArr('hemera_mantras');
+  mantras[i] = val;
+  localStorage.setItem('hemera_mantras', JSON.stringify(mantras));
+}
+function deleteMantra(i) {
+  const mantras = loadArr('hemera_mantras');
+  mantras.splice(i, 1);
+  localStorage.setItem('hemera_mantras', JSON.stringify(mantras));
+  renderMantras();
 }
 
-function setVal(id, val) {
-  const el = document.getElementById(id);
-  if (el) el.value = val;
-}
-
-function switchTabById(view) {
-  const btn = document.querySelector(`[data-view="${view}"]`);
-  if (btn) switchTab(view, btn);
-}
-
+// ── STATS HELPERS ────────────────────────────────────────────────
 function countDagEntries(year, month) {
   let c = 0;
   const days = new Date(year, month+1, 0).getDate();
   for (let d = 1; d <= days; d++) {
     const dd = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const data = load(key('dag', dd));
-    if (data.intentie || data.pareto1 || data.reflectie) c++;
+    if (data.inzicht || data.werk_lerenDoel || data.ss_slaap) c++;
   }
   return c;
 }
-
 function countAllDagEntries(year) {
-  let c = 0;
-  for (let m = 0; m < 12; m++) c += countDagEntries(year, m);
-  return c;
+  let c = 0; for (let m=0;m<12;m++) c += countDagEntries(year,m); return c;
 }
-
 function getAvgScore(year) {
   let total = 0, count = 0;
-  for (let m = 0; m < 12; m++) {
-    const days = new Date(year, m+1, 0).getDate();
-    for (let d = 1; d <= days; d++) {
+  for (let m=0;m<12;m++) {
+    const days = new Date(year,m+1,0).getDate();
+    for (let d=1;d<=days;d++) {
       const dd = `${year}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-      const data = load(key('dag', dd));
-      if (data.voldaan) { total += parseInt(data.voldaan); count++; }
+      const data = load(key('dag',dd));
+      if (data.voldoening) { total+=parseInt(data.voldoening); count++; }
     }
   }
   return count ? Math.round(total/count*10)/10 : null;
 }
-
-function getAvgScoreMonth(year, month) {
-  let total = 0, count = 0;
-  const days = new Date(year, month+1, 0).getDate();
-  for (let d = 1; d <= days; d++) {
-    const dd = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const data = load(key('dag', dd));
-    if (data.voldaan) { total += parseInt(data.voldaan); count++; }
-  }
-  return count ? Math.round(total/count*10)/10 : null;
-}
-
 function getTotalPunten(year) {
-  let total = 0;
-  for (let m = 0; m < 12; m++) {
-    const days = new Date(year, m+1, 0).getDate();
-    for (let d = 1; d <= days; d++) {
-      const dd = `${year}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-      const data = load(key('dag', dd));
-      if (data.punten) total += parseFloat(data.punten)||0;
-    }
+  let t = 0;
+  for (let m=0;m<12;m++) t += getMonthPunten(year,m);
+  return t;
+}
+function getMonthPunten(year, month) {
+  let t = 0;
+  const days = new Date(year,month+1,0).getDate();
+  for (let d=1;d<=days;d++) {
+    const dd = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    t += getDagPts(dd);
   }
-  return total;
+  return t;
 }
 
-// ─── EXPORT / IMPORT ───────────────────────────────────────────
+// ── EXPORT / IMPORT ───────────────────────────────────────────────
 function exportData() {
   const allData = {};
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i);
-    if (k.startsWith('hemera_')) {
-      try { allData[k] = JSON.parse(localStorage.getItem(k)); } catch(e) {}
-    }
+    if (k.startsWith('hemera_')) { try { allData[k] = JSON.parse(localStorage.getItem(k)); } catch(e){} }
   }
   const blob = new Blob([JSON.stringify(allData, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `hemera-backup-${formatDate(today)}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
+  const a = document.createElement('a'); a.href = url;
+  a.download = `dagboek-backup-${formatDate(today)}.json`;
+  a.click(); URL.revokeObjectURL(url);
 }
-
-function importData() {
-  document.getElementById('import-file').click();
-}
-
+function importData() { document.getElementById('import-file').click(); }
 function handleImport(event) {
-  const file = event.target.files[0];
-  if (!file) return;
+  const file = event.target.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = (e) => {
     try {
-      const data = JSON.parse(e.target.result);
-      let count = 0;
-      Object.entries(data).forEach(([k, v]) => {
-        if (k.startsWith('hemera_')) {
-          localStorage.setItem(k, JSON.stringify(v));
-          count++;
-        }
+      const data = JSON.parse(e.target.result); let count = 0;
+      Object.entries(data).forEach(([k,v]) => {
+        if (k.startsWith('hemera_')) { localStorage.setItem(k, JSON.stringify(v)); count++; }
       });
       alert(`✓ ${count} items geïmporteerd!`);
       renderView(document.querySelector('.tab-btn.active').dataset.view);
-    } catch(err) {
-      alert('Fout bij importeren: ' + err.message);
-    }
+    } catch(err) { alert('Fout bij importeren: ' + err.message); }
   };
-  reader.readAsText(file);
-  event.target.value = '';
+  reader.readAsText(file); event.target.value = '';
 }
 
-// ─── INIT ────────────────────────────────────────────────────────
-renderJaar();
+// ── INIT ─────────────────────────────────────────────────────────
+renderDashboard();
 </script>
 </body>
 </html>
