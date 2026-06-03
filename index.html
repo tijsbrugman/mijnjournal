@@ -3,1510 +3,2045 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dagboek</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Hemera — Dagboek</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --ink: #1a1612; --paper: #f5f0e8; --paper-dark: #ede6d6;
-  --accent: #c4651a; --accent-light: #e8a96a; --muted: #8a7e6e;
-  --line: #d4c9b2; --gold: #b8962e; --success: #4a7c59; --danger: #9b3a3a;
+  --accent: #c4651a;
+  --accent-light: #e8924a;
+  --accent-dark: #9a4d12;
+  --bg: #f5f0e8;
+  --paper: #faf7f2;
+  --paper2: #f0ebe0;
+  --header-bg: #1a1a1a;
+  --text: #2c2c2c;
+  --text-muted: #7a7060;
+  --border: #d8d0c0;
+  --card-bg: #fff;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --radius: 8px;
+  --hoog: #c0392b;
+  --normaal: #2980b9;
+  --laag: #27ae60;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'DM Sans', sans-serif; background: var(--ink); color: var(--ink); min-height: 100vh; display: flex; flex-direction: column; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+h1,h2,h3,h4 { font-family: 'Playfair Display', serif; }
+code, .mono { font-family: 'DM Mono', monospace; }
 
 /* HEADER */
-#app-header { background: var(--ink); color: var(--paper); padding: 14px 28px; display: flex; align-items: center; gap: 20px; border-bottom: 1px solid #2e2820; }
-#app-header h1 { font-family: 'Playfair Display', serif; font-size: 1.5rem; letter-spacing: 0.08em; color: var(--accent-light); }
-#app-header .tagline { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 2px; }
+.site-header {
+  background: var(--header-bg);
+  color: #fff;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+.site-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--accent-light); font-style: italic; }
+.site-date { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: #aaa; }
 
-/* TABS */
-#tab-bar { background: var(--ink); display: flex; gap: 2px; padding: 0 28px; border-bottom: 2px solid var(--accent); overflow-x: auto; }
-.tab-btn { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; background: none; border: none; color: var(--muted); padding: 11px 16px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; white-space: nowrap; }
-.tab-btn:hover { color: var(--paper); }
-.tab-btn.active { color: var(--accent-light); border-bottom: 2px solid var(--accent-light); background: rgba(196,101,26,0.08); }
+/* NAV */
+.main-nav {
+  background: var(--paper);
+  border-bottom: 2px solid var(--border);
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.main-nav::-webkit-scrollbar { display: none; }
+.nav-tab {
+  padding: 12px 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-family: 'DM Sans', sans-serif;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+.nav-tab:hover { color: var(--accent); background: var(--paper2); }
+.nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
 
-/* CONTENT */
-#content { flex: 1; background: var(--paper); padding: 28px; overflow-y: auto; }
-.view { display: none; }
-.view.active { display: block; }
+/* MAIN CONTENT */
+.tab-content { display: none; padding: 24px; max-width: 1200px; margin: 0 auto; }
+.tab-content.active { display: block; }
 
-/* SECTION HEADER */
-.section-header { display: flex; align-items: baseline; gap: 16px; margin-bottom: 24px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
-.section-header h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--ink); }
-.section-header .meta { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+/* CARDS / SECTIONS */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  color: var(--accent-dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
 
-/* NAV ROW */
-.nav-row { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
-.nav-btn { background: var(--ink); color: var(--paper); border: none; padding: 7px 16px; font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; cursor: pointer; border-radius: 2px; transition: background 0.2s; }
-.nav-btn:hover { background: var(--accent); }
-.nav-btn.secondary { background: transparent; color: var(--ink); border: 1px solid var(--line); }
-.nav-btn.secondary:hover { border-color: var(--accent); color: var(--accent); }
+/* PROGRESS BAR */
+.progress-bar-wrap { background: var(--paper2); border-radius: 20px; height: 10px; overflow: hidden; margin: 8px 0; }
+.progress-bar-fill { height: 100%; background: var(--accent); border-radius: 20px; transition: width 0.4s; }
+.progress-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 2px; display: flex; justify-content: space-between; }
 
-/* FORM */
-.journal-form { max-width: 820px; }
-.form-section { background: white; border: 1px solid var(--line); border-radius: 6px; padding: 20px; margin-bottom: 16px; }
-.form-section h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; margin-bottom: 4px; color: var(--ink); }
-.form-section .form-desc { font-size: 0.75rem; color: var(--muted); margin-bottom: 14px; font-style: italic; }
-.form-group { margin-bottom: 14px; }
-label { display: block; font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
-textarea, input[type="text"], input[type="number"] { width: 100%; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; padding: 9px 12px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 3px; resize: vertical; transition: border-color 0.2s; line-height: 1.5; }
-textarea:focus, input:focus { outline: none; border-color: var(--accent); background: white; }
-textarea { min-height: 70px; }
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-@media(max-width:600px) { .two-col,.three-col { grid-template-columns: 1fr; } #content { padding: 14px; } }
+/* BUTTONS */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.83rem;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-dark); }
+.btn-secondary { background: var(--paper2); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--border); }
+.btn-danger { background: #fee; color: #c0392b; border: 1px solid #fcc; }
+.btn-danger:hover { background: #fcc; }
+.btn-sm { padding: 4px 10px; font-size: 0.75rem; }
+.btn-xs { padding: 2px 7px; font-size: 0.7rem; }
 
-/* SCORE BUTTONS */
-.score-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-.score-btn { width: 34px; height: 34px; border: 1px solid var(--line); background: var(--paper-dark); color: var(--ink); font-family: 'DM Mono', monospace; font-size: 0.82rem; cursor: pointer; border-radius: 3px; transition: all 0.15s; }
-.score-btn:hover { border-color: var(--accent); color: var(--accent); }
-.score-btn.selected { background: var(--accent); color: white; border-color: var(--accent); }
+/* INPUTS */
+input[type=text], input[type=date], input[type=time], input[type=number], select, textarea {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--text);
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+textarea { resize: vertical; min-height: 60px; }
 
-/* CHECKBOX ROW */
-.check-row { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 4px; margin-bottom: 8px; background: var(--paper); cursor: pointer; transition: all 0.15s; }
-.check-row:hover { border-color: var(--accent-light); }
-.check-row.done { background: rgba(74,124,89,0.06); border-color: var(--success); }
-.check-box { width: 20px; height: 20px; border: 1.5px solid var(--muted); border-radius: 3px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; transition: all 0.15s; background: white; }
-.check-box.checked { background: var(--success); border-color: var(--success); color: white; }
-.check-label { flex: 1; font-size: 0.88rem; }
-.check-pts { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--accent); font-weight: 500; }
+/* CHECKBOX */
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--paper2);
+}
+.check-row:last-child { border-bottom: none; }
+.check-row input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+.check-row label { cursor: pointer; font-size: 0.88rem; flex: 1; }
+.check-row label.checked { text-decoration: line-through; color: var(--text-muted); }
 
-/* POINTS DISPLAY */
-.pts-display { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--accent); line-height: 1; }
-.pts-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+/* SCORE */
+.score-display {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+.score-num { font-family: 'DM Mono', monospace; font-size: 2rem; color: var(--accent); font-weight: 500; }
+.score-max { font-family: 'DM Mono', monospace; font-size: 1rem; color: var(--text-muted); }
 
-/* STATS ROW */
-.stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 10px; margin-bottom: 24px; }
-.stat-box { background: var(--paper-dark); border: 1px solid var(--line); border-radius: 4px; padding: 14px; text-align: center; }
-.stat-box .stat-num { font-family: 'Playfair Display', serif; font-size: 1.9rem; color: var(--accent); line-height: 1; }
-.stat-box .stat-label { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 5px; }
+/* DAG specific */
+.dag-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 700px) { .dag-grid { grid-template-columns: 1fr; } }
 
-/* CARDS */
-.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px,1fr)); gap: 10px; margin-bottom: 24px; }
-.card { background: var(--paper-dark); border: 1px solid var(--line); border-radius: 4px; padding: 14px; cursor: pointer; transition: all 0.15s; }
-.card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-.card .card-title { font-family: 'Playfair Display', serif; font-size: 0.95rem; margin-bottom: 5px; }
-.card .card-sub { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+/* WEEK TABLE */
+.week-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+.week-table th, .week-table td { border: 1px solid var(--border); padding: 6px 8px; vertical-align: top; min-width: 80px; }
+.week-table th { background: var(--paper2); font-weight: 600; text-align: center; position: sticky; top: 56px; }
+.week-table td { background: var(--card-bg); min-height: 50px; }
+.week-table .row-label { background: var(--paper2); font-weight: 500; white-space: nowrap; font-size: 0.78rem; color: var(--text-muted); }
+.scheduled-chip {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 0.68rem;
+  margin: 2px 1px;
+  color: #fff;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
 
-/* WEEK DAYS */
-.week-days { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; margin-bottom: 20px; }
-@media(max-width:700px) { .week-days { grid-template-columns: 1fr 1fr; } }
-.week-day-card { background: var(--paper-dark); border: 1px solid var(--line); border-radius: 4px; padding: 10px; cursor: pointer; transition: all 0.15s; min-height: 80px; }
-.week-day-card:hover { border-color: var(--accent); }
-.week-day-card.today { border-color: var(--gold); background: #fffbf0; }
-.week-day-card.has-data { border-left: 3px solid var(--accent); }
-.wdc-name { font-family: 'DM Mono', monospace; font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
-.wdc-num { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--ink); line-height: 1.1; }
-.wdc-score { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--accent); margin-top: 3px; }
+/* PROJECTEN */
+.projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.project-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  border: 2px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.project-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+.project-color-bar { height: 4px; border-radius: 2px; margin-bottom: 12px; }
+.project-name { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 600; }
+.project-count { font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; }
 
-/* YEAR CALENDAR */
-.year-calendar { display: grid; grid-template-columns: repeat(12,1fr); gap: 5px; margin-bottom: 24px; }
-@media(max-width:700px) { .year-calendar { grid-template-columns: repeat(6,1fr); } }
-.month-mini { background: var(--paper-dark); border: 1px solid var(--line); border-radius: 4px; padding: 9px 7px; cursor: pointer; transition: all 0.15s; text-align: center; }
-.month-mini:hover { border-color: var(--accent); }
-.month-mini.current-m { border-color: var(--gold); background: #fffbf0; }
-.month-mini.has-entries { border-left: 3px solid var(--accent); }
-.mm-name { font-family: 'DM Mono', monospace; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
-.mm-count { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--ink); line-height: 1.2; }
+/* KANBAN */
+.kanban-board { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px; }
+.kanban-col {
+  background: var(--paper2);
+  border-radius: var(--radius);
+  padding: 12px;
+  min-width: 240px;
+  max-width: 280px;
+  flex-shrink: 0;
+}
+.kanban-col-title {
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.kanban-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.kanban-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+.kanban-card-title { font-weight: 600; font-size: 0.85rem; margin-bottom: 4px; }
+.prio-badge {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #fff;
+}
+.prio-Hoog { background: var(--hoog); }
+.prio-Normaal { background: var(--normaal); }
+.prio-Laag { background: var(--laag); }
 
-/* QUARTER */
-.quarter-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 7px; margin-bottom: 20px; }
-@media(max-width:600px) { .quarter-grid { grid-template-columns: 1fr 1fr; } }
-.quarter-card { background: var(--paper-dark); border: 1px solid var(--line); border-radius: 4px; padding: 12px; cursor: pointer; transition: all 0.15s; text-align: center; }
-.quarter-card:hover { border-color: var(--accent); }
-.quarter-card.active-q { border-color: var(--gold); background: #fffbf0; }
-.q-label { font-family: 'Playfair Display', serif; font-size: 1.05rem; }
-.q-months { font-family: 'DM Mono', monospace; font-size: 0.58rem; color: var(--muted); margin-top: 3px; }
+/* MODAL */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 16px;
+  overflow-y: auto;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: var(--paper);
+  border-radius: 12px;
+  padding: 28px;
+  width: 100%;
+  max-width: 640px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.25);
+  position: relative;
+}
+.modal-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 20px; color: var(--accent-dark); }
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  line-height: 1;
+}
+.form-row { margin-bottom: 14px; }
+.form-row label { display: block; font-size: 0.78rem; font-weight: 600; margin-bottom: 4px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
 
-/* SAVE BAR */
-.save-bar { position: sticky; bottom: 0; background: var(--ink); padding: 12px 22px; display: flex; align-items: center; gap: 14px; margin: 0 -28px -28px -28px; border-top: 1px solid #2e2820; }
-.save-btn { background: var(--accent); color: white; border: none; padding: 9px 26px; font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border-radius: 2px; transition: background 0.2s; }
-.save-btn:hover { background: var(--accent-light); color: var(--ink); }
-.save-status { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); letter-spacing: 0.08em; }
+/* INPLANNEN */
+.inplan-slot {
+  background: var(--paper2);
+  border-radius: var(--radius);
+  padding: 10px;
+  margin-bottom: 8px;
+  border: 1px solid var(--border);
+}
+.inplan-slot .slot-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.8rem; font-weight: 600; }
 
-/* SEPARATOR */
-.sep { height: 1px; background: var(--line); margin: 20px 0; }
+/* AGENDA */
+.agenda-item {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.agenda-item-body { flex: 1; }
+.agenda-item-title { font-weight: 600; font-size: 0.9rem; }
+.agenda-item-meta { font-size: 0.76rem; color: var(--text-muted); margin-top: 3px; }
 
-/* MANTRA */
-.mantra-item { background: white; border: 1px solid var(--line); border-radius: 6px; padding: 16px; margin-bottom: 10px; display: flex; align-items: flex-start; gap: 10px; }
-.mantra-text { flex: 1; font-family: 'Playfair Display', serif; font-size: 1rem; font-style: italic; line-height: 1.6; color: var(--ink); border: none; background: transparent; resize: none; min-height: 50px; }
-.mantra-text:focus { outline: none; }
-.mantra-del { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.1rem; padding: 4px; transition: color 0.2s; flex-shrink: 0; }
-.mantra-del:hover { color: var(--danger); }
-.mantra-num { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); min-width: 24px; margin-top: 4px; }
+/* MANTRA'S */
+.mantra-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  border-left: 4px solid var(--accent);
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+}
 
-/* LEVENSWIEL */
-.levenswiel-wrap { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
-.levenswiel-sliders { flex: 1; min-width: 220px; }
-.lw-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-.lw-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; min-width: 90px; color: var(--ink); }
-.lw-slider { flex: 1; }
-.lw-val { font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--accent); min-width: 20px; text-align: right; }
-input[type="range"] { -webkit-appearance: none; width: 100%; height: 4px; background: var(--line); border-radius: 2px; outline: none; }
-input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); cursor: pointer; }
+/* UTILS */
+.flex { display: flex; }
+.gap-8 { gap: 8px; }
+.gap-12 { gap: 12px; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mb-8 { margin-bottom: 8px; }
+.text-muted { color: var(--text-muted); font-size: 0.82rem; }
+.text-sm { font-size: 0.82rem; }
+.hidden { display: none !important; }
 
-/* WEEK SCHEDULE */
-.week-schedule-wrap { overflow-x: auto; margin-bottom: 20px; }
-.week-schedule { border-collapse: collapse; min-width: 600px; width: 100%; font-size: 0.75rem; }
-.week-schedule th { background: var(--ink); color: var(--paper); font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 6px; text-align: center; position: sticky; top: 0; z-index: 2; }
-.week-schedule th.time-col { min-width: 52px; background: var(--ink); }
-.week-schedule td { border: 1px solid var(--line); padding: 0; vertical-align: top; }
-.week-schedule td.time-lbl { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); padding: 2px 6px; background: var(--paper-dark); text-align: right; white-space: nowrap; vertical-align: middle; }
-.week-schedule td.time-lbl.hour { font-weight: 600; color: var(--ink); border-top: 1px solid var(--line); }
-.sched-input { width: 100%; border: none; background: transparent; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; padding: 2px 5px; color: var(--ink); resize: none; min-height: 22px; line-height: 1.3; display: block; }
-.sched-input:focus { outline: none; background: rgba(196,101,26,0.05); }
-.week-schedule tr.hour-row td { border-top: 1px solid #b8a990; }
+/* GOAL ROWS */
+.goal-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  background: var(--paper2);
+  margin-bottom: 6px;
+}
+.goal-row input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; margin-top: 2px; }
+.goal-row-label { font-size: 0.88rem; flex: 1; }
+.goal-row-label.checked { text-decoration: line-through; color: var(--text-muted); }
 
-/* GOAL CARD */
-.goal-card { background: white; border: 1px solid var(--line); border-radius: 6px; padding: 16px; margin-bottom: 14px; }
-.goal-card h4 { font-family: 'Playfair Display', serif; font-size: 0.95rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-.goal-card h4 span { font-size: 1.1rem; }
+/* JAAR/KWARTAAL/MAAND/WEEK tabs */
+.period-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.period-nav { display: flex; gap: 8px; align-items: center; }
+.period-label { font-family: 'DM Mono', monospace; font-size: 0.9rem; color: var(--text-muted); min-width: 80px; text-align: center; }
 
-/* DASHBOARD */
-.dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-@media(max-width:700px) { .dash-grid { grid-template-columns: 1fr; } }
-.dash-card { background: white; border: 1px solid var(--line); border-radius: 6px; padding: 18px; }
-.dash-card h3 { font-family: 'Playfair Display', serif; font-size: 1rem; margin-bottom: 14px; color: var(--ink); }
-.todo-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 0.82rem; }
-.todo-item:last-child { border-bottom: none; }
-.todo-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.todo-dot.done { background: var(--success); }
-.todo-dot.open { background: var(--danger); }
+/* Dashboard planning */
+.dag-planning-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: var(--paper2);
+  border-radius: var(--radius);
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.dag-planning-item:hover { background: var(--border); }
+.dag-planning-time { font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--accent); min-width: 100px; }
+.dag-planning-naam { font-size: 0.88rem; font-weight: 500; }
 
-/* RADIO-like voeding */
-.voeding-opts { display: flex; gap: 8px; flex-wrap: wrap; }
-.voeding-btn { padding: 8px 16px; border: 1px solid var(--line); background: var(--paper-dark); border-radius: 3px; font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.06em; cursor: pointer; transition: all 0.15s; }
-.voeding-btn:hover { border-color: var(--accent); }
-.voeding-btn.selected { background: var(--accent); color: white; border-color: var(--accent); }
+/* Totaal block in week */
+.week-totaal { background: var(--accent); color: #fff; border-radius: var(--radius); padding: 8px 12px; text-align: center; }
+.week-totaal-num { font-family: 'DM Mono', monospace; font-size: 1.4rem; font-weight: 600; }
+.week-totaal-label { font-size: 0.7rem; opacity: 0.8; }
 
-/* PUNTEN TOTAAL */
-.punten-totaal { background: var(--ink); color: var(--paper); border-radius: 6px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-.punten-totaal .big { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--accent-light); line-height: 1; }
-.punten-totaal .lbl { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+/* Subtask row */
+.subtask-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 4px;
+  background: var(--paper2);
+  margin-bottom: 4px;
+}
+.subtask-row input[type=checkbox] { width: 14px; height: 14px; accent-color: var(--accent); }
+.subtask-tekst { font-size: 0.82rem; flex: 1; }
+.subtask-tekst.done { text-decoration: line-through; color: var(--text-muted); }
 
-/* SMALL TAG */
-.tag { display: inline-block; background: var(--paper-dark); border: 1px solid var(--line); color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.08em; padding: 2px 7px; border-radius: 20px; text-transform: uppercase; }
-.tag.accent { background: rgba(196,101,26,0.1); border-color: var(--accent-light); color: var(--accent); }
+/* Color picker */
+.color-options { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+.color-option {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: border-color 0.15s;
+}
+.color-option.selected { border-color: var(--text); }
+
+/* Back button */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: 'DM Sans', sans-serif;
+}
+.back-btn:hover { color: var(--accent); }
 </style>
 </head>
 <body>
 
-<div id="app-header">
-  <div>
-    <h1>DAGBOEK</h1>
-    <div class="tagline">Alleen vandaag &nbsp;·&nbsp; Digitale Journal</div>
-  </div>
-  <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
-    <button class="nav-btn secondary" onclick="exportData()" style="color:var(--paper-dark);border-color:#3a3228;">↓ Export</button>
-    <button class="nav-btn secondary" onclick="importData()" style="color:var(--paper-dark);border-color:#3a3228;">↑ Import</button>
-    <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)">
-  </div>
-</div>
+<header class="site-header">
+  <span class="site-title">Hemera</span>
+  <span class="site-date" id="headerDate"></span>
+</header>
 
-<div id="tab-bar">
-  <button class="tab-btn active" data-view="dashboard" onclick="switchTab('dashboard',this)">Dashboard</button>
-  <button class="tab-btn" data-view="jaar" onclick="switchTab('jaar',this)">Jaar</button>
-  <button class="tab-btn" data-view="kwartaal" onclick="switchTab('kwartaal',this)">Kwartaal</button>
-  <button class="tab-btn" data-view="maand" onclick="switchTab('maand',this)">Maand</button>
-  <button class="tab-btn" data-view="week" onclick="switchTab('week',this)">Week</button>
-  <button class="tab-btn" data-view="dag" onclick="switchTab('dag',this)">Dag</button>
-  <button class="tab-btn" data-view="mantras" onclick="switchTab('mantras',this)">Mantra's</button>
-</div>
+<nav class="main-nav">
+  <button class="nav-tab" data-tab="dashboard">Dashboard</button>
+  <button class="nav-tab" data-tab="jaar">Jaar</button>
+  <button class="nav-tab" data-tab="kwartaal">Kwartaal</button>
+  <button class="nav-tab" data-tab="maand">Maand</button>
+  <button class="nav-tab" data-tab="week">Week</button>
+  <button class="nav-tab" data-tab="dag">Dag</button>
+  <button class="nav-tab" data-tab="projecten">Projecten</button>
+  <button class="nav-tab" data-tab="mantras">Mantra's</button>
+</nav>
 
-<div id="content">
-
-<!-- ══ DASHBOARD ══ -->
-<div class="view active" id="view-dashboard">
-  <div class="section-header">
-    <h2 id="dash-date-title"></h2>
-    <span class="meta">Overzicht</span>
+<!-- ===================== DASHBOARD TAB ===================== -->
+<div class="tab-content" id="tab-dashboard">
+  <div id="dash-progress-wrap" class="card mb-8">
+    <div class="progress-label"><span>Voortgang vandaag</span><span id="dash-pct">0%</span></div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="dash-bar" style="width:0%"></div></div>
   </div>
 
-  <div id="dash-punten-today" class="punten-totaal" style="max-width:820px;">
-    <div><div class="big" id="dash-pts-num">0</div><div class="lbl">Punten vandaag</div></div>
-    <div style="text-align:right;"><div class="big" id="dash-pts-week-num">0</div><div class="lbl">Punten deze week</div></div>
-  </div>
-
-  <div class="dash-grid" style="max-width:820px;">
-    <div class="dash-card">
-      <h3>📋 Nog te doen vandaag</h3>
-      <div id="dash-todo"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div>
+      <div class="card">
+        <div class="section-title">Dagplanning</div>
+        <div id="dash-dagplanning"><p class="text-muted">Geen ingeplande items voor vandaag.</p></div>
+      </div>
+      <div class="card">
+        <div class="section-title">Jaardoelen</div>
+        <div id="dash-jaardoelen"></div>
+      </div>
+      <div class="card">
+        <div class="section-title">Kwartaaldoelen</div>
+        <div id="dash-kwartaaldoelen"></div>
+      </div>
     </div>
-    <div class="dash-card">
-      <h3>🎯 Kwartaaldoelen</h3>
-      <div id="dash-kwdoelen"></div>
-    </div>
-  </div>
-
-  <div style="max-width:820px;">
-    <div class="dash-card" style="margin-bottom:16px;">
-      <h3>📊 Dagpunten deze week</h3>
-      <svg id="chart-week" width="100%" height="160"></svg>
-    </div>
-    <div class="dash-card">
-      <h3>📈 Maandpunten (12 maanden)</h3>
-      <svg id="chart-months" width="100%" height="140"></svg>
-    </div>
-  </div>
-</div>
-
-<!-- ══ JAAR ══ -->
-<div class="view" id="view-jaar">
-  <div class="nav-row">
-    <button class="nav-btn" onclick="changeYear(-1)">← Vorig</button>
-    <span id="jaar-titel" style="font-family:'Playfair Display',serif;font-size:1.4rem;"></span>
-    <button class="nav-btn" onclick="changeYear(1)">Volgend →</button>
-    <button class="nav-btn secondary" onclick="goToday('jaar')">Huidig jaar</button>
-  </div>
-  <div id="jaar-stats" class="stats-row"></div>
-  <div class="section-header"><h2>Jaarkalender</h2><span class="meta">Klik op een maand</span></div>
-  <div class="year-calendar" id="jaar-kalender"></div>
-  <div class="sep"></div>
-  <div class="form-section">
-    <h3>Jaardoelen</h3>
-    <p class="form-desc">Wat zijn jouw 3 grote doelen dit jaar?</p>
-    <div class="form-group"><label>Doel 1</label><input type="text" id="jaar-doel-1" onchange="saveJaarData()"></div>
-    <div class="form-group"><label>Doel 2</label><input type="text" id="jaar-doel-2" onchange="saveJaarData()"></div>
-    <div class="form-group"><label>Doel 3</label><input type="text" id="jaar-doel-3" onchange="saveJaarData()"></div>
-  </div>
-  <div class="form-section">
-    <h3>Jaarreflectie</h3>
-    <div class="two-col">
-      <div class="form-group"><label>Waar ben ik trots op?</label><textarea id="jaar-trots" rows="4" onchange="saveJaarData()"></textarea></div>
-      <div class="form-group"><label>Wat wil ik volgend jaar anders?</label><textarea id="jaar-anders" rows="4" onchange="saveJaarData()"></textarea></div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ KWARTAAL ══ -->
-<div class="view" id="view-kwartaal">
-  <div class="nav-row">
-    <button class="nav-btn" onclick="changeQuarter(-1)">← Vorig</button>
-    <span id="kwartaal-titel" style="font-family:'Playfair Display',serif;font-size:1.4rem;"></span>
-    <button class="nav-btn" onclick="changeQuarter(1)">Volgend →</button>
-    <button class="nav-btn secondary" onclick="goToday('kwartaal')">Huidig kwartaal</button>
-  </div>
-  <div class="quarter-grid" id="kwartaal-nav"></div>
-
-  <!-- Levenswiel -->
-  <div class="form-section">
-    <h3>🕸️ Levenswiel</h3>
-    <p class="form-desc">Geef per levensgebied een score van 1–10. Vul dit elke 3 maanden in.</p>
-    <div class="levenswiel-wrap">
-      <div class="levenswiel-sliders" id="lw-sliders"></div>
-      <svg id="lw-svg" width="280" height="280" style="flex-shrink:0;"></svg>
-    </div>
-  </div>
-
-  <!-- Kwartaaldoelen -->
-  <div class="section-header" style="margin-top:8px;"><h2>Kwartaaldoelen</h2><span class="meta">Werk · Training · Ontspanning · Verbinding</span></div>
-
-  <div id="kw-doelen-container"></div>
-
-  <!-- Review -->
-  <div class="form-section">
-    <h3>Kwartaalreview</h3>
-    <div class="two-col">
-      <div class="form-group"><label>Wat ging goed?</label><textarea id="kw-goed" rows="4" onchange="saveKwartaalData()"></textarea></div>
-      <div class="form-group"><label>Wat kan beter?</label><textarea id="kw-beter" rows="4" onchange="saveKwartaalData()"></textarea></div>
-    </div>
-    <div class="form-group" style="margin-top:10px;"><label>Focus voor volgend kwartaal</label><textarea id="kw-focus" rows="3" onchange="saveKwartaalData()"></textarea></div>
-  </div>
-</div>
-
-<!-- ══ MAAND ══ -->
-<div class="view" id="view-maand">
-  <div class="nav-row">
-    <button class="nav-btn" onclick="changeMonth(-1)">← Vorig</button>
-    <span id="maand-titel" style="font-family:'Playfair Display',serif;font-size:1.4rem;"></span>
-    <button class="nav-btn" onclick="changeMonth(1)">Volgend →</button>
-    <button class="nav-btn secondary" onclick="goToday('maand')">Deze maand</button>
-  </div>
-  <div id="maand-stats" class="stats-row"></div>
-  <div class="form-section">
-    <h3>Maanddoelen</h3>
-    <div class="form-group"><label>Zakelijk</label><textarea id="maand-zakelijk" rows="3" onchange="saveMaandData()"></textarea></div>
-    <div class="form-group"><label>Gezondheid / Vitaliteit</label><textarea id="maand-gezondheid" rows="2" onchange="saveMaandData()"></textarea></div>
-    <div class="form-group"><label>Relaties / Persoonlijk</label><textarea id="maand-relaties" rows="2" onchange="saveMaandData()"></textarea></div>
-  </div>
-  <div class="section-header" style="margin-top:20px;"><h2>Weken</h2><span class="meta">Klik om in te zoomen</span></div>
-  <div class="cards-grid" id="maand-weken"></div>
-  <div class="form-section">
-    <h3>Maandreflectie</h3>
-    <div class="two-col">
-      <div class="form-group"><label>Hoogtepunten</label><textarea id="maand-highs" rows="4" onchange="saveMaandData()"></textarea></div>
-      <div class="form-group"><label>Lessen geleerd</label><textarea id="maand-lessen" rows="4" onchange="saveMaandData()"></textarea></div>
-    </div>
-    <div class="form-group" style="margin-top:10px;">
-      <label>Gevoel over deze maand (1–10)</label>
-      <div class="score-row" id="maand-score-btns"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ WEEK ══ -->
-<div class="view" id="view-week">
-  <div class="nav-row">
-    <button class="nav-btn" onclick="changeWeek(-1)">← Vorig</button>
-    <span id="week-titel" style="font-family:'Playfair Display',serif;font-size:1.4rem;"></span>
-    <button class="nav-btn" onclick="changeWeek(1)">Volgend →</button>
-    <button class="nav-btn secondary" onclick="goToday('week')">Deze week</button>
-  </div>
-
-  <!-- Dagpunten overzicht -->
-  <div id="week-dag-punten" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:20px;max-width:820px;"></div>
-
-  <!-- Weekschema -->
-  <div class="form-section" style="padding:14px;">
-    <h3>Weekschema</h3>
-    <p class="form-desc">Plan je week op kwartierbasis — klik in een cel om te typen</p>
-    <div class="week-schedule-wrap">
-      <table class="week-schedule" id="week-schedule-table"></table>
-    </div>
-  </div>
-
-  <!-- Reflectie vorige week -->
-  <div class="form-section">
-    <h3>Reflectie vorige week</h3>
-    <p class="form-desc">Terugblik — hoeveel heb je geïnvesteerd? (1–5)</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:16px;">
-      <div><label>Werk</label><div class="score-row" id="refl-werk-btns" style="gap:4px;"></div></div>
-      <div><label>Training</label><div class="score-row" id="refl-training-btns" style="gap:4px;"></div></div>
-      <div><label>Ontspanning</label><div class="score-row" id="refl-ontsp-btns" style="gap:4px;"></div></div>
-      <div><label>Verbinding</label><div class="score-row" id="refl-verb-btns" style="gap:4px;"></div></div>
-    </div>
-    <div class="form-group">
-      <label>3 Lessen van vorige week</label>
-      <textarea id="week-lessen" rows="3" placeholder="1. &#10;2. &#10;3. " onchange="saveWeekData()"></textarea>
-    </div>
-  </div>
-
-  <!-- Weekplanning -->
-  <div class="form-section">
-    <h3>5 Belangrijkste taken deze week</h3>
-    <div class="form-group"><label>Taak 1</label><input type="text" id="week-p1" onchange="saveWeekData()"></div>
-    <div class="form-group"><label>Taak 2</label><input type="text" id="week-p2" onchange="saveWeekData()"></div>
-    <div class="form-group"><label>Taak 3</label><input type="text" id="week-p3" onchange="saveWeekData()"></div>
-    <div class="form-group"><label>Taak 4</label><input type="text" id="week-p4" onchange="saveWeekData()"></div>
-    <div class="form-group"><label>Taak 5</label><input type="text" id="week-p5" onchange="saveWeekData()"></div>
-  </div>
-</div>
-
-<!-- ══ DAG ══ -->
-<div class="view" id="view-dag">
-  <div class="nav-row">
-    <button class="nav-btn" onclick="changeDay(-1)">← Gisteren</button>
-    <span id="dag-titel" style="font-family:'Playfair Display',serif;font-size:1.4rem;"></span>
-    <button class="nav-btn" onclick="changeDay(1)">Morgen →</button>
-    <button class="nav-btn secondary" onclick="goToday('dag')">Vandaag</button>
-  </div>
-
-  <div id="dag-punten-top" class="punten-totaal" style="max-width:820px;margin-bottom:20px;">
-    <div><div class="big" id="dag-pts-display">0</div><div class="lbl">Dagscore</div></div>
-    <div style="text-align:right;font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted);line-height:1.8;" id="dag-pts-breakdown"></div>
-  </div>
-
-  <div class="journal-form">
-
-    <!-- START STERK -->
-    <div class="form-section" style="border-left:3px solid var(--gold);">
-      <h3>⭐ Start Sterk <span class="tag accent" style="margin-left:8px;">max 10 pts</span></h3>
-      <p class="form-desc">Begin je dag sterk — vink af wat je hebt gedaan</p>
-      <div id="ss-checks"></div>
-    </div>
-
-    <!-- WERK -->
-    <div class="form-section">
-      <h3>💼 Werk <span class="tag accent" style="margin-left:8px;">max 40 pts</span></h3>
-      <p class="form-desc">Stel je leerdoel, je één grote taak en je grote drie in</p>
-
-      <div class="form-group">
-        <label>Leren — Doel voor vandaag (10 pts)</label>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <input type="text" id="werk-leren-doel" placeholder="Bijv. Hoofdstuk 3 lezen..." onchange="saveDagData()" style="flex:1;">
-          <div class="check-row" id="werk-leren-check" onclick="toggleDagCheck('werk_leren')" style="width:auto;padding:8px 14px;margin-bottom:0;">
-            <div class="check-box" id="cb-werk_leren"></div>
-            <span style="font-size:0.8rem;">Gedaan</span>
-            <span class="check-pts">+10</span>
-          </div>
+    <div>
+      <div class="card">
+        <div class="section-title">Week taken</div>
+        <div id="dash-weektaken"></div>
+      </div>
+      <div class="card">
+        <div class="section-title">Score vandaag</div>
+        <div class="score-display">
+          <span class="score-num" id="dash-score">0</span>
+          <span class="score-max">/ 100</span>
         </div>
       </div>
+    </div>
+  </div>
+</div>
 
-      <div class="form-group">
-        <label>EEN — Belangrijkste zakelijke taak (15 pts)</label>
-        <div style="display:flex;gap:8px;align-items:center;">
-          <input type="text" id="werk-een-taak" placeholder="De meest impactvolle taak..." onchange="saveDagData()" style="flex:1;">
-          <div class="check-row" id="werk-een-check" onclick="toggleDagCheck('werk_een')" style="width:auto;padding:8px 14px;margin-bottom:0;">
-            <div class="check-box" id="cb-werk_een"></div>
-            <span style="font-size:0.8rem;">Gedaan</span>
-            <span class="check-pts">+15</span>
-          </div>
-        </div>
+<!-- ===================== JAAR TAB ===================== -->
+<div class="tab-content" id="tab-jaar">
+  <div class="period-header">
+    <h2 style="font-family:'Playfair Display',serif;" id="jaar-title">Jaar 2026</h2>
+    <div class="period-nav">
+      <button class="btn btn-secondary btn-sm" onclick="jaarNav(-1)">◀</button>
+      <span class="period-label" id="jaar-label"></span>
+      <button class="btn btn-secondary btn-sm" onclick="jaarNav(1)">▶</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Jaar Thema</div>
+    <input type="text" id="jaar-thema" placeholder="Het thema van dit jaar..." oninput="saveJaar()">
+  </div>
+
+  <div class="card">
+    <div class="section-title">Jaar Doelen</div>
+    <div id="jaar-doelen-list"></div>
+    <button class="btn btn-secondary btn-sm mt-8" onclick="addJaarDoel()">+ Doel toevoegen</button>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Jaar Reflectie</div>
+    <textarea id="jaar-reflectie" rows="5" placeholder="Reflectie op het jaar..." oninput="saveJaar()"></textarea>
+  </div>
+</div>
+
+<!-- ===================== KWARTAAL TAB ===================== -->
+<div class="tab-content" id="tab-kwartaal">
+  <div class="period-header">
+    <h2 style="font-family:'Playfair Display',serif;" id="kwartaal-title">Q1 2026</h2>
+    <div class="period-nav">
+      <button class="btn btn-secondary btn-sm" onclick="kwartaalNav(-1)">◀</button>
+      <span class="period-label" id="kwartaal-label"></span>
+      <button class="btn btn-secondary btn-sm" onclick="kwartaalNav(1)">▶</button>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div class="card">
+      <div class="section-title">Werk doelen</div>
+      <div id="kw-werk-doelen"></div>
+      <button class="btn btn-secondary btn-sm mt-8" onclick="addKwDoel('werk')">+ Toevoegen</button>
+    </div>
+    <div class="card">
+      <div class="section-title">Training doelen</div>
+      <div id="kw-training-doelen"></div>
+      <button class="btn btn-secondary btn-sm mt-8" onclick="addKwDoel('training')">+ Toevoegen</button>
+    </div>
+    <div class="card">
+      <div class="section-title">Ontspanning doelen</div>
+      <div id="kw-ontspanning-doelen"></div>
+      <button class="btn btn-secondary btn-sm mt-8" onclick="addKwDoel('ontspanning')">+ Toevoegen</button>
+    </div>
+    <div class="card">
+      <div class="section-title">Verbinding doelen</div>
+      <div id="kw-verbinding-doelen"></div>
+      <button class="btn btn-secondary btn-sm mt-8" onclick="addKwDoel('verbinding')">+ Toevoegen</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Kwartaal Reflectie</div>
+    <textarea id="kwartaal-reflectie" rows="4" placeholder="Reflectie..." oninput="saveKwartaal()"></textarea>
+  </div>
+</div>
+
+<!-- ===================== MAAND TAB ===================== -->
+<div class="tab-content" id="tab-maand">
+  <div class="period-header">
+    <h2 style="font-family:'Playfair Display',serif;" id="maand-title">Januari 2026</h2>
+    <div class="period-nav">
+      <button class="btn btn-secondary btn-sm" onclick="maandNav(-1)">◀</button>
+      <span class="period-label" id="maand-label"></span>
+      <button class="btn btn-secondary btn-sm" onclick="maandNav(1)">▶</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Maand Intentie</div>
+    <input type="text" id="maand-intentie" placeholder="Intentie voor deze maand..." oninput="saveMaand()">
+  </div>
+
+  <div class="card">
+    <div class="section-title">Maand Doelen</div>
+    <div id="maand-doelen-list"></div>
+    <button class="btn btn-secondary btn-sm mt-8" onclick="addMaandDoel()">+ Doel toevoegen</button>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Maand Reflectie</div>
+    <textarea id="maand-reflectie" rows="4" placeholder="Reflectie..." oninput="saveMaand()"></textarea>
+  </div>
+</div>
+
+<!-- ===================== WEEK TAB ===================== -->
+<div class="tab-content" id="tab-week">
+  <div class="period-header">
+    <h2 style="font-family:'Playfair Display',serif;" id="week-title">Week 1</h2>
+    <div class="period-nav">
+      <button class="btn btn-secondary btn-sm" onclick="weekNav(-1)">◀</button>
+      <span class="period-label" id="week-label"></span>
+      <button class="btn btn-secondary btn-sm" onclick="weekNav(1)">▶</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Week Intentie</div>
+    <input type="text" id="week-intentie" placeholder="Intentie voor deze week..." oninput="saveWeek()">
+  </div>
+
+  <div class="card">
+    <div class="section-title">Week Taken (top 5)</div>
+    <div id="week-taken-list"></div>
+  </div>
+
+  <div class="card" style="overflow-x:auto;">
+    <div class="section-title">Week Planning</div>
+    <table class="week-table" id="week-planning-table"></table>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Dag Punten</div>
+    <div id="week-dagpunten" style="overflow-x:auto;"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Agenda taken
+      <button class="btn btn-primary btn-sm" onclick="openAgendaModal()" style="margin-left:auto;font-size:0.78rem;">+ Nieuwe taak</button>
+    </div>
+    <div id="agenda-list-week"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Week Reflectie</div>
+    <textarea id="week-reflectie" rows="4" placeholder="Reflectie..." oninput="saveWeek()"></textarea>
+  </div>
+</div>
+
+<!-- ===================== DAG TAB ===================== -->
+<div class="tab-content" id="tab-dag">
+  <div class="period-header">
+    <h2 style="font-family:'Playfair Display',serif;" id="dag-title">Maandag 1 januari</h2>
+    <div class="period-nav">
+      <button class="btn btn-secondary btn-sm" onclick="dagNav(-1)">◀</button>
+      <span class="period-label" id="dag-label"></span>
+      <button class="btn btn-secondary btn-sm" onclick="dagNav(1)">▶</button>
+    </div>
+  </div>
+
+  <div class="progress-label"><span>Dag voortgang</span><span id="dag-pct">0%</span></div>
+  <div class="progress-bar-wrap mb-8"><div class="progress-bar-fill" id="dag-bar" style="width:0%"></div></div>
+
+  <div class="dag-grid">
+    <!-- Start Sterk -->
+    <div class="card">
+      <div class="flex justify-between items-center mb-8">
+        <div class="section-title" style="flex:1">🌅 Start Sterk</div>
+        <div class="score-display"><span class="score-num" id="sc-start">0</span><span class="score-max">/10</span></div>
       </div>
+      <div id="start-checks">
+        <div class="check-row"><input type="checkbox" id="d-slaap" onchange="saveDag();calcScore()"><label for="d-slaap">Slaap 7–9 uur <span class="text-muted">(5 pts)</span></label></div>
+        <div class="check-row"><input type="checkbox" id="d-water" onchange="saveDag();calcScore()"><label for="d-water">Water bij het opstaan <span class="text-muted">(1 pt)</span></label></div>
+        <div class="check-row"><input type="checkbox" id="d-medi" onchange="saveDag();calcScore()"><label for="d-medi">Mediteren <span class="text-muted">(2 pts)</span></label></div>
+        <div class="check-row"><input type="checkbox" id="d-stretch" onchange="saveDag();calcScore()"><label for="d-stretch">Stretchen / bewegen <span class="text-muted">(2 pts)</span></label></div>
+      </div>
+    </div>
 
-      <div class="form-group">
-        <label>Grote Drie — 3 taken (elk 5 pts)</label>
+    <!-- Werk -->
+    <div class="card">
+      <div class="flex justify-between items-center mb-8">
+        <div class="section-title" style="flex:1">💼 Werk</div>
+        <div class="score-display"><span class="score-num" id="sc-werk">0</span><span class="score-max">/40</span></div>
+      </div>
+      <div class="form-row">
+        <label>Leren (10 pts)</label>
+        <input type="checkbox" id="d-leren" onchange="saveDag();calcScore()">
+        <label for="d-leren" style="font-size:0.82rem;margin-left:6px;">Iets geleerd vandaag</label>
+      </div>
+      <div class="form-row">
+        <label>Één taak (15 pts)</label>
+        <input type="text" id="d-een" placeholder="Jouw #1 taak vandaag..." oninput="saveDag()">
+        <div class="check-row mt-8"><input type="checkbox" id="d-een-done" onchange="saveDag();calcScore()"><label for="d-een-done">Afgerond</label></div>
+      </div>
+      <div class="form-row">
+        <label>Grote Drie (5 pts elk)</label>
         <div id="grote-drie-list"></div>
       </div>
+    </div>
 
-      <div class="form-group">
-        <label>De Rest — overige taken (geen punten)</label>
-        <textarea id="werk-rest" rows="3" placeholder="- Taak A&#10;- Taak B" onchange="saveDagData()"></textarea>
+    <!-- Training -->
+    <div class="card">
+      <div class="flex justify-between items-center mb-8">
+        <div class="section-title" style="flex:1">🏋️ Training</div>
+        <div class="score-display"><span class="score-num" id="sc-training">0</span><span class="score-max">/10</span></div>
       </div>
+      <div id="training-checks"></div>
+      <button class="btn btn-secondary btn-sm mt-8" onclick="addTrainingItem()">+ Item toevoegen</button>
     </div>
 
-    <!-- TRAINING -->
-    <div class="form-section">
-      <h3>🏋️ Training <span class="tag accent" style="margin-left:8px;">10 pts per doel</span></h3>
-      <p class="form-desc">Stel 1–3 trainingsdoelen en vink af als gedaan</p>
-      <div id="training-list"></div>
-      <button class="nav-btn secondary" onclick="addDagGoal('training')" style="margin-top:4px;font-size:0.68rem;" id="training-add-btn">+ Voeg doel toe</button>
-    </div>
-
-    <!-- ONTSPANNING -->
-    <div class="form-section">
-      <h3>🧘 Diepe Ontspanning <span class="tag accent" style="margin-left:8px;">10 pts per doel</span></h3>
-      <p class="form-desc">Stel 1–3 ontspanningsdoelen en vink af als gedaan</p>
-      <div id="ontspanning-list"></div>
-      <button class="nav-btn secondary" onclick="addDagGoal('ontspanning')" style="margin-top:4px;font-size:0.68rem;" id="ontspanning-add-btn">+ Voeg doel toe</button>
-    </div>
-
-    <!-- VERBINDING -->
-    <div class="form-section">
-      <h3>❤️ Echte Verbinding <span class="tag accent" style="margin-left:8px;">10 pts per doel</span></h3>
-      <p class="form-desc">Stel 1–3 verbindingsdoelen en vink af als gedaan</p>
-      <div id="verbinding-list"></div>
-      <button class="nav-btn secondary" onclick="addDagGoal('verbinding')" style="margin-top:4px;font-size:0.68rem;" id="verbinding-add-btn">+ Voeg doel toe</button>
-    </div>
-
-    <!-- VOEDING -->
-    <div class="form-section">
-      <h3>🥗 Voeding</h3>
-      <p class="form-desc">Hoe heb je gegeten vandaag?</p>
-      <div class="voeding-opts" id="voeding-opts">
-        <button class="voeding-btn" onclick="setVoeding('')">Niet gelogd</button>
-        <button class="voeding-btn" onclick="setVoeding('gezond')">Gezond gegeten (80/20) +7 pts</button>
-        <button class="voeding-btn" onclick="setVoeding('getrackt')">Gezond + getrackt +10 pts</button>
+    <!-- Ontspanning -->
+    <div class="card">
+      <div class="flex justify-between items-center mb-8">
+        <div class="section-title" style="flex:1">🌿 Ontspanning</div>
+        <div class="score-display"><span class="score-num" id="sc-ontspanning">0</span><span class="score-max">/10</span></div>
       </div>
+      <div id="ontspanning-checks"></div>
+      <button class="btn btn-secondary btn-sm mt-8" onclick="addOntspanningItem()">+ Item toevoegen</button>
     </div>
 
-    <!-- AVOND REFLECTIE -->
-    <div class="form-section" style="border-left:3px solid var(--accent);">
-      <h3>🌙 Avondreflectie <span class="tag accent" style="margin-left:8px;">max 10 pts</span></h3>
-      <p class="form-desc">Sluit je dag bewust af</p>
-
-      <div class="form-group">
-        <label>Inzicht van de dag</label>
-        <textarea id="dag-inzicht" rows="3" placeholder="Wat heb ik vandaag geleerd of ontdekt?" onchange="saveDagData()"></textarea>
+    <!-- Verbinding -->
+    <div class="card">
+      <div class="flex justify-between items-center mb-8">
+        <div class="section-title" style="flex:1">❤️ Verbinding</div>
+        <div class="score-display"><span class="score-num" id="sc-verbinding">0</span><span class="score-max">/10</span></div>
       </div>
-
-      <label style="margin-bottom:10px;display:block;">Eindig voldaan</label>
-      <div id="av-checks"></div>
-
-      <div class="form-group" style="margin-top:16px;">
-        <label>Succes (1–5)</label>
-        <div class="score-row" id="dag-succes-btns"></div>
-      </div>
-      <div class="form-group">
-        <label>Voldoening (1–5)</label>
-        <div class="score-row" id="dag-voldaan-btns"></div>
-      </div>
+      <div id="verbinding-checks"></div>
+      <button class="btn btn-secondary btn-sm mt-8" onclick="addVerbindingItem()">+ Item toevoegen</button>
     </div>
 
-  </div>
+    <!-- Voeding -->
+    <div class="card">
+      <div class="flex justify-between items-center mb-8">
+        <div class="section-title" style="flex:1">🥗 Voeding</div>
+        <div class="score-display"><span class="score-num" id="sc-voeding">0</span><span class="score-max">/10</span></div>
+      </div>
+      <div class="check-row"><input type="checkbox" id="d-gezond" onchange="saveDag();calcScore()"><label for="d-gezond">Gezond gegeten (7 pts)</label></div>
+      <div class="check-row"><input type="checkbox" id="d-getrackt" onchange="saveDag();calcScore()"><label for="d-getrackt">Voeding getrackt (10 pts)</label></div>
+    </div>
 
-  <div class="save-bar">
-    <button class="save-btn" onclick="saveDagData(true)">Opslaan</button>
-    <span class="save-status" id="save-status">Wijzigingen worden automatisch opgeslagen</span>
+    <!-- Avond -->
+    <div class="card">
+      <div class="flex justify-between items-center mb-8">
+        <div class="section-title" style="flex:1">🌙 Avond</div>
+        <div class="score-display"><span class="score-num" id="sc-avond">0</span><span class="score-max">/10</span></div>
+      </div>
+      <div class="check-row"><input type="checkbox" id="d-scheermLoos" onchange="saveDag();calcScore()"><label for="d-scheermLoos">Schermvrij uur (4 pts)</label></div>
+      <div class="check-row"><input type="checkbox" id="d-planning" onchange="saveDag();calcScore()"><label for="d-planning">Morgen gepland (2 pts)</label></div>
+      <div class="check-row"><input type="checkbox" id="d-levenswiel" onchange="saveDag();calcScore()"><label for="d-levenswiel">Levenswiel ingevuld (2 pts)</label></div>
+      <div class="check-row"><input type="checkbox" id="d-doelen" onchange="saveDag();calcScore()"><label for="d-doelen">Doelen gelezen (2 pts)</label></div>
+    </div>
+
+    <!-- De Rest -->
+    <div class="card" style="grid-column: span 2">
+      <div class="section-title">📋 De Rest</div>
+      <div id="de-rest-list"></div>
+      <button class="btn btn-secondary btn-sm mt-8" onclick="addDeRestItem()">+ Taak toevoegen</button>
+    </div>
+
+    <!-- Notities -->
+    <div class="card" style="grid-column: span 2">
+      <div class="section-title">📝 Notities</div>
+      <textarea id="dag-notities" rows="4" placeholder="Vrije notities van vandaag..." oninput="saveDag()"></textarea>
+    </div>
   </div>
 </div>
 
-<!-- ══ MANTRA'S ══ -->
-<div class="view" id="view-mantras">
-  <div class="section-header">
-    <h2>Mantra's & Leefregels</h2>
-    <span class="meta">Jouw persoonlijke ankers</span>
+<!-- ===================== PROJECTEN TAB ===================== -->
+<div class="tab-content" id="tab-projecten">
+  <!-- Overview -->
+  <div id="proj-overview">
+    <div class="flex justify-between items-center mb-8" style="margin-bottom:16px;">
+      <h2 style="font-family:'Playfair Display',serif;">Projecten</h2>
+      <button class="btn btn-primary" onclick="openNewProjectModal()">+ Nieuw project</button>
+    </div>
+    <div class="projects-grid" id="proj-grid"></div>
   </div>
-  <p style="font-size:0.85rem;color:var(--muted);margin-bottom:20px;font-style:italic;">Spreuken en leefregels die jij elke ochtend terug wilt lezen. Klik op de tekst om te bewerken.</p>
-  <div id="mantra-list"></div>
-  <button class="nav-btn" onclick="addMantra()" style="margin-top:8px;">+ Nieuwe mantra toevoegen</button>
+
+  <!-- Kanban view -->
+  <div id="proj-kanban" class="hidden">
+    <button class="back-btn" onclick="showProjectOverview()">← Terug naar projecten</button>
+    <div class="flex justify-between items-center" style="margin-bottom:16px;">
+      <h2 style="font-family:'Playfair Display',serif;" id="kanban-title"></h2>
+      <button class="btn btn-primary btn-sm" onclick="openNewCardModal()">+ Nieuwe kaart</button>
+    </div>
+    <div class="kanban-board" id="kanban-board"></div>
+  </div>
 </div>
 
-</div><!-- end #content -->
+<!-- Agenda tab verwijderd — taken aanmaken via Week tab -->
+
+<!-- ===================== MANTRA'S TAB ===================== -->
+<div class="tab-content" id="tab-mantras">
+  <div class="flex justify-between items-center" style="margin-bottom:16px;">
+    <h2 style="font-family:'Playfair Display',serif;">Mantra's</h2>
+    <button class="btn btn-primary" onclick="addMantra()">+ Toevoegen</button>
+  </div>
+  <div id="mantras-list"></div>
+</div>
+
+<!-- ===================== MODALS ===================== -->
+
+<!-- New Project Modal -->
+<div class="modal-overlay" id="modal-new-project">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-new-project')">×</button>
+    <div class="modal-title">Nieuw project</div>
+    <div class="form-row"><label>Naam</label><input type="text" id="np-naam" placeholder="Projectnaam..."></div>
+    <div class="form-row">
+      <label>Kleur</label>
+      <div class="color-options" id="np-colors"></div>
+    </div>
+    <button class="btn btn-primary" onclick="saveNewProject()">Aanmaken</button>
+  </div>
+</div>
+
+<!-- Card Modal -->
+<div class="modal-overlay" id="modal-card">
+  <div class="modal-box" style="max-width:720px;">
+    <button class="modal-close" onclick="closeModal('modal-card')">×</button>
+    <div class="modal-title" id="modal-card-title">Kaart bewerken</div>
+    <input type="hidden" id="mc-card-id">
+    <input type="hidden" id="mc-project-id">
+    <input type="hidden" id="mc-is-agenda">
+    <div class="form-row"><label>Titel</label><input type="text" id="mc-titel" placeholder="Titel..."></div>
+    <div class="form-row"><label>Beschrijving</label><textarea id="mc-beschrijving" rows="3" placeholder="Beschrijving..."></textarea></div>
+    <div class="form-row-2">
+      <div class="form-row" style="margin:0"><label>Prioriteit</label>
+        <select id="mc-prioriteit">
+          <option>Hoog</option><option selected>Normaal</option><option>Laag</option>
+        </select>
+      </div>
+      <div class="form-row" style="margin:0"><label>Deadline</label><input type="date" id="mc-deadline"></div>
+    </div>
+    <div class="form-row-2">
+      <div class="form-row" style="margin:0"><label>Verantwoordelijke</label><input type="text" id="mc-verantwoordelijke" placeholder="Naam..."></div>
+      <div class="form-row" style="margin:0"><label>Label</label><input type="text" id="mc-label" placeholder="Label..."></div>
+    </div>
+    <div class="form-row"><label>Notities</label><textarea id="mc-notities" rows="3" placeholder="Notities..."></textarea></div>
+
+    <!-- Subtaken -->
+    <div class="form-row">
+      <label>Subtaken</label>
+      <div id="mc-subtaken-list"></div>
+      <div class="flex gap-8 mt-8">
+        <input type="text" id="mc-subtaak-input" placeholder="Nieuwe subtaak..." style="flex:1;">
+        <button class="btn btn-secondary btn-sm" onclick="addSubtaak()">+ Toevoegen</button>
+      </div>
+    </div>
+
+    <!-- Inplannen kaart -->
+    <div class="form-row">
+      <label>Inplannen (kaart)</label>
+      <div id="mc-gepland-list"></div>
+      <button class="btn btn-secondary btn-sm mt-8" onclick="addGeplandSlot('card')">+ Moment toevoegen</button>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:16px;justify-content:space-between;">
+      <button class="btn btn-danger btn-sm" onclick="deleteCard()">Verwijderen</button>
+      <button class="btn btn-primary" onclick="saveCard()">Opslaan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Agenda Modal -->
+<div class="modal-overlay" id="modal-agenda">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-agenda')">×</button>
+    <div class="modal-title" id="modal-agenda-title">Agenda taak</div>
+    <input type="hidden" id="ma-id">
+    <div class="form-row"><label>Titel</label><input type="text" id="ma-titel" placeholder="Titel..."></div>
+    <div class="form-row"><label>Beschrijving</label><textarea id="ma-beschrijving" rows="2" placeholder="Beschrijving..."></textarea></div>
+    <div class="form-row-2">
+      <div class="form-row" style="margin:0"><label>Prioriteit</label>
+        <select id="ma-prioriteit"><option>Hoog</option><option selected>Normaal</option><option>Laag</option></select>
+      </div>
+      <div class="form-row" style="margin:0"><label>Deadline</label><input type="date" id="ma-deadline"></div>
+    </div>
+    <div class="form-row-2">
+      <div class="form-row" style="margin:0"><label>Verantwoordelijke</label><input type="text" id="ma-verantwoordelijke"></div>
+      <div class="form-row" style="margin:0"><label>Label</label><input type="text" id="ma-label"></div>
+    </div>
+    <div class="form-row"><label>Notities</label><textarea id="ma-notities" rows="2" placeholder="Notities..."></textarea></div>
+    <div class="form-row">
+      <label>Inplannen</label>
+      <div id="ma-gepland-list"></div>
+      <button class="btn btn-secondary btn-sm mt-8" onclick="addGeplandSlot('agenda')">+ Moment toevoegen</button>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px;justify-content:space-between;">
+      <button class="btn btn-danger btn-sm" onclick="deleteAgendaItem()" id="ma-delete-btn">Verwijderen</button>
+      <button class="btn btn-primary" onclick="saveAgendaItem()">Opslaan</button>
+    </div>
+  </div>
+</div>
 
 <script>
-// ── STATE ──────────────────────────────────────────────────────────
-const today = new Date();
-let curYear    = today.getFullYear();
-let curMonth   = today.getMonth();
-let curWeek    = getWeekNumber(today);
-let curDay     = new Date(today);
-let curQuarter = Math.floor(today.getMonth() / 3);
+// ===================== STATE =====================
+const TODAY = new Date();
+const COLORS = ['#c4651a','#2980b9','#27ae60','#8e44ad','#c0392b','#16a085','#d35400','#2c3e50','#e91e63','#607d8b'];
+const FASES = ['Idee','Gepland','Bezig','Wacht op','Gedaan'];
 
-// ── STORAGE ────────────────────────────────────────────────────────
-function key(type, ...parts) { return `hemera_${type}_${parts.join('_')}`; }
-function save(k, obj) { try { localStorage.setItem(k, JSON.stringify(obj)); } catch(e){} }
-function load(k) { try { const d = localStorage.getItem(k); return d ? JSON.parse(d) : {}; } catch(e){ return {}; } }
-function loadArr(k) { try { const d = localStorage.getItem(k); return d ? JSON.parse(d) : []; } catch(e){ return []; } }
+let currentJaar = TODAY.getFullYear();
+let currentKwartaal = Math.ceil((TODAY.getMonth()+1)/3);
+let currentMaandDate = new Date(TODAY.getFullYear(), TODAY.getMonth(), 1);
+let currentWeekDate = getMonday(TODAY);
+let currentDagDate = new Date(TODAY);
+let currentProjectId = null;
 
-// ── TABS ───────────────────────────────────────────────────────────
-function switchTab(view, btn) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('view-' + view).classList.add('active');
-  renderView(view);
+// ===================== UTILS =====================
+function pad(n){return String(n).padStart(2,'0');}
+function dateStr(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;}
+function getMonday(d){
+  const dt=new Date(d);
+  const day=dt.getDay();
+  const diff=dt.getDate()-(day===0?6:day-1);
+  return new Date(dt.setDate(diff));
 }
-function switchTabById(view) {
-  const btn = document.querySelector(`[data-view="${view}"]`);
-  if (btn) switchTab(view, btn);
+function addDays(d,n){const dt=new Date(d);dt.setDate(dt.getDate()+n);return dt;}
+function uid(){return Math.random().toString(36).slice(2)+Date.now().toString(36);}
+function nl(d){
+  const dagen=['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'];
+  const maanden=['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+  return {dag:dagen[d.getDay()],maand:maanden[d.getMonth()]};
 }
-function renderView(view) {
-  if (view === 'dashboard') renderDashboard();
-  if (view === 'jaar')      renderJaar();
-  if (view === 'kwartaal')  renderKwartaal();
-  if (view === 'maand')     renderMaand();
-  if (view === 'week')      renderWeek();
-  if (view === 'dag')       renderDag();
-  if (view === 'mantras')   renderMantras();
+function weekNum(d){
+  const dt=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  const day=dt.getUTCDay()||7;
+  dt.setUTCDate(dt.getUTCDate()+4-day);
+  const y=new Date(Date.UTC(dt.getUTCFullYear(),0,1));
+  return Math.ceil((((dt-y)/86400000)+1)/7);
+}
+const maandNamen=['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
+
+// ===================== STORAGE =====================
+function ls(key,def){try{const v=localStorage.getItem(key);return v?JSON.parse(v):def;}catch{return def;}}
+function lsSet(key,val){try{localStorage.setItem(key,JSON.stringify(val));}catch(e){console.warn(e);}}
+
+function getJaarData(y){
+  const all=ls('hemera_jaar',{});
+  if(!all[y])all[y]={thema:'',doelen:[],reflectie:''};
+  return all[y];
+}
+function saveJaarData(y,data){const all=ls('hemera_jaar',{});all[y]=data;lsSet('hemera_jaar',all);}
+
+function getKwartaalData(y,q){
+  const all=ls('hemera_kwartaal',{});
+  const k=`${y}-Q${q}`;
+  if(!all[k])all[k]={werk:[],training:[],ontspanning:[],verbinding:[],reflectie:''};
+  return all[k];
+}
+function saveKwartaalData(y,q,data){const all=ls('hemera_kwartaal',{});all[`${y}-Q${q}`]=data;lsSet('hemera_kwartaal',all);}
+
+function getMaandData(y,m){
+  const all=ls('hemera_maand',{});
+  const k=`${y}-${pad(m)}`;
+  if(!all[k])all[k]={intentie:'',doelen:[],reflectie:''};
+  return all[k];
+}
+function saveMaandData(y,m,data){const all=ls('hemera_maand',{});all[`${y}-${pad(m)}`]=data;lsSet('hemera_maand',all);}
+
+function getWeekData(y,w){
+  const all=ls('hemera_week',{});
+  const k=`${y}-W${pad(w)}`;
+  if(!all[k])all[k]={intentie:'',taken:[{tekst:'',gedaan:false},{tekst:'',gedaan:false},{tekst:'',gedaan:false},{tekst:'',gedaan:false},{tekst:'',gedaan:false}],planning:{},reflectie:''};
+  return all[k];
+}
+function saveWeekData(y,w,data){const all=ls('hemera_week',{});all[`${y}-W${pad(w)}`]=data;lsSet('hemera_week',all);}
+
+function getDagData(dateS){
+  const all=ls('hemera_dag',{});
+  if(!all[dateS])all[dateS]={slaap:false,water:false,medi:false,stretch:false,leren:false,een:'',eenDone:false,groteDrie:['','',''],groteDrieDone:[false,false,false],training:[],ontspanning:[],verbinding:[],gezond:false,getrackt:false,schermLoos:false,planning:false,levenswiel:false,doelen:false,deRest:[],notities:''};
+  return all[dateS];
+}
+function saveDagData(dateS,data){const all=ls('hemera_dag',{});all[dateS]=data;lsSet('hemera_dag',all);}
+
+function getProjects(){return ls('hemera_projects',[]);}
+function saveProjects(p){lsSet('hemera_projects',p);}
+
+function getAgenda(){return ls('hemera_agenda',[]);}
+function saveAgenda(a){lsSet('hemera_agenda',a);}
+
+function getMantras(){return ls('hemera_mantras',[]);}
+function saveMantras(m){lsSet('hemera_mantras',m);}
+
+// ===================== SCHEDULED ITEMS HELPER =====================
+function getScheduledForDate(dateS){
+  const items=[];
+  // From projects
+  getProjects().forEach(proj=>{
+    (proj.cards||[]).forEach(card=>{
+      (card.gepland||[]).forEach(slot=>{
+        if(slot.datum===dateS)items.push({...slot,projectKleur:proj.kleur,bron:`${proj.naam}: ${card.titel}`,cardId:card.id,projectId:proj.id,type:'project'});
+      });
+      (card.checklist||[]).forEach(sub=>{
+        (sub.gepland||[]).forEach(slot=>{
+          if(slot.datum===dateS)items.push({...slot,projectKleur:proj.kleur,bron:`${proj.naam}: ${card.titel} › ${sub.tekst}`,cardId:card.id,projectId:proj.id,subId:sub.id,type:'project-sub'});
+        });
+      });
+    });
+  });
+  // From agenda
+  getAgenda().forEach(item=>{
+    (item.gepland||[]).forEach(slot=>{
+      if(slot.datum===dateS)items.push({...slot,projectKleur:'#607d8b',bron:item.titel,agendaId:item.id,type:'agenda'});
+    });
+    (item.checklist||[]).forEach(sub=>{
+      (sub.gepland||[]).forEach(slot=>{
+        if(slot.datum===dateS)items.push({...slot,projectKleur:'#607d8b',bron:`${item.titel} › ${sub.tekst}`,agendaId:item.id,subId:sub.id,type:'agenda-sub'});
+      });
+    });
+  });
+  // Sort by start time
+  items.sort((a,b)=>(a.start||'').localeCompare(b.start||''));
+  return items;
 }
 
-// ── NAVIGATION ─────────────────────────────────────────────────────
-function goToday(view) {
-  const t = new Date();
-  if (view === 'jaar')     { curYear = t.getFullYear(); renderJaar(); }
-  if (view === 'kwartaal') { curYear = t.getFullYear(); curQuarter = Math.floor(t.getMonth()/3); renderKwartaal(); }
-  if (view === 'maand')    { curYear = t.getFullYear(); curMonth = t.getMonth(); renderMaand(); }
-  if (view === 'week')     { curYear = t.getFullYear(); curWeek = getWeekNumber(t); renderWeek(); }
-  if (view === 'dag')      { curDay = new Date(t); renderDag(); }
+// ===================== NAVIGATION =====================
+document.querySelectorAll('.nav-tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    const tab=btn.dataset.tab;
+    document.getElementById('tab-'+tab).classList.add('active');
+    renderTab(tab);
+  });
+});
+
+function renderTab(tab){
+  if(tab==='dashboard')renderDashboard();
+  if(tab==='jaar')renderJaar();
+  if(tab==='kwartaal')renderKwartaal();
+  if(tab==='maand')renderMaand();
+  if(tab==='week'){renderWeek();renderAgenda();}
+  if(tab==='dag')renderDag();
+  if(tab==='projecten')renderProjecten();
+  if(tab==='agenda')renderAgenda();
+  if(tab==='mantras')renderMantras();
 }
-function changeYear(d) { curYear += d; renderJaar(); }
-function changeQuarter(d) {
-  curQuarter += d;
-  if (curQuarter > 3) { curQuarter = 0; curYear++; }
-  if (curQuarter < 0) { curQuarter = 3; curYear--; }
-  renderKwartaal();
+
+// ===================== HEADER DATE =====================
+function updateHeaderDate(){
+  const {dag,maand}=nl(TODAY);
+  document.getElementById('headerDate').textContent=`${dag} ${TODAY.getDate()} ${maand} ${TODAY.getFullYear()}`;
 }
-function changeMonth(d) {
-  curMonth += d;
-  if (curMonth > 11) { curMonth = 0; curYear++; }
-  if (curMonth < 0)  { curMonth = 11; curYear--; }
-  renderMaand();
+
+// ===================== SCORE CALCULATION =====================
+function calcDagScore(data){
+  let score=0;
+  // Start Sterk
+  if(data.slaap)score+=5;
+  if(data.water)score+=1;
+  if(data.medi)score+=2;
+  if(data.stretch)score+=2;
+  // Werk
+  if(data.leren)score+=10;
+  if(data.eenDone)score+=15;
+  (data.groteDrieDone||[]).forEach(d=>{if(d)score+=5;});
+  // Training
+  const tr=data.training||[];
+  if(tr.length>0){const done=tr.filter(x=>x.gedaan).length;score+=(done===tr.length?10:done>0?5:0);}
+  // Ontspanning
+  const ot=data.ontspanning||[];
+  if(ot.length>0){const done=ot.filter(x=>x.gedaan).length;score+=(done===ot.length?10:done>0?5:0);}
+  // Verbinding
+  const vb=data.verbinding||[];
+  if(vb.length>0){const done=vb.filter(x=>x.gedaan).length;score+=(done===vb.length?10:done>0?5:0);}
+  // Voeding
+  if(data.getrackt)score+=10;else if(data.gezond)score+=7;
+  // Avond
+  if(data.schermLoos)score+=4;
+  if(data.planning)score+=2;
+  if(data.levenswiel)score+=2;
+  if(data.doelen)score+=2;
+  return Math.min(score,100);
 }
-function changeWeek(d) {
-  const date = weekStart(curYear, curWeek);
-  date.setDate(date.getDate() + d * 7);
-  curYear = date.getFullYear();
-  curWeek = getWeekNumber(date);
+
+function calcScore(){
+  const data=getDagDataFromForm();
+  const score=calcDagScore(data);
+  document.getElementById('sc-start').textContent=(data.slaap?5:0)+(data.water?1:0)+(data.medi?2:0)+(data.stretch?2:0);
+  const werk=(data.leren?10:0)+(data.eenDone?15:0)+(data.groteDrieDone||[]).reduce((a,d)=>a+(d?5:0),0);
+  document.getElementById('sc-werk').textContent=werk;
+  const tr=data.training||[];
+  const trScore=tr.length===0?0:(tr.filter(x=>x.gedaan).length===tr.length?10:tr.some(x=>x.gedaan)?5:0);
+  document.getElementById('sc-training').textContent=trScore;
+  const ot=data.ontspanning||[];
+  const otScore=ot.length===0?0:(ot.filter(x=>x.gedaan).length===ot.length?10:ot.some(x=>x.gedaan)?5:0);
+  document.getElementById('sc-ontspanning').textContent=otScore;
+  const vb=data.verbinding||[];
+  const vbScore=vb.length===0?0:(vb.filter(x=>x.gedaan).length===vb.length?10:vb.some(x=>x.gedaan)?5:0);
+  document.getElementById('sc-verbinding').textContent=vbScore;
+  const voed=(data.getrackt?10:data.gezond?7:0);
+  document.getElementById('sc-voeding').textContent=voed;
+  const av=(data.schermLoos?4:0)+(data.planning?2:0)+(data.levenswiel?2:0)+(data.doelen?2:0);
+  document.getElementById('sc-avond').textContent=av;
+  updateDagProgress(data);
+}
+
+function updateDagProgress(data){
+  // Count checkable items
+  const checks=[data.slaap,data.water,data.medi,data.stretch,data.leren,data.eenDone,...(data.groteDrieDone||[]),...(data.training||[]).map(x=>x.gedaan),...(data.ontspanning||[]).map(x=>x.gedaan),...(data.verbinding||[]).map(x=>x.gedaan),data.gezond,data.getrackt,data.schermLoos,data.planning,data.levenswiel,data.doelen,...(data.deRest||[]).map(x=>x.gedaan)];
+  const total=checks.length;
+  const done=checks.filter(Boolean).length;
+  const pct=total>0?Math.round(done/total*100):0;
+  const el=document.getElementById('dag-bar');
+  const el2=document.getElementById('dag-pct');
+  if(el)el.style.width=pct+'%';
+  if(el2)el2.textContent=pct+'%';
+}
+
+// ===================== DAG TAB =====================
+function renderDag(){
+  const ds=dateStr(currentDagDate);
+  const {dag,maand}=nl(currentDagDate);
+  document.getElementById('dag-title').textContent=`${capitalize(dag)} ${currentDagDate.getDate()} ${maand}`;
+  document.getElementById('dag-label').textContent=ds;
+
+  const data=getDagData(ds);
+  // Checkboxes
+  document.getElementById('d-slaap').checked=data.slaap||false;
+  document.getElementById('d-water').checked=data.water||false;
+  document.getElementById('d-medi').checked=data.medi||false;
+  document.getElementById('d-stretch').checked=data.stretch||false;
+  document.getElementById('d-leren').checked=data.leren||false;
+  document.getElementById('d-een').value=data.een||'';
+  document.getElementById('d-een-done').checked=data.eenDone||false;
+  document.getElementById('d-gezond').checked=data.gezond||false;
+  document.getElementById('d-getrackt').checked=data.getrackt||false;
+  document.getElementById('d-scheermLoos').checked=data.schermLoos||false;
+  document.getElementById('d-planning').checked=data.planning||false;
+  document.getElementById('d-levenswiel').checked=data.levenswiel||false;
+  document.getElementById('d-doelen').checked=data.doelen||false;
+  document.getElementById('dag-notities').value=data.notities||'';
+
+  // Grote drie
+  renderGroteDrie(data);
+  // Dynamic lists
+  renderDagList('training','training-checks',data);
+  renderDagList('ontspanning','ontspanning-checks',data);
+  renderDagList('verbinding','verbinding-checks',data);
+  // De Rest
+  renderDeRest(ds,data);
+  calcScore();
+}
+
+function capitalize(s){return s?s[0].toUpperCase()+s.slice(1):s;}
+
+function renderGroteDrie(data){
+  const el=document.getElementById('grote-drie-list');
+  el.innerHTML='';
+  const gd=data.groteDrie||['','',''];
+  const gdd=data.groteDrieDone||[false,false,false];
+  for(let i=0;i<3;i++){
+    const row=document.createElement('div');
+    row.className='check-row';
+    row.innerHTML=`<input type="checkbox" id="d-gd${i}" ${gdd[i]?'checked':''} onchange="saveDag();calcScore()">
+      <input type="text" id="d-gd-txt${i}" value="${escHtml(gd[i]||'')}" placeholder="Taak ${i+1}..." oninput="saveDag()" style="flex:1;">`;
+    el.appendChild(row);
+  }
+}
+
+function renderDagList(type,containerId,data){
+  const el=document.getElementById(containerId);
+  el.innerHTML='';
+  (data[type]||[]).forEach((item,i)=>{
+    const row=document.createElement('div');
+    row.className='check-row';
+    row.innerHTML=`<input type="checkbox" id="d-${type}-${i}" ${item.gedaan?'checked':''} onchange="saveDag();calcScore()">
+      <label for="d-${type}-${i}" style="flex:1;">${escHtml(item.tekst)}</label>
+      <button class="btn btn-danger btn-xs" onclick="removeDagListItem('${type}',${i})">×</button>`;
+    el.appendChild(row);
+  });
+}
+
+function addTrainingItem(){addDagListItem('training','training-checks');}
+function addOntspanningItem(){addDagListItem('ontspanning','ontspanning-checks');}
+function addVerbindingItem(){addDagListItem('verbinding','verbinding-checks');}
+
+function addDagListItem(type,containerId){
+  const tekst=prompt(`Nieuw item voor ${type}:`);
+  if(!tekst)return;
+  const ds=dateStr(currentDagDate);
+  const data=getDagData(ds);
+  data[type]=data[type]||[];
+  data[type].push({tekst,gedaan:false});
+  saveDagData(ds,data);
+  renderDagList(type,containerId,data);
+  calcScore();
+}
+
+function removeDagListItem(type,idx){
+  const ds=dateStr(currentDagDate);
+  const data=getDagData(ds);
+  data[type].splice(idx,1);
+  saveDagData(ds,data);
+  renderDag();
+}
+
+function renderDeRest(ds,data){
+  const el=document.getElementById('de-rest-list');
+  el.innerHTML='';
+  const items=data.deRest||[];
+  // Scheduled items for today
+  const scheduled=getScheduledForDate(ds);
+  // Add scheduled items that aren't already in deRest
+  scheduled.forEach(slot=>{
+    const alreadyIn=items.some(x=>x._slotId===slot.id);
+    if(!alreadyIn){
+      items.push({id:uid(),tekst:slot.naam||slot.bron,gedaan:false,_slotId:slot.id,_kleur:slot.projectKleur,_fromSchedule:true});
+    }
+  });
+  items.forEach((item,i)=>{
+    const row=document.createElement('div');
+    row.className='check-row';
+    const kleurDot=item._kleur?`<span style="width:10px;height:10px;background:${item._kleur};border-radius:50%;flex-shrink:0;display:inline-block;"></span>`:'';
+    row.innerHTML=`${kleurDot}<input type="checkbox" id="d-rest-${i}" ${item.gedaan?'checked':''} onchange="saveDag();calcScore()">
+      <label for="d-rest-${i}" class="${item.gedaan?'checked':''}" style="flex:1;">${escHtml(item.tekst)}</label>
+      <button class="btn btn-secondary btn-xs" onclick="promoteDeRest(${i},'een')">→ EEN</button>
+      <button class="btn btn-secondary btn-xs" onclick="promoteDeRest(${i},'grote')">→ GROTE DRIE</button>
+      <button class="btn btn-danger btn-xs" onclick="removeDeRestItem(${i})">×</button>`;
+    el.appendChild(row);
+  });
+  data.deRest=items;
+}
+
+function addDeRestItem(){
+  const tekst=prompt('Nieuwe taak:');
+  if(!tekst)return;
+  const ds=dateStr(currentDagDate);
+  const data=getDagData(ds);
+  data.deRest=data.deRest||[];
+  data.deRest.push({id:uid(),tekst,gedaan:false});
+  saveDagData(ds,data);
+  renderDeRest(ds,data);
+  calcScore();
+}
+
+function removeDeRestItem(idx){
+  const ds=dateStr(currentDagDate);
+  const data=getDagData(ds);
+  data.deRest.splice(idx,1);
+  saveDagData(ds,data);
+  renderDag();
+}
+
+function promoteDeRest(idx,target){
+  const ds=dateStr(currentDagDate);
+  const data=getDagData(ds);
+  const item=data.deRest[idx];
+  if(!item)return;
+  if(target==='een'){
+    data.een=item.tekst;
+  } else {
+    const gd=data.groteDrie||['','',''];
+    const empty=gd.findIndex(x=>!x);
+    if(empty>=0)gd[empty]=item.tekst;
+    else gd[2]=item.tekst;
+    data.groteDrie=gd;
+  }
+  saveDagData(ds,data);
+  renderDag();
+}
+
+function getDagDataFromForm(){
+  const ds=dateStr(currentDagDate);
+  const data=getDagData(ds);
+  data.slaap=document.getElementById('d-slaap').checked;
+  data.water=document.getElementById('d-water').checked;
+  data.medi=document.getElementById('d-medi').checked;
+  data.stretch=document.getElementById('d-stretch').checked;
+  data.leren=document.getElementById('d-leren').checked;
+  data.een=document.getElementById('d-een').value;
+  data.eenDone=document.getElementById('d-een-done').checked;
+  data.gezond=document.getElementById('d-gezond').checked;
+  data.getrackt=document.getElementById('d-getrackt').checked;
+  data.schermLoos=document.getElementById('d-scheermLoos').checked;
+  data.planning=document.getElementById('d-planning').checked;
+  data.levenswiel=document.getElementById('d-levenswiel').checked;
+  data.doelen=document.getElementById('d-doelen').checked;
+  data.notities=document.getElementById('dag-notities').value;
+  // Grote drie
+  const gd=[];const gdd=[];
+  for(let i=0;i<3;i++){
+    const t=document.getElementById(`d-gd-txt${i}`);
+    const c=document.getElementById(`d-gd${i}`);
+    gd.push(t?t.value:'');
+    gdd.push(c?c.checked:false);
+  }
+  data.groteDrie=gd;data.groteDrieDone=gdd;
+  // Training/ontspanning/verbinding checkboxes
+  ['training','ontspanning','verbinding'].forEach(type=>{
+    (data[type]||[]).forEach((item,i)=>{
+      const c=document.getElementById(`d-${type}-${i}`);
+      if(c)item.gedaan=c.checked;
+    });
+  });
+  // De rest checkboxes
+  (data.deRest||[]).forEach((item,i)=>{
+    const c=document.getElementById(`d-rest-${i}`);
+    if(c)item.gedaan=c.checked;
+  });
+  return data;
+}
+
+function saveDag(){
+  const ds=dateStr(currentDagDate);
+  const data=getDagDataFromForm();
+  saveDagData(ds,data);
+}
+
+function dagNav(n){
+  currentDagDate=addDays(currentDagDate,n);
+  renderDag();
+}
+
+// ===================== WEEK TAB =====================
+function renderWeek(){
+  const mon=getMonday(currentWeekDate);
+  const wn=weekNum(mon);
+  const yr=mon.getFullYear();
+  document.getElementById('week-title').textContent=`Week ${wn}, ${yr}`;
+  document.getElementById('week-label').textContent=`W${pad(wn)}`;
+  const data=getWeekData(yr,wn);
+  document.getElementById('week-intentie').value=data.intentie||'';
+  document.getElementById('week-reflectie').value=data.reflectie||'';
+  renderWeekTaken(data);
+  renderWeekPlanning(mon,data);
+  renderWeekDagpunten(mon);
+}
+
+function renderWeekTaken(data){
+  const el=document.getElementById('week-taken-list');
+  el.innerHTML='';
+  const taken=data.taken||[];
+  for(let i=0;i<5;i++){
+    const t=taken[i]||{tekst:'',gedaan:false};
+    const row=document.createElement('div');
+    row.className='goal-row';
+    row.innerHTML=`<input type="checkbox" id="wt-${i}" ${t.gedaan?'checked':''} onchange="saveWeek()">
+      <input type="text" id="wt-txt-${i}" value="${escHtml(t.tekst)}" placeholder="Taak ${i+1}..." oninput="saveWeek()" style="flex:1;background:transparent;border:none;font-size:0.88rem;outline:none;">`;
+    el.appendChild(row);
+  }
+}
+
+const WEEK_ROWS=['06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00'];
+const DAG_NAMEN_SHORT=['Ma','Di','Wo','Do','Vr','Za','Zo'];
+
+function renderWeekPlanning(mon,data){
+  const tbl=document.getElementById('week-planning-table');
+  tbl.innerHTML='';
+  const days=[];
+  for(let i=0;i<7;i++)days.push(addDays(mon,i));
+  // Header
+  let head='<tr><th class="row-label">Tijd</th>';
+  days.forEach((d,i)=>{head+=`<th>${DAG_NAMEN_SHORT[i]}<br><small style="font-weight:400;color:var(--text-muted);">${d.getDate()}</small></th>`;});
+  head+='</tr>';
+  tbl.innerHTML=head;
+  // Rows
+  WEEK_ROWS.forEach(tijd=>{
+    let row=`<tr><td class="row-label">${tijd}</td>`;
+    days.forEach(d=>{
+      const ds=dateStr(d);
+      const key=`${ds}_${tijd}`;
+      const cellVal=(data.planning||{})[key]||'';
+      // Get scheduled items for this day+hour
+      const scheduled=getScheduledForDate(ds);
+      const chips=scheduled.filter(s=>{
+        if(!s.start)return false;
+        const sh=s.start.slice(0,5);
+        return sh===tijd;
+      }).map(s=>`<div class="scheduled-chip" style="background:${s.projectKleur||'#607d8b'};" title="${escHtml(s.bron)}">${escHtml(s.naam||s.bron)}</div>`).join('');
+      row+=`<td>${chips}<textarea style="width:100%;background:transparent;border:none;font-size:0.75rem;resize:none;outline:none;min-height:30px;font-family:'DM Sans',sans-serif;" onchange="saveWeekCell('${key}',this.value)" placeholder="">${escHtml(cellVal)}</textarea></td>`;
+    });
+    row+='</tr>';
+    tbl.innerHTML+=row;
+  });
+}
+
+function saveWeekCell(key,val){
+  const mon=getMonday(currentWeekDate);
+  const wn=weekNum(mon);const yr=mon.getFullYear();
+  const data=getWeekData(yr,wn);
+  data.planning=data.planning||{};
+  data.planning[key]=val;
+  saveWeekData(yr,wn,data);
+}
+
+function renderWeekDagpunten(mon){
+  const el=document.getElementById('week-dagpunten');
+  el.innerHTML='';
+  const wrap=document.createElement('div');
+  wrap.style.cssText='display:flex;gap:8px;align-items:stretch;';
+  let total=0;
+  for(let i=0;i<7;i++){
+    const d=addDays(mon,i);
+    const ds=dateStr(d);
+    const dagData=getDagData(ds);
+    const score=calcDagScore(dagData);
+    total+=score;
+    const block=document.createElement('div');
+    block.style.cssText='flex:1;background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:10px;text-align:center;cursor:pointer;';
+    block.innerHTML=`<div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);">${DAG_NAMEN_SHORT[i]}</div><div style="font-family:'DM Mono',monospace;font-size:1.3rem;color:var(--accent);font-weight:600;">${score}</div><div style="font-size:0.65rem;color:var(--text-muted);">/100</div>`;
+    block.onclick=()=>{currentDagDate=new Date(d);switchTab('dag');};
+    wrap.appendChild(block);
+  }
+  // Totaal block
+  const totBlock=document.createElement('div');
+  totBlock.className='week-totaal';
+  totBlock.style.cssText='min-width:80px;display:flex;flex-direction:column;justify-content:center;';
+  totBlock.innerHTML=`<div class="week-totaal-num">${total}</div><div class="week-totaal-label">Totaal</div>`;
+  wrap.appendChild(totBlock);
+  el.appendChild(wrap);
+}
+
+function saveWeek(){
+  const mon=getMonday(currentWeekDate);
+  const wn=weekNum(mon);const yr=mon.getFullYear();
+  const data=getWeekData(yr,wn);
+  data.intentie=document.getElementById('week-intentie').value;
+  data.reflectie=document.getElementById('week-reflectie').value;
+  const taken=[];
+  for(let i=0;i<5;i++){
+    taken.push({tekst:document.getElementById(`wt-txt-${i}`).value,gedaan:document.getElementById(`wt-${i}`).checked});
+  }
+  data.taken=taken;
+  saveWeekData(yr,wn,data);
+}
+
+function weekNav(n){
+  currentWeekDate=addDays(currentWeekDate,n*7);
   renderWeek();
 }
-function changeDay(d) { curDay.setDate(curDay.getDate() + d); renderDag(); }
 
-// ── UTILS ──────────────────────────────────────────────────────────
-const MAANDEN = ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'];
-const MAANDEN_SHORT = ['Jan','Feb','Mrt','Apr','Mei','Jun','Jul','Aug','Sep','Okt','Nov','Dec'];
-const DAGEN = ['Zondag','Maandag','Dinsdag','Woensdag','Donderdag','Vrijdag','Zaterdag'];
-const DAGEN_SHORT = ['Zo','Ma','Di','Wo','Do','Vr','Za'];
-const DAG_COLS = ['Ma','Di','Wo','Do','Vr','Za','Zo'];
-
-function getWeekNumber(d) {
-  d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
-  return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
-}
-function weekStart(year, week) {
-  const d = new Date(year, 0, 1 + (week - 1) * 7);
-  const day = d.getDay();
-  const diff = (day <= 4) ? 1 - day : 8 - day;
-  d.setDate(d.getDate() + diff);
-  return d;
-}
-function weekEnd(year, week) {
-  const ws = weekStart(year, week);
-  const we = new Date(ws); we.setDate(we.getDate() + 6); return we;
-}
-function formatDate(d) {
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-}
-function isToday(d) { return formatDate(d) === formatDate(today); }
-function weeksInMonth(year, month) {
-  const first = new Date(year, month, 1), last = new Date(year, month+1, 0);
-  const weeks = new Set();
-  for (let d = new Date(first); d <= last; d.setDate(d.getDate()+1)) weeks.add(getWeekNumber(new Date(d)));
-  return [...weeks];
-}
-function getValue(id) { const el = document.getElementById(id); return el ? el.value : ''; }
-function setValue(id, val) { const el = document.getElementById(id); if (el) el.value = val||''; }
-
-// ── SCORE BUTTONS (1-10 or 1-5) ───────────────────────────────────
-function makeScoreBtns(containerId, max, onSelect) {
-  const c = document.getElementById(containerId); if (!c) return;
-  c.innerHTML = '';
-  for (let i = 1; i <= max; i++) {
-    const b = document.createElement('button');
-    b.className = 'score-btn'; b.textContent = i;
-    b.onclick = () => {
-      c.querySelectorAll('.score-btn').forEach(x => x.classList.remove('selected'));
-      b.classList.add('selected'); onSelect(i);
-    };
-    c.appendChild(b);
-  }
-}
-function setScoreBtns(containerId, val) {
-  const c = document.getElementById(containerId); if (!c || !val) return;
-  c.querySelectorAll('.score-btn').forEach(b => b.classList.toggle('selected', parseInt(b.textContent) === parseInt(val)));
+// ===================== JAAR TAB =====================
+function renderJaar(){
+  document.getElementById('jaar-title').textContent=`Jaar ${currentJaar}`;
+  document.getElementById('jaar-label').textContent=currentJaar;
+  const data=getJaarData(currentJaar);
+  document.getElementById('jaar-thema').value=data.thema||'';
+  document.getElementById('jaar-reflectie').value=data.reflectie||'';
+  renderJaarDoelen(data);
 }
 
-// ── PUNTEN CALC ────────────────────────────────────────────────────
-function calcDagScore(data) {
-  let pts = 0, breakdown = {};
-  // Start Sterk
-  let ss = 0;
-  if (data.ss_slaap)    ss += 4;
-  if (data.ss_water)    ss += 1;
-  if (data.ss_mediteren) ss += 2;
-  if (data.ss_stretchen) ss += 2;
-  pts += ss; breakdown.startSterk = ss;
-  // Werk
-  let werk = 0;
-  if (data.werk_leren && data.werk_lerenDoel) werk += 10;
-  if (data.werk_een) werk += 15;
-  (data.groteDrie || []).forEach(t => { if (t.gedaan) werk += 5; });
-  pts += werk; breakdown.werk = werk;
-  // Training
-  let tr = 0; (data.training || []).forEach(t => { if (t.gedaan) tr += 10; });
-  pts += tr; breakdown.training = tr;
-  // Ontspanning
-  let on = 0; (data.ontspanning || []).forEach(t => { if (t.gedaan) on += 10; });
-  pts += on; breakdown.ontspanning = on;
-  // Verbinding
-  let vb = 0; (data.verbinding || []).forEach(t => { if (t.gedaan) vb += 10; });
-  pts += vb; breakdown.verbinding = vb;
-  // Voeding
-  let vo = data.voeding === 'getrackt' ? 10 : data.voeding === 'gezond' ? 7 : 0;
-  pts += vo; breakdown.voeding = vo;
-  // Avond
-  let av = 0;
-  if (data.av_schermLoos) av += 4;
-  if (data.av_planning)   av += 2;
-  if (data.av_levenswiel) av += 2;
-  if (data.av_doelen)     av += 2;
-  pts += av; breakdown.avond = av;
-  return { pts, breakdown };
+function renderJaarDoelen(data){
+  const el=document.getElementById('jaar-doelen-list');
+  el.innerHTML='';
+  (data.doelen||[]).forEach((d,i)=>{
+    const row=document.createElement('div');
+    row.className='goal-row';
+    row.innerHTML=`<input type="checkbox" id="jd-${i}" ${d.gedaan?'checked':''} onchange="saveJaar()">
+      <input type="text" id="jd-txt-${i}" value="${escHtml(d.tekst)}" placeholder="Doel ${i+1}..." oninput="saveJaar()" style="flex:1;background:transparent;border:none;font-size:0.88rem;outline:none;">
+      <button class="btn btn-danger btn-xs" onclick="removeJaarDoel(${i})">×</button>`;
+    el.appendChild(row);
+  });
 }
 
-function getWeekPunten(year, week) {
-  const ws = weekStart(year, week);
-  let total = 0;
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(ws); d.setDate(d.getDate() + i);
-    const dd = formatDate(d);
-    const data = load(key('dag', dd));
-    total += calcDagScore(data).pts;
-  }
-  return total;
+function addJaarDoel(){
+  const data=getJaarData(currentJaar);
+  data.doelen=data.doelen||[];
+  data.doelen.push({tekst:'',gedaan:false});
+  saveJaarData(currentJaar,data);
+  renderJaarDoelen(data);
 }
 
-function getDagPts(dd) {
-  return calcDagScore(load(key('dag', dd))).pts;
+function removeJaarDoel(idx){
+  const data=getJaarData(currentJaar);
+  data.doelen.splice(idx,1);
+  saveJaarData(currentJaar,data);
+  renderJaarDoelen(data);
 }
 
-// ── DASHBOARD ──────────────────────────────────────────────────────
-function renderDashboard() {
-  const dd = formatDate(today);
-  document.getElementById('dash-date-title').textContent =
-    `${DAGEN[today.getDay()]} ${today.getDate()} ${MAANDEN[today.getMonth()]} ${today.getFullYear()}`;
-
-  const todayData = load(key('dag', dd));
-  const { pts, breakdown } = calcDagScore(todayData);
-  document.getElementById('dash-pts-num').textContent = pts;
-  document.getElementById('dash-pts-week-num').textContent = getWeekPunten(today.getFullYear(), getWeekNumber(today));
-
-  // Todo today
-  const todoEl = document.getElementById('dash-todo');
-  const todos = [
-    { label: '8 uur slaap', done: !!todayData.ss_slaap },
-    { label: '3 glazen water', done: !!todayData.ss_water },
-    { label: 'Mediteren', done: !!todayData.ss_mediteren },
-    { label: 'Stretchen', done: !!todayData.ss_stretchen },
-    { label: 'Leerdoel ingevuld', done: !!(todayData.werk_lerenDoel) },
-    { label: 'Leren afgevinkt', done: !!todayData.werk_leren },
-    { label: 'EEN taak afgevinkt', done: !!todayData.werk_een },
-    { label: 'Voeding gelogd', done: !!todayData.voeding },
-    { label: '1u schermvrij', done: !!todayData.av_schermLoos },
-    { label: 'Planning morgen', done: !!todayData.av_planning },
-    { label: 'Levenswiel bekeken', done: !!todayData.av_levenswiel },
-    { label: 'Doelen bekeken', done: !!todayData.av_doelen },
-    { label: 'Succes gescoord', done: !!todayData.succes },
-    { label: 'Voldoening gescoord', done: !!todayData.voldoening },
-  ];
-  const open = todos.filter(t => !t.done);
-  const done = todos.filter(t => t.done);
-  todoEl.innerHTML = (open.length === 0 ? '<p style="color:var(--success);font-family:DM Mono,monospace;font-size:0.75rem;">✓ Alles afgerond vandaag!</p>' : '') +
-    [...open, ...done].map(t => `
-      <div class="todo-item">
-        <div class="todo-dot ${t.done?'done':'open'}"></div>
-        <span style="${t.done?'color:var(--muted);text-decoration:line-through;':''}">${t.label}</span>
-      </div>`).join('');
-
-  // Kwartaaldoelen
-  const kwEl = document.getElementById('dash-kwdoelen');
-  const q = Math.floor(today.getMonth()/3);
-  const kwData = load(key('kwartaal', today.getFullYear(), q));
-  const kwDoel = kwData.doelen || {};
-  const cats = ['werk','training','ontspanning','verbinding'];
-  const catLabels = {'werk':'💼 Werk','training':'🏋️ Training','ontspanning':'🧘 Ontspanning','verbinding':'❤️ Verbinding'};
-  kwEl.innerHTML = cats.map(c => {
-    const d = kwDoel[c] || {};
-    return d.doel ? `<div class="todo-item"><div class="todo-dot" style="background:var(--accent);"></div><div><div style="font-size:0.78rem;font-weight:500;">${catLabels[c]}</div><div style="font-size:0.75rem;color:var(--muted);">${d.doel}</div></div></div>` : '';
-  }).join('') || '<p style="font-size:0.78rem;color:var(--muted);font-style:italic;">Stel je kwartaaldoelen in</p>';
-
-  // Chart: week punten
-  renderWeekChart();
-  renderMonthChart();
+function saveJaar(){
+  const data=getJaarData(currentJaar);
+  data.thema=document.getElementById('jaar-thema').value;
+  data.reflectie=document.getElementById('jaar-reflectie').value;
+  (data.doelen||[]).forEach((d,i)=>{
+    const t=document.getElementById(`jd-txt-${i}`);
+    const c=document.getElementById(`jd-${i}`);
+    if(t)d.tekst=t.value;
+    if(c)d.gedaan=c.checked;
+  });
+  saveJaarData(currentJaar,data);
 }
 
-function renderWeekChart() {
-  const svg = document.getElementById('chart-week');
-  if (!svg) return;
-  const W = svg.clientWidth || 600, H = 160;
-  const ws = weekStart(today.getFullYear(), getWeekNumber(today));
-  const wsLast = weekStart(today.getFullYear(), getWeekNumber(today)-1 < 1 ? 1 : getWeekNumber(today)-1);
-  const thisWeekPts = [], lastWeekPts = [];
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(ws); d.setDate(d.getDate()+i);
-    const dl = new Date(wsLast); dl.setDate(dl.getDate()+i);
-    thisWeekPts.push(getDagPts(formatDate(d)));
-    lastWeekPts.push(getDagPts(formatDate(dl)));
-  }
-  const maxVal = Math.max(...thisWeekPts, ...lastWeekPts, 1);
-  const pad = 36, barW = Math.floor((W - pad - 10) / 7 * 0.55);
-  const chartH = H - 40;
-  let html = '';
-  // bars this week
-  for (let i = 0; i < 7; i++) {
-    const x = pad + i * ((W - pad - 10) / 7) + 4;
-    const barH = Math.round((thisWeekPts[i] / maxVal) * chartH);
-    const y = H - 24 - barH;
-    html += `<rect x="${x}" y="${y}" width="${barW}" height="${barH}" fill="#c4651a" opacity="0.85" rx="2"/>`;
-    html += `<text x="${x + barW/2}" y="${H-8}" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a7e6e">${DAG_COLS[i]}</text>`;
-    if (thisWeekPts[i] > 0) html += `<text x="${x + barW/2}" y="${y-3}" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#c4651a">${thisWeekPts[i]}</text>`;
-  }
-  // line last week
-  const linePoints = lastWeekPts.map((v,i) => {
-    const x = pad + i * ((W - pad - 10) / 7) + 4 + barW/2;
-    const y = H - 24 - Math.round((v / maxVal) * chartH);
-    return `${x},${y}`;
-  }).join(' ');
-  if (lastWeekPts.some(v=>v>0)) {
-    html += `<polyline points="${linePoints}" fill="none" stroke="#b8962e" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.7"/>`;
-    lastWeekPts.forEach((v,i) => {
-      if (v > 0) {
-        const x = pad + i * ((W - pad - 10) / 7) + 4 + barW/2;
-        const y = H - 24 - Math.round((v / maxVal) * chartH);
-        html += `<circle cx="${x}" cy="${y}" r="3" fill="#b8962e" opacity="0.7"/>`;
-      }
+function jaarNav(n){currentJaar+=n;renderJaar();}
+
+// ===================== KWARTAAL TAB =====================
+function renderKwartaal(){
+  document.getElementById('kwartaal-title').textContent=`Q${currentKwartaal} ${currentJaar}`;
+  document.getElementById('kwartaal-label').textContent=`Q${currentKwartaal}`;
+  const data=getKwartaalData(currentJaar,currentKwartaal);
+  document.getElementById('kwartaal-reflectie').value=data.reflectie||'';
+  ['werk','training','ontspanning','verbinding'].forEach(cat=>renderKwDoelen(cat,data));
+}
+
+function renderKwDoelen(cat,data){
+  const el=document.getElementById(`kw-${cat}-doelen`);
+  el.innerHTML='';
+  (data[cat]||[]).forEach((d,i)=>{
+    const row=document.createElement('div');
+    row.className='goal-row';
+    row.innerHTML=`<input type="checkbox" id="kw-${cat}-${i}" ${d.gedaan?'checked':''} onchange="saveKwartaal()">
+      <input type="text" id="kw-${cat}-txt-${i}" value="${escHtml(d.tekst)}" placeholder="Doel..." oninput="saveKwartaal()" style="flex:1;background:transparent;border:none;font-size:0.88rem;outline:none;">
+      <button class="btn btn-danger btn-xs" onclick="removeKwDoel('${cat}',${i})">×</button>`;
+    el.appendChild(row);
+  });
+}
+
+function addKwDoel(cat){
+  const data=getKwartaalData(currentJaar,currentKwartaal);
+  data[cat]=data[cat]||[];
+  data[cat].push({tekst:'',gedaan:false});
+  saveKwartaalData(currentJaar,currentKwartaal,data);
+  renderKwDoelen(cat,data);
+}
+
+function removeKwDoel(cat,idx){
+  const data=getKwartaalData(currentJaar,currentKwartaal);
+  data[cat].splice(idx,1);
+  saveKwartaalData(currentJaar,currentKwartaal,data);
+  renderKwDoelen(cat,data);
+}
+
+function saveKwartaal(){
+  const data=getKwartaalData(currentJaar,currentKwartaal);
+  data.reflectie=document.getElementById('kwartaal-reflectie').value;
+  ['werk','training','ontspanning','verbinding'].forEach(cat=>{
+    (data[cat]||[]).forEach((d,i)=>{
+      const t=document.getElementById(`kw-${cat}-txt-${i}`);
+      const c=document.getElementById(`kw-${cat}-${i}`);
+      if(t)d.tekst=t.value;
+      if(c)d.gedaan=c.checked;
     });
-  }
-  // legend
-  html += `<rect x="${pad}" y="6" width="10" height="8" fill="#c4651a" rx="1"/><text x="${pad+14}" y="14" font-family="DM Mono,monospace" font-size="9" fill="#8a7e6e">Deze week</text>`;
-  html += `<line x1="${pad+80}" y1="10" x2="${pad+92}" y2="10" stroke="#b8962e" stroke-width="1.5" stroke-dasharray="4,3"/><circle cx="${pad+86}" cy="10" r="2.5" fill="#b8962e"/><text x="${pad+96}" y="14" font-family="DM Mono,monospace" font-size="9" fill="#8a7e6e">Vorige week</text>`;
-  svg.innerHTML = html;
-  svg.setAttribute('height', H);
-}
-
-function renderMonthChart() {
-  const svg = document.getElementById('chart-months');
-  if (!svg) return;
-  const W = svg.clientWidth || 600, H = 140;
-  const months = [];
-  for (let i = 11; i >= 0; i--) {
-    let m = today.getMonth() - i, y = today.getFullYear();
-    if (m < 0) { m += 12; y--; }
-    let pts = 0;
-    const days = new Date(y, m+1, 0).getDate();
-    for (let d = 1; d <= days; d++) {
-      const dd = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-      pts += getDagPts(dd);
-    }
-    months.push({ label: MAANDEN_SHORT[m], pts });
-  }
-  const maxVal = Math.max(...months.map(m=>m.pts), 1);
-  const pad = 10, barW = Math.floor((W - pad*2) / 12 * 0.7);
-  const chartH = H - 36;
-  let html = '';
-  months.forEach((m,i) => {
-    const x = pad + i * ((W - pad*2) / 12) + 2;
-    const barH = Math.round((m.pts / maxVal) * chartH);
-    const y = H - 24 - barH;
-    html += `<rect x="${x}" y="${y}" width="${barW}" height="${barH}" fill="#c4651a" opacity="${0.4 + 0.6*(i/11)}" rx="2"/>`;
-    html += `<text x="${x + barW/2}" y="${H-8}" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#8a7e6e">${m.label}</text>`;
-    if (m.pts > 0) html += `<text x="${x + barW/2}" y="${y-3}" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#c4651a">${m.pts}</text>`;
   });
-  svg.innerHTML = html;
-  svg.setAttribute('height', H);
+  saveKwartaalData(currentJaar,currentKwartaal,data);
 }
 
-// ── JAAR ───────────────────────────────────────────────────────────
-function renderJaar() {
-  document.getElementById('jaar-titel').textContent = curYear;
-  const data = load(key('jaar', curYear));
-  setValue('jaar-doel-1', data.doel1); setValue('jaar-doel-2', data.doel2); setValue('jaar-doel-3', data.doel3);
-  setValue('jaar-trots', data.trots); setValue('jaar-anders', data.anders);
-  const cal = document.getElementById('jaar-kalender'); cal.innerHTML = '';
-  for (let m = 0; m < 12; m++) {
-    const dc = countDagEntries(curYear, m);
-    const div = document.createElement('div');
-    div.className = 'month-mini' + (curYear===today.getFullYear()&&m===today.getMonth()?' current-m':'') + (dc>0?' has-entries':'');
-    div.innerHTML = `<div class="mm-name">${MAANDEN_SHORT[m]}</div><div class="mm-count">${dc||'·'}</div>`;
-    div.onclick = () => { curMonth = m; switchTabById('maand'); };
-    cal.appendChild(div);
-  }
-  const totalDays = countAllDagEntries(curYear);
-  const avgScore = getAvgScore(curYear);
-  const totalPts = getTotalPunten(curYear);
-  document.getElementById('jaar-stats').innerHTML = `
-    <div class="stat-box"><div class="stat-num">${totalDays}</div><div class="stat-label">Dagen gelogd</div></div>
-    <div class="stat-box"><div class="stat-num">${avgScore||'—'}</div><div class="stat-label">Gem. voldoening</div></div>
-    <div class="stat-box"><div class="stat-num">${totalPts}</div><div class="stat-label">Totaal punten</div></div>`;
+function kwartaalNav(n){
+  currentKwartaal+=n;
+  if(currentKwartaal<1){currentKwartaal=4;currentJaar--;}
+  if(currentKwartaal>4){currentKwartaal=1;currentJaar++;}
+  renderKwartaal();
 }
-function saveJaarData() {
-  save(key('jaar', curYear), {
-    doel1: getValue('jaar-doel-1'), doel2: getValue('jaar-doel-2'), doel3: getValue('jaar-doel-3'),
-    trots: getValue('jaar-trots'), anders: getValue('jaar-anders')
+
+// ===================== MAAND TAB =====================
+function renderMaand(){
+  const y=currentMaandDate.getFullYear();
+  const m=currentMaandDate.getMonth()+1;
+  document.getElementById('maand-title').textContent=`${maandNamen[m-1]} ${y}`;
+  document.getElementById('maand-label').textContent=`${maandNamen[m-1].slice(0,3)} ${y}`;
+  const data=getMaandData(y,m);
+  document.getElementById('maand-intentie').value=data.intentie||'';
+  document.getElementById('maand-reflectie').value=data.reflectie||'';
+  renderMaandDoelen(data);
+}
+
+function renderMaandDoelen(data){
+  const el=document.getElementById('maand-doelen-list');
+  el.innerHTML='';
+  (data.doelen||[]).forEach((d,i)=>{
+    const row=document.createElement('div');
+    row.className='goal-row';
+    row.innerHTML=`<input type="checkbox" id="md-${i}" ${d.gedaan?'checked':''} onchange="saveMaand()">
+      <input type="text" id="md-txt-${i}" value="${escHtml(d.tekst)}" placeholder="Doel..." oninput="saveMaand()" style="flex:1;background:transparent;border:none;font-size:0.88rem;outline:none;">
+      <button class="btn btn-danger btn-xs" onclick="removeMaandDoel(${i})">×</button>`;
+    el.appendChild(row);
   });
 }
 
-// ── KWARTAAL ──────────────────────────────────────────────────────
-const LW_DIMS = ['werk','plezier','sociaal','geven','geld','groei','gezondheid','liefde'];
-const LW_LABELS = ['Werk','Plezier','Sociaal','Geven','Geld','Groei','Gezondheid','Liefde'];
-const KW_CATS = ['werk','training','ontspanning','verbinding'];
-const KW_CAT_LABELS = { werk:'💼 Werk', training:'🏋️ Training', ontspanning:'🧘 Ontspanning', verbinding:'❤️ Verbinding' };
-
-function renderKwartaal() {
-  const qNames = ['Q1','Q2','Q3','Q4'];
-  const qMonths = ['Jan–Mrt','Apr–Jun','Jul–Sep','Okt–Dec'];
-  document.getElementById('kwartaal-titel').textContent = `${qNames[curQuarter]} ${curYear}`;
-  const nav = document.getElementById('kwartaal-nav'); nav.innerHTML = '';
-  for (let q = 0; q < 4; q++) {
-    const isNow = curYear===today.getFullYear() && q===Math.floor(today.getMonth()/3);
-    const div = document.createElement('div');
-    div.className = 'quarter-card' + (q===curQuarter||isNow ? ' active-q' : '');
-    div.innerHTML = `<div class="q-label">${qNames[q]}</div><div class="q-months">${qMonths[q]}</div>`;
-    div.onclick = () => { curQuarter = q; renderKwartaal(); };
-    nav.appendChild(div);
-  }
-
-  const data = load(key('kwartaal', curYear, curQuarter));
-  const lwVals = data.levenswiel || {};
-
-  // Levenswiel sliders
-  const sliderEl = document.getElementById('lw-sliders'); sliderEl.innerHTML = '';
-  LW_DIMS.forEach((dim, i) => {
-    const val = lwVals[dim] || 5;
-    const row = document.createElement('div');
-    row.className = 'lw-row';
-    row.innerHTML = `
-      <span class="lw-label">${LW_LABELS[i]}</span>
-      <input type="range" class="lw-slider" min="1" max="10" value="${val}" data-dim="${dim}"
-        oninput="this.nextElementSibling.textContent=this.value; updateLevenswiel()">
-      <span class="lw-val">${val}</span>`;
-    sliderEl.appendChild(row);
+function addMaandDoel(){
+  const y=currentMaandDate.getFullYear();const m=currentMaandDate.getMonth()+1;
+  const data=getMaandData(y,m);
+  data.doelen=data.doelen||[];data.doelen.push({tekst:'',gedaan:false});
+  saveMaandData(y,m,data);renderMaandDoelen(data);
+}
+function removeMaandDoel(idx){
+  const y=currentMaandDate.getFullYear();const m=currentMaandDate.getMonth()+1;
+  const data=getMaandData(y,m);data.doelen.splice(idx,1);
+  saveMaandData(y,m,data);renderMaandDoelen(data);
+}
+function saveMaand(){
+  const y=currentMaandDate.getFullYear();const m=currentMaandDate.getMonth()+1;
+  const data=getMaandData(y,m);
+  data.intentie=document.getElementById('maand-intentie').value;
+  data.reflectie=document.getElementById('maand-reflectie').value;
+  (data.doelen||[]).forEach((d,i)=>{
+    const t=document.getElementById(`md-txt-${i}`);const c=document.getElementById(`md-${i}`);
+    if(t)d.tekst=t.value;if(c)d.gedaan=c.checked;
   });
-  drawLevenswiel(LW_DIMS.map(d => lwVals[d] || 5));
+  saveMaandData(y,m,data);
+}
+function maandNav(n){
+  currentMaandDate=new Date(currentMaandDate.getFullYear(),currentMaandDate.getMonth()+n,1);
+  renderMaand();
+}
 
+// ===================== DASHBOARD =====================
+function renderDashboard(){
+  const ds=dateStr(TODAY);
+  const dagData=getDagData(ds);
+  // Progress
+  const checks=[dagData.slaap,dagData.water,dagData.medi,dagData.stretch,dagData.leren,dagData.eenDone,...(dagData.groteDrieDone||[]),...(dagData.training||[]).map(x=>x.gedaan),...(dagData.ontspanning||[]).map(x=>x.gedaan),...(dagData.verbinding||[]).map(x=>x.gedaan),dagData.gezond,dagData.getrackt,dagData.schermLoos,dagData.planning,dagData.levenswiel,dagData.doelen,...(dagData.deRest||[]).map(x=>x.gedaan)];
+  const total=checks.length;const done=checks.filter(Boolean).length;
+  const pct=total>0?Math.round(done/total*100):0;
+  document.getElementById('dash-bar').style.width=pct+'%';
+  document.getElementById('dash-pct').textContent=pct+'%';
+  // Score
+  document.getElementById('dash-score').textContent=calcDagScore(dagData);
+  // Dagplanning
+  const scheduled=getScheduledForDate(ds);
+  const dpEl=document.getElementById('dash-dagplanning');
+  if(scheduled.length===0){
+    dpEl.innerHTML='<p class="text-muted">Geen ingeplande items voor vandaag.</p>';
+  } else {
+    dpEl.innerHTML=scheduled.map(s=>`<div class="dag-planning-item" onclick="switchTab('dag')">
+      <span class="dag-planning-time">${s.start||'--:--'}–${s.eind||'--:--'}</span>
+      <span class="dag-planning-naam">${escHtml(s.naam||s.bron)}</span>
+      <span style="width:10px;height:10px;background:${s.projectKleur||'#aaa'};border-radius:50%;flex-shrink:0;display:inline-block;"></span>
+    </div>`).join('');
+  }
+  // Jaardoelen
+  const jaarData=getJaarData(TODAY.getFullYear());
+  const jEl=document.getElementById('dash-jaardoelen');
+  jEl.innerHTML=(jaarData.doelen||[]).map((d,i)=>`<div class="goal-row">
+    <input type="checkbox" ${d.gedaan?'checked':''} disabled>
+    <span class="goal-row-label ${d.gedaan?'checked':''}">${escHtml(d.tekst||`Doel ${i+1}`)}</span>
+  </div>`).join('')||'<p class="text-muted">Geen jaardoelen ingesteld.</p>';
   // Kwartaaldoelen
-  const doelen = data.doelen || {};
-  const cont = document.getElementById('kw-doelen-container'); cont.innerHTML = '';
-  KW_CATS.forEach(cat => {
-    const d = doelen[cat] || {};
-    const card = document.createElement('div');
-    card.className = 'goal-card';
-    card.innerHTML = `
-      <h4><span>${KW_CAT_LABELS[cat]}</span></h4>
-      <div class="form-group"><label>Doel</label>
-        <input type="text" id="kw-${cat}-doel" value="${d.doel||''}" placeholder="Wat wil je bereiken?" onchange="saveKwartaalData()"></div>
-      <div class="two-col">
-        <div class="form-group"><label>Wat levert het je op?</label>
-          <textarea id="kw-${cat}-opbrengst" rows="2" onchange="saveKwartaalData()">${d.opbrengst||''}</textarea></div>
-        <div class="form-group"><label>Gevolgen als je dit niet haalt?</label>
-          <textarea id="kw-${cat}-gevolgen" rows="2" onchange="saveKwartaalData()">${d.gevolgen||''}</textarea></div>
-      </div>
-      <div class="form-group"><label>Beloning als je het haalt 🎁</label>
-        <input type="text" id="kw-${cat}-beloning" value="${d.beloning||''}" placeholder="Bijv. Etentje, dag vrij..." onchange="saveKwartaalData()"></div>`;
-    cont.appendChild(card);
-  });
-
-  setValue('kw-goed', data.goed); setValue('kw-beter', data.beter); setValue('kw-focus', data.focus);
+  const q=Math.ceil((TODAY.getMonth()+1)/3);
+  const kwData=getKwartaalData(TODAY.getFullYear(),q);
+  const kwEl=document.getElementById('dash-kwartaaldoelen');
+  const allKwDoelen=[...(kwData.werk||[]).map(d=>({...d,cat:'Werk'})),...(kwData.training||[]).map(d=>({...d,cat:'Training'})),...(kwData.ontspanning||[]).map(d=>({...d,cat:'Ontsp.'})),...(kwData.verbinding||[]).map(d=>({...d,cat:'Verb.'}))];
+  kwEl.innerHTML=allKwDoelen.map(d=>`<div class="goal-row">
+    <input type="checkbox" ${d.gedaan?'checked':''} disabled>
+    <span class="goal-row-label ${d.gedaan?'checked':''}">[${d.cat}] ${escHtml(d.tekst)}</span>
+  </div>`).join('')||'<p class="text-muted">Geen kwartaaldoelen.</p>';
+  // Week taken
+  const wn=weekNum(getMonday(TODAY));const wkData=getWeekData(TODAY.getFullYear(),wn);
+  const wtEl=document.getElementById('dash-weektaken');
+  wtEl.innerHTML=(wkData.taken||[]).filter(t=>t.tekst).map(t=>`<div class="goal-row">
+    <input type="checkbox" ${t.gedaan?'checked':''} disabled>
+    <span class="goal-row-label ${t.gedaan?'checked':''}">${escHtml(t.tekst)}</span>
+  </div>`).join('')||'<p class="text-muted">Geen week taken.</p>';
 }
 
-function updateLevenswiel() {
-  const vals = LW_DIMS.map(dim => {
-    const sl = document.querySelector(`[data-dim="${dim}"]`);
-    return sl ? parseInt(sl.value) : 5;
-  });
-  drawLevenswiel(vals);
-  saveKwartaalData();
-}
-
-function drawLevenswiel(vals) {
-  const svg = document.getElementById('lw-svg');
-  const cx = 140, cy = 140, r = 110, n = 8;
-  const colors = ['#c4651a','#b8962e','#4a7c59','#5a7a9b','#9b5a7a','#7a5a9b','#7a9b5a','#9b7a5a'];
-  let html = '';
-  // Gridlines
-  for (let ring = 2; ring <= 10; ring += 2) {
-    const pts = Array.from({length:n}, (_,i) => {
-      const a = i * 2*Math.PI/n - Math.PI/2;
-      return `${cx + r*(ring/10)*Math.cos(a)},${cy + r*(ring/10)*Math.sin(a)}`;
-    }).join(' ');
-    html += `<polygon points="${pts}" fill="none" stroke="#d4c9b2" stroke-width="${ring===10?1.5:0.7}"/>`;
-  }
-  // Axes
-  for (let i = 0; i < n; i++) {
-    const a = i * 2*Math.PI/n - Math.PI/2;
-    html += `<line x1="${cx}" y1="${cy}" x2="${cx + r*Math.cos(a)}" y2="${cy + r*Math.sin(a)}" stroke="#d4c9b2" stroke-width="1"/>`;
-    const lx = cx + (r+18)*Math.cos(a), ly = cy + (r+18)*Math.sin(a);
-    html += `<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle" font-family="DM Mono,monospace" font-size="9" fill="#8a7e6e">${LW_LABELS[i]}</text>`;
-  }
-  // Data polygon
-  const dataPts = vals.map((v,i) => {
-    const a = i * 2*Math.PI/n - Math.PI/2;
-    return `${cx + r*(Math.max(v,1)/10)*Math.cos(a)},${cy + r*(Math.max(v,1)/10)*Math.sin(a)}`;
-  }).join(' ');
-  html += `<polygon points="${dataPts}" fill="rgba(196,101,26,0.18)" stroke="#c4651a" stroke-width="2"/>`;
-  // Dots
-  vals.forEach((v,i) => {
-    const a = i * 2*Math.PI/n - Math.PI/2;
-    const px = cx + r*(Math.max(v,1)/10)*Math.cos(a), py = cy + r*(Math.max(v,1)/10)*Math.sin(a);
-    html += `<circle cx="${px}" cy="${py}" r="4" fill="${colors[i]}" stroke="white" stroke-width="1.5"/>`;
-    html += `<text x="${px}" y="${py-8}" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="${colors[i]}" font-weight="600">${v}</text>`;
-  });
-  svg.innerHTML = html;
-}
-
-function saveKwartaalData() {
-  const lwVals = {};
-  LW_DIMS.forEach(dim => {
-    const sl = document.querySelector(`[data-dim="${dim}"]`);
-    if (sl) lwVals[dim] = parseInt(sl.value);
-  });
-  const doelen = {};
-  KW_CATS.forEach(cat => {
-    doelen[cat] = {
-      doel: getValue(`kw-${cat}-doel`),
-      opbrengst: getValue(`kw-${cat}-opbrengst`),
-      gevolgen: getValue(`kw-${cat}-gevolgen`),
-      beloning: getValue(`kw-${cat}-beloning`),
-    };
-  });
-  save(key('kwartaal', curYear, curQuarter), {
-    levenswiel: lwVals, doelen,
-    goed: getValue('kw-goed'), beter: getValue('kw-beter'), focus: getValue('kw-focus')
-  });
-}
-
-// ── MAAND ────────────────────────────────────────────────────────
-function renderMaand() {
-  document.getElementById('maand-titel').textContent = `${MAANDEN[curMonth]} ${curYear}`;
-  const data = load(key('maand', curYear, curMonth));
-  setValue('maand-zakelijk', data.zakelijk); setValue('maand-gezondheid', data.gezondheid);
-  setValue('maand-relaties', data.relaties); setValue('maand-highs', data.highs); setValue('maand-lessen', data.lessen);
-  makeScoreBtns('maand-score-btns', 10, v => {
-    const d = load(key('maand', curYear, curMonth)); d.score = v;
-    save(key('maand', curYear, curMonth), d);
-  });
-  setScoreBtns('maand-score-btns', data.score);
-  const weeks = weeksInMonth(curYear, curMonth);
-  const weekGrid = document.getElementById('maand-weken'); weekGrid.innerHTML = '';
-  weeks.forEach(w => {
-    const ws = weekStart(curYear, w), we = weekEnd(curYear, w);
-    const wData = load(key('week', curYear, w));
-    const hasData = wData.p1||wData.lessen;
-    const pts = getWeekPunten(curYear, w);
-    const div = document.createElement('div');
-    div.className = 'card';
-    div.innerHTML = `<div class="card-title">Week ${w}</div>
-      <div class="card-sub">${ws.getDate()} ${MAANDEN_SHORT[ws.getMonth()]} – ${we.getDate()} ${MAANDEN_SHORT[we.getMonth()]}</div>
-      ${pts > 0 ? `<div style="margin-top:6px;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);">${pts} punten</div>` : ''}
-      <div style="margin-top:6px;"><span style="font-size:0.72rem;color:var(--muted);font-family:'DM Mono',monospace;">${hasData?'✓ Ingevuld':'Leeg'}</span></div>`;
-    div.onclick = () => { curWeek = w; switchTabById('week'); };
-    weekGrid.appendChild(div);
-  });
-  const dayCount = countDagEntries(curYear, curMonth);
-  const totalPts = getMonthPunten(curYear, curMonth);
-  document.getElementById('maand-stats').innerHTML = `
-    <div class="stat-box"><div class="stat-num">${dayCount}</div><div class="stat-label">Dagen gelogd</div></div>
-    <div class="stat-box"><div class="stat-num">${totalPts}</div><div class="stat-label">Maandpunten</div></div>
-    <div class="stat-box"><div class="stat-num">${weeks.length}</div><div class="stat-label">Weken</div></div>`;
-}
-function saveMaandData() {
-  const d = load(key('maand', curYear, curMonth));
-  d.zakelijk = getValue('maand-zakelijk'); d.gezondheid = getValue('maand-gezondheid');
-  d.relaties = getValue('maand-relaties'); d.highs = getValue('maand-highs'); d.lessen = getValue('maand-lessen');
-  save(key('maand', curYear, curMonth), d);
-}
-
-// ── WEEK ──────────────────────────────────────────────────────────
-const SCHEDULE_TIMES = [];
-(function() {
-  for (let h = 6; h <= 22; h++) {
-    for (let m = 0; m < 60; m += 15) {
-      SCHEDULE_TIMES.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);
-    }
-  }
-  SCHEDULE_TIMES.push('23:00');
-})();
-
-function renderWeek() {
-  const ws = weekStart(curYear, curWeek);
-  const we = weekEnd(curYear, curWeek);
-  document.getElementById('week-titel').textContent =
-    `Week ${curWeek} · ${ws.getDate()} ${MAANDEN_SHORT[ws.getMonth()]} – ${we.getDate()} ${MAANDEN_SHORT[we.getMonth()]} ${curYear}`;
-
-  const data = load(key('week', curYear, curWeek));
-  setValue('week-p1', data.p1); setValue('week-p2', data.p2); setValue('week-p3', data.p3);
-  setValue('week-p4', data.p4); setValue('week-p5', data.p5);
-  setValue('week-lessen', data.lessen);
-
-  // Dag punten overzicht
-  const dpEl = document.getElementById('week-dag-punten'); dpEl.innerHTML = '';
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(ws); d.setDate(d.getDate()+i);
-    const dd = formatDate(d);
-    const pts = getDagPts(dd);
-    const isTod = isToday(d);
-    const div = document.createElement('div');
-    div.style.cssText = `background:${isTod?'#fffbf0':'white'};border:1px solid ${isTod?'var(--gold)':'var(--line)'};border-radius:4px;padding:10px;text-align:center;cursor:pointer;`;
-    div.innerHTML = `<div style="font-family:'DM Mono',monospace;font-size:0.6rem;text-transform:uppercase;color:var(--muted);">${DAG_COLS[i]}</div>
-      <div style="font-family:'Playfair Display',serif;font-size:1.2rem;">${d.getDate()}</div>
-      <div style="font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--accent);margin-top:2px;">${pts} pts</div>`;
-    div.onclick = () => { curDay = new Date(d); switchTabById('dag'); };
-    dpEl.appendChild(div);
-  }
-
-  // Reflectie scores (1-5)
-  ['werk','training','ontsp','verb'].forEach((k,i) => {
-    const btnId = ['refl-werk-btns','refl-training-btns','refl-ontsp-btns','refl-verb-btns'][i];
-    const field = ['reflWerk','reflTraining','reflOntsp','reflVerb'][i];
-    makeScoreBtns(btnId, 5, v => {
-      const d = load(key('week', curYear, curWeek)); d[field] = v;
-      save(key('week', curYear, curWeek), d);
-    });
-    setScoreBtns(btnId, data[field]);
-  });
-
-  // Week schedule table
-  renderWeekSchedule(ws, data.schedule || {});
-}
-
-function renderWeekSchedule(ws, schedData) {
-  const table = document.getElementById('week-schedule-table');
-  // Header
-  const days = [];
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(ws); d.setDate(d.getDate()+i);
-    days.push(d);
-  }
-  let html = `<thead><tr><th class="time-col">Tijd</th>${days.map((d,i) => `<th>${DAG_COLS[i]}<br><span style="font-size:0.58rem;font-weight:300;">${d.getDate()} ${MAANDEN_SHORT[d.getMonth()]}</span></th>`).join('')}</tr></thead><tbody>`;
-
-  SCHEDULE_TIMES.forEach(t => {
-    const isHour = t.endsWith(':00');
-    html += `<tr${isHour?' class="hour-row"':''}>`;
-    html += `<td class="time-lbl${isHour?' hour':''}">${isHour ? t : '<span style="color:#c9bfae">'+t+'</span>'}</td>`;
-    for (let di = 0; di < 7; di++) {
-      const cellKey = `${di}_${t}`;
-      const val = (schedData[cellKey]||'').replace(/"/g,'&quot;');
-      html += `<td><textarea class="sched-input" data-cell="${cellKey}" rows="1" onchange="saveSchedCell(this)" onfocus="this.rows=2" onblur="this.rows=1">${schedData[cellKey]||''}</textarea></td>`;
-    }
-    html += '</tr>';
-  });
-  html += '</tbody>';
-  table.innerHTML = html;
-}
-
-function saveSchedCell(el) {
-  const data = load(key('week', curYear, curWeek));
-  if (!data.schedule) data.schedule = {};
-  const cellKey = el.dataset.cell;
-  if (el.value) data.schedule[cellKey] = el.value;
-  else delete data.schedule[cellKey];
-  save(key('week', curYear, curWeek), data);
-}
-
-function saveWeekData() {
-  const d = load(key('week', curYear, curWeek));
-  d.p1 = getValue('week-p1'); d.p2 = getValue('week-p2'); d.p3 = getValue('week-p3');
-  d.p4 = getValue('week-p4'); d.p5 = getValue('week-p5');
-  d.lessen = getValue('week-lessen');
-  save(key('week', curYear, curWeek), d);
-}
-
-// ── DAG ───────────────────────────────────────────────────────────
-const SS_CHECKS = [
-  { key: 'ss_slaap',     label: '8 uur slaap',  pts: 4 },
-  { key: 'ss_water',     label: '3 glazen water', pts: 1 },
-  { key: 'ss_mediteren', label: 'Mediteren',      pts: 2 },
-  { key: 'ss_stretchen', label: 'Stretchen',      pts: 2 },
-];
-const AV_CHECKS = [
-  { key: 'av_schermLoos', label: '1 uur schermvrij voor slapen', pts: 4 },
-  { key: 'av_planning',   label: 'Planning morgen gemaakt',       pts: 2 },
-  { key: 'av_levenswiel', label: 'Levenswiel bekeken',            pts: 2 },
-  { key: 'av_doelen',     label: 'Doelen bekeken',                pts: 2 },
-];
-
-function renderDag() {
-  const dd = formatDate(curDay);
-  document.getElementById('dag-titel').textContent =
-    `${DAGEN[curDay.getDay()]} ${curDay.getDate()} ${MAANDEN[curDay.getMonth()]} ${curDay.getFullYear()}${isToday(curDay)?' — Vandaag':''}`;
-
-  const data = load(key('dag', dd));
-
-  // Start Sterk checks
-  const ssEl = document.getElementById('ss-checks'); ssEl.innerHTML = '';
-  SS_CHECKS.forEach(c => {
-    const row = makeCheckRow(c.key, c.label, c.pts, data[c.key], () => toggleDagCheck(c.key));
-    ssEl.appendChild(row);
-  });
-
-  // Werk
-  setValue('werk-leren-doel', data.werk_lerenDoel);
-  setValue('werk-een-taak', data.werk_eenTaak);
-  setValue('werk-rest', data.werkRest);
-  updateCheckBox('cb-werk_leren', data.werk_leren);
-  updateCheckBox('cb-werk_een', data.werk_een);
-
-  // Grote Drie
-  const gdEl = document.getElementById('grote-drie-list'); gdEl.innerHTML = '';
-  const groteDrie = data.groteDrie || [{taak:'',gedaan:false},{taak:'',gedaan:false},{taak:'',gedaan:false}];
-  groteDrie.forEach((t, i) => {
-    const wrap = document.createElement('div');
-    wrap.style.cssText = 'display:flex;gap:8px;align-items:center;margin-bottom:8px;';
-    wrap.innerHTML = `
-      <span style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--accent);min-width:20px;">${i+1}</span>
-      <input type="text" id="gd-taak-${i}" value="${(t.taak||'').replace(/"/g,'&quot;')}" placeholder="Taak ${i+1}..." onchange="saveGroteDrie()" style="flex:1;">
-      <div class="check-row" onclick="toggleGroteDrie(${i})" style="width:auto;padding:7px 12px;margin-bottom:0;">
-        <div class="check-box ${t.gedaan?'checked':''}" id="cb-gd-${i}">${t.gedaan?'✓':''}</div>
-        <span style="font-size:0.78rem;">Gedaan</span>
-        <span class="check-pts">+5</span>
-      </div>`;
-    gdEl.appendChild(wrap);
-  });
-
-  // Training / Ontspanning / Verbinding
-  renderDagGoals('training', data.training || []);
-  renderDagGoals('ontspanning', data.ontspanning || []);
-  renderDagGoals('verbinding', data.verbinding || []);
-
-  // Voeding
-  const vOpts = document.querySelectorAll('.voeding-btn');
-  vOpts.forEach(b => b.classList.remove('selected'));
-  const voedingMap = {'':'button:first-child', 'gezond':'', 'getrackt':''};
-  document.querySelectorAll('.voeding-btn').forEach(b => {
-    if ((data.voeding||'') === '' && b.textContent.includes('Niet')) b.classList.add('selected');
-    if (data.voeding === 'gezond' && b.textContent.includes('80/20')) b.classList.add('selected');
-    if (data.voeding === 'getrackt' && b.textContent.includes('getrackt')) b.classList.add('selected');
-  });
-
-  // Avond
-  setValue('dag-inzicht', data.inzicht);
-  const avEl = document.getElementById('av-checks'); avEl.innerHTML = '';
-  AV_CHECKS.forEach(c => {
-    const row = makeCheckRow(c.key, c.label, c.pts, data[c.key], () => toggleDagCheck(c.key));
-    avEl.appendChild(row);
-  });
-
-  // Score buttons
-  makeScoreBtns('dag-succes-btns', 5, v => { const d2 = load(key('dag',dd)); d2.succes=v; save(key('dag',dd),d2); updateDagPts(); });
-  setScoreBtns('dag-succes-btns', data.succes);
-  makeScoreBtns('dag-voldaan-btns', 5, v => { const d2 = load(key('dag',dd)); d2.voldoening=v; save(key('dag',dd),d2); updateDagPts(); });
-  setScoreBtns('dag-voldaan-btns', data.voldoening);
-
-  updateDagPts();
-
-  // Show/hide add buttons
-  updateGoalAddBtns('training', data.training||[]);
-  updateGoalAddBtns('ontspanning', data.ontspanning||[]);
-  updateGoalAddBtns('verbinding', data.verbinding||[]);
-}
-
-function makeCheckRow(k, label, pts, checked, onToggle) {
-  const row = document.createElement('div');
-  row.className = 'check-row' + (checked?' done':'');
-  row.innerHTML = `<div class="check-box ${checked?'checked':''}">${checked?'✓':''}</div>
-    <span class="check-label" style="${checked?'text-decoration:line-through;color:var(--muted);':''}">${label}</span>
-    <span class="check-pts">+${pts} pts</span>`;
-  row.onclick = onToggle;
-  return row;
-}
-
-function updateCheckBox(id, val) {
-  const el = document.getElementById(id); if (!el) return;
-  el.className = 'check-box' + (val?' checked':'');
-  el.textContent = val ? '✓' : '';
-}
-
-function toggleDagCheck(field) {
-  const dd = formatDate(curDay);
-  const d = load(key('dag', dd));
-  d[field] = !d[field];
-  save(key('dag', dd), d);
-  renderDag();
-}
-
-function toggleGroteDrie(i) {
-  const dd = formatDate(curDay);
-  const d = load(key('dag', dd));
-  if (!d.groteDrie) d.groteDrie = [{taak:'',gedaan:false},{taak:'',gedaan:false},{taak:'',gedaan:false}];
-  d.groteDrie[i].gedaan = !d.groteDrie[i].gedaan;
-  save(key('dag', dd), d);
-  renderDag();
-}
-
-function saveGroteDrie() {
-  const dd = formatDate(curDay);
-  const d = load(key('dag', dd));
-  if (!d.groteDrie) d.groteDrie = [{taak:'',gedaan:false},{taak:'',gedaan:false},{taak:'',gedaan:false}];
-  for (let i = 0; i < 3; i++) {
-    d.groteDrie[i] = d.groteDrie[i] || {taak:'',gedaan:false};
-    d.groteDrie[i].taak = getValue(`gd-taak-${i}`);
-  }
-  save(key('dag', dd), d);
-  updateDagPts();
-}
-
-function renderDagGoals(type, goals) {
-  const el = document.getElementById(`${type}-list`); if (!el) return;
-  el.innerHTML = '';
-  if (goals.length === 0) {
-    const wrap = document.createElement('div');
-    wrap.innerHTML = `<p style="font-size:0.8rem;color:var(--muted);font-style:italic;margin-bottom:8px;">Nog geen doelen — voeg er één toe</p>`;
-    el.appendChild(wrap);
+// ===================== PROJECTEN =====================
+function renderProjecten(){
+  const projs=getProjects();
+  const grid=document.getElementById('proj-grid');
+  grid.innerHTML='';
+  if(projs.length===0){
+    grid.innerHTML='<p class="text-muted">Nog geen projecten. Maak je eerste aan!</p>';
     return;
   }
-  goals.forEach((g, i) => {
-    const wrap = document.createElement('div');
-    wrap.style.cssText = 'display:flex;gap:8px;align-items:center;margin-bottom:8px;';
-    wrap.innerHTML = `
-      <input type="text" id="${type}-goal-${i}" value="${(g.doel||'').replace(/"/g,'&quot;')}" placeholder="Beschrijf je doel..." onchange="saveDagGoal('${type}',${i})" style="flex:1;">
-      <div class="check-row" onclick="toggleDagGoal('${type}',${i})" style="width:auto;padding:7px 12px;margin-bottom:0;">
-        <div class="check-box ${g.gedaan?'checked':''}">${g.gedaan?'✓':''}</div>
-        <span style="font-size:0.78rem;">Gedaan</span>
-        <span class="check-pts">+10</span>
+  projs.forEach(proj=>{
+    const card=document.createElement('div');
+    card.className='project-card';
+    const cardCount=(proj.cards||[]).length;
+    card.innerHTML=`<div class="project-color-bar" style="background:${proj.kleur||'var(--accent)'};"></div>
+      <div class="project-name">${escHtml(proj.naam)}</div>
+      <div class="project-count">${cardCount} kaart${cardCount!==1?'en':''}</div>`;
+    card.onclick=()=>openKanban(proj.id);
+    grid.appendChild(card);
+  });
+}
+
+function openKanban(projectId){
+  currentProjectId=projectId;
+  const proj=getProjects().find(p=>p.id===projectId);
+  if(!proj)return;
+  document.getElementById('proj-overview').classList.add('hidden');
+  document.getElementById('proj-kanban').classList.remove('hidden');
+  document.getElementById('kanban-title').textContent=proj.naam;
+  renderKanban(proj);
+}
+
+function showProjectOverview(){
+  currentProjectId=null;
+  document.getElementById('proj-kanban').classList.add('hidden');
+  document.getElementById('proj-overview').classList.remove('hidden');
+  renderProjecten();
+}
+
+function renderKanban(proj){
+  const board=document.getElementById('kanban-board');
+  board.innerHTML='';
+  FASES.forEach(fase=>{
+    const col=document.createElement('div');
+    col.className='kanban-col';
+    const cards=(proj.cards||[]).filter(c=>c.fase===fase);
+    col.innerHTML=`<div class="kanban-col-title"><span>${fase}</span><span style="background:var(--border);padding:2px 8px;border-radius:10px;font-size:0.75rem;">${cards.length}</span></div>`;
+    cards.forEach(card=>{
+      const cardEl=document.createElement('div');
+      cardEl.className='kanban-card';
+      const subtaken=card.checklist||[];
+      const doneSub=subtaken.filter(s=>s.gedaan).length;
+      cardEl.innerHTML=`<div class="kanban-card-title">${escHtml(card.titel)}</div>
+        <div style="margin:4px 0;"><span class="prio-badge prio-${card.prioriteit||'Normaal'}">${card.prioriteit||'Normaal'}</span>${card.label?`<span style="margin-left:6px;font-size:0.72rem;color:var(--text-muted);">#${escHtml(card.label)}</span>`:''}</div>
+        ${subtaken.length>0?`<div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;">✓ ${doneSub}/${subtaken.length} subtaken</div>`:''}
+        ${card.deadline?`<div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">📅 ${card.deadline}</div>`:''}
+        <div style="display:flex;gap:4px;margin-top:8px;">
+          ${fase!==FASES[0]?`<button class="btn btn-secondary btn-xs" onclick="event.stopPropagation();moveCard('${proj.id}','${card.id}',-1)">←</button>`:''}
+          ${fase!==FASES[FASES.length-1]?`<button class="btn btn-secondary btn-xs" onclick="event.stopPropagation();moveCard('${proj.id}','${card.id}',1)">→</button>`:''}
+        </div>`;
+      cardEl.onclick=()=>openCardModal(proj.id,card.id);
+      col.appendChild(cardEl);
+    });
+    board.appendChild(col);
+  });
+}
+
+function moveCard(projId,cardId,dir){
+  const projs=getProjects();
+  const proj=projs.find(p=>p.id===projId);
+  if(!proj)return;
+  const card=proj.cards.find(c=>c.id===cardId);
+  if(!card)return;
+  const fi=FASES.indexOf(card.fase||FASES[0]);
+  const ni=Math.max(0,Math.min(FASES.length-1,fi+dir));
+  card.fase=FASES[ni];
+  saveProjects(projs);
+  renderKanban(proj);
+}
+
+const PROJECT_COLORS=['#c4651a','#2980b9','#27ae60','#8e44ad','#c0392b','#16a085','#d35400','#e91e63','#607d8b','#f39c12'];
+let selectedColor=PROJECT_COLORS[0];
+
+function openNewProjectModal(){
+  selectedColor=PROJECT_COLORS[0];
+  document.getElementById('np-naam').value='';
+  const colorEl=document.getElementById('np-colors');
+  colorEl.innerHTML='';
+  PROJECT_COLORS.forEach(c=>{
+    const div=document.createElement('div');
+    div.className='color-option'+(c===selectedColor?' selected':'');
+    div.style.background=c;
+    div.onclick=()=>{selectedColor=c;document.querySelectorAll('.color-option').forEach(el=>el.classList.remove('selected'));div.classList.add('selected');};
+    colorEl.appendChild(div);
+  });
+  openModal('modal-new-project');
+}
+
+function saveNewProject(){
+  const naam=document.getElementById('np-naam').value.trim();
+  if(!naam)return;
+  const projs=getProjects();
+  projs.push({id:uid(),naam,kleur:selectedColor,cards:[]});
+  saveProjects(projs);
+  closeModal('modal-new-project');
+  renderProjecten();
+}
+
+// Card modal
+let editingCardContext={};
+
+function openNewCardModal(){
+  editingCardContext={projId:currentProjectId,cardId:null,isAgenda:false};
+  document.getElementById('modal-card-title').textContent='Nieuwe kaart';
+  document.getElementById('mc-card-id').value='';
+  document.getElementById('mc-project-id').value=currentProjectId||'';
+  document.getElementById('mc-is-agenda').value='false';
+  clearCardModal();
+  openModal('modal-card');
+}
+
+function openCardModal(projId,cardId){
+  const projs=getProjects();
+  const proj=projs.find(p=>p.id===projId);
+  const card=proj?proj.cards.find(c=>c.id===cardId):null;
+  if(!card)return;
+  editingCardContext={projId,cardId,isAgenda:false};
+  document.getElementById('modal-card-title').textContent='Kaart bewerken';
+  document.getElementById('mc-card-id').value=cardId;
+  document.getElementById('mc-project-id').value=projId;
+  document.getElementById('mc-is-agenda').value='false';
+  document.getElementById('mc-titel').value=card.titel||'';
+  document.getElementById('mc-beschrijving').value=card.beschrijving||'';
+  document.getElementById('mc-prioriteit').value=card.prioriteit||'Normaal';
+  document.getElementById('mc-deadline').value=card.deadline||'';
+  document.getElementById('mc-verantwoordelijke').value=card.verantwoordelijke||'';
+  document.getElementById('mc-label').value=card.label||'';
+  document.getElementById('mc-notities').value=card.notities||'';
+  renderSubtaken(card.checklist||[]);
+  renderGeplandSlots('card',card.gepland||[]);
+  openModal('modal-card');
+}
+
+function clearCardModal(){
+  ['mc-titel','mc-beschrijving','mc-deadline','mc-verantwoordelijke','mc-label','mc-notities'].forEach(id=>{document.getElementById(id).value='';});
+  document.getElementById('mc-prioriteit').value='Normaal';
+  renderSubtaken([]);
+  renderGeplandSlots('card',[]);
+}
+
+let currentSubtaken=[];
+let currentGepland=[];
+let currentAgendaGepland=[];
+
+function renderSubtaken(list){
+  currentSubtaken=JSON.parse(JSON.stringify(list));
+  const el=document.getElementById('mc-subtaken-list');
+  el.innerHTML='';
+  list.forEach((sub,i)=>{
+    const row=document.createElement('div');
+    row.className='subtask-row';
+    row.innerHTML=`<input type="checkbox" ${sub.gedaan?'checked':''} onchange="currentSubtaken[${i}].gedaan=this.checked">
+      <span class="subtask-tekst ${sub.gedaan?'done':''}">${escHtml(sub.tekst)}</span>
+      <button class="btn btn-secondary btn-xs" onclick="openSubtaakInplan(${i})">Inplannen</button>
+      <button class="btn btn-danger btn-xs" onclick="removeSubtaak(${i})">×</button>`;
+    el.appendChild(row);
+    // Show planned slots for subtask
+    if((sub.gepland||[]).length>0){
+      sub.gepland.forEach(slot=>{
+        const sp=document.createElement('div');
+        sp.className='inplan-slot';
+        sp.style.marginLeft='24px';
+        sp.innerHTML=`<div class="slot-header"><span>${escHtml(slot.naam)}</span><span style="color:var(--text-muted);">${slot.datum} ${slot.start}–${slot.eind}</span></div>`;
+        el.appendChild(sp);
+      });
+    }
+  });
+}
+
+function addSubtaak(){
+  const inp=document.getElementById('mc-subtaak-input');
+  const tekst=inp.value.trim();
+  if(!tekst)return;
+  currentSubtaken.push({id:uid(),tekst,gedaan:false,gepland:[]});
+  inp.value='';
+  renderSubtaken(currentSubtaken);
+}
+
+function removeSubtaak(idx){
+  currentSubtaken.splice(idx,1);
+  renderSubtaken(currentSubtaken);
+}
+
+function openSubtaakInplan(idx){
+  // Simple: add a slot for the subtask
+  const slot={id:uid(),naam:currentSubtaken[idx].tekst,datum:dateStr(TODAY),start:'09:00',eind:'10:00'};
+  currentSubtaken[idx].gepland=currentSubtaken[idx].gepland||[];
+  currentSubtaken[idx].gepland.push(slot);
+  renderSubtaken(currentSubtaken);
+}
+
+function renderGeplandSlots(context,list){
+  if(context==='card')currentGepland=JSON.parse(JSON.stringify(list));
+  else currentAgendaGepland=JSON.parse(JSON.stringify(list));
+  const elId=context==='card'?'mc-gepland-list':'ma-gepland-list';
+  const el=document.getElementById(elId);
+  el.innerHTML='';
+  const slots=context==='card'?currentGepland:currentAgendaGepland;
+  slots.forEach((slot,i)=>{
+    const div=document.createElement('div');
+    div.className='inplan-slot';
+    div.innerHTML=`<div class="slot-header"><span>Moment ${i+1}</span><button class="btn btn-danger btn-xs" onclick="removeGeplandSlot('${context}',${i})">×</button></div>
+      <div class="form-row-2">
+        <div class="form-row" style="margin:0"><label>Naam</label><input type="text" value="${escHtml(slot.naam)}" oninput="updateSlot('${context}',${i},'naam',this.value)"></div>
+        <div class="form-row" style="margin:0"><label>Datum</label><input type="date" value="${slot.datum}" oninput="updateSlot('${context}',${i},'datum',this.value)"></div>
       </div>
-      <button onclick="removeDagGoal('${type}',${i})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:4px;" title="Verwijder">✕</button>`;
-    el.appendChild(wrap);
-  });
-}
-
-function updateGoalAddBtns(type, goals) {
-  const btn = document.getElementById(`${type}-add-btn`);
-  if (btn) btn.style.display = goals.length >= 3 ? 'none' : 'inline-block';
-}
-
-function addDagGoal(type) {
-  const dd = formatDate(curDay);
-  const d = load(key('dag', dd));
-  if (!d[type]) d[type] = [];
-  if (d[type].length >= 3) return;
-  d[type].push({ doel: '', gedaan: false });
-  save(key('dag', dd), d);
-  renderDag();
-}
-
-function removeDagGoal(type, i) {
-  const dd = formatDate(curDay);
-  const d = load(key('dag', dd));
-  if (!d[type]) return;
-  d[type].splice(i, 1);
-  save(key('dag', dd), d);
-  renderDag();
-}
-
-function saveDagGoal(type, i) {
-  const dd = formatDate(curDay);
-  const d = load(key('dag', dd));
-  if (!d[type] || !d[type][i]) return;
-  d[type][i].doel = getValue(`${type}-goal-${i}`);
-  save(key('dag', dd), d);
-  updateDagPts();
-}
-
-function toggleDagGoal(type, i) {
-  const dd = formatDate(curDay);
-  const d = load(key('dag', dd));
-  if (!d[type] || !d[type][i]) return;
-  d[type][i].gedaan = !d[type][i].gedaan;
-  save(key('dag', dd), d);
-  renderDag();
-}
-
-function setVoeding(val) {
-  const dd = formatDate(curDay);
-  const d = load(key('dag', dd));
-  d.voeding = val;
-  save(key('dag', dd), d);
-  document.querySelectorAll('.voeding-btn').forEach(b => {
-    b.classList.remove('selected');
-    if (val === '' && b.textContent.includes('Niet')) b.classList.add('selected');
-    if (val === 'gezond' && b.textContent.includes('80/20')) b.classList.add('selected');
-    if (val === 'getrackt' && b.textContent.includes('getrackt')) b.classList.add('selected');
-  });
-  updateDagPts();
-}
-
-function saveDagData(manual) {
-  const dd = formatDate(curDay);
-  const existing = load(key('dag', dd));
-  existing.werk_lerenDoel = getValue('werk-leren-doel');
-  existing.werk_eenTaak   = getValue('werk-een-taak');
-  existing.werkRest       = getValue('werk-rest');
-  existing.inzicht        = getValue('dag-inzicht');
-  save(key('dag', dd), existing);
-  // Save grote drie text
-  saveGroteDrie();
-  updateDagPts();
-  if (manual) {
-    const s = document.getElementById('save-status');
-    s.textContent = '✓ Opgeslagen om ' + new Date().toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'});
-    setTimeout(()=>{ s.textContent='Wijzigingen worden automatisch opgeslagen'; }, 3000);
-  }
-}
-
-function updateDagPts() {
-  const dd = formatDate(curDay);
-  const data = load(key('dag', dd));
-  const { pts, breakdown } = calcDagScore(data);
-  const el = document.getElementById('dag-pts-display'); if (el) el.textContent = pts;
-  const br = document.getElementById('dag-pts-breakdown');
-  if (br) {
-    br.innerHTML = [
-      `Start Sterk: ${breakdown.startSterk||0}`,
-      `Werk: ${breakdown.werk||0}`,
-      `Training: ${breakdown.training||0}`,
-      `Ontspanning: ${breakdown.ontspanning||0}`,
-      `Verbinding: ${breakdown.verbinding||0}`,
-      `Voeding: ${breakdown.voeding||0}`,
-      `Avond: ${breakdown.avond||0}`,
-    ].join('<br>');
-  }
-}
-
-// ── MANTRA'S ───────────────────────────────────────────────────────
-function renderMantras() {
-  const mantras = loadArr('hemera_mantras');
-  const el = document.getElementById('mantra-list'); el.innerHTML = '';
-  if (mantras.length === 0) {
-    el.innerHTML = '<p style="color:var(--muted);font-style:italic;font-size:0.85rem;margin-bottom:16px;">Voeg je eerste mantra toe — een spreuk of leefregel die jou inspireert.</p>';
-  }
-  mantras.forEach((m, i) => {
-    const div = document.createElement('div');
-    div.className = 'mantra-item';
-    div.innerHTML = `<span class="mantra-num">${i+1}.</span>
-      <textarea class="mantra-text" rows="2" onchange="saveMantra(${i}, this.value)">${m}</textarea>
-      <button class="mantra-del" onclick="deleteMantra(${i})" title="Verwijder">✕</button>`;
+      <div class="form-row-2">
+        <div class="form-row" style="margin:0"><label>Starttijd</label><input type="time" value="${slot.start}" oninput="updateSlot('${context}',${i},'start',this.value)"></div>
+        <div class="form-row" style="margin:0"><label>Eindtijd</label><input type="time" value="${slot.eind}" oninput="updateSlot('${context}',${i},'eind',this.value)"></div>
+      </div>`;
     el.appendChild(div);
   });
 }
-function addMantra() {
-  const mantras = loadArr('hemera_mantras');
-  mantras.push('');
-  localStorage.setItem('hemera_mantras', JSON.stringify(mantras));
-  renderMantras();
-  // focus last
-  setTimeout(() => {
-    const areas = document.querySelectorAll('.mantra-text');
-    if (areas.length) areas[areas.length-1].focus();
-  }, 50);
-}
-function saveMantra(i, val) {
-  const mantras = loadArr('hemera_mantras');
-  mantras[i] = val;
-  localStorage.setItem('hemera_mantras', JSON.stringify(mantras));
-}
-function deleteMantra(i) {
-  const mantras = loadArr('hemera_mantras');
-  mantras.splice(i, 1);
-  localStorage.setItem('hemera_mantras', JSON.stringify(mantras));
-  renderMantras();
+
+function addGeplandSlot(context){
+  const titel=context==='card'?document.getElementById('mc-titel').value:document.getElementById('ma-titel').value;
+  const slot={id:uid(),naam:titel||'Nieuw moment',datum:dateStr(TODAY),start:'09:00',eind:'10:00'};
+  if(context==='card')currentGepland.push(slot);
+  else currentAgendaGepland.push(slot);
+  renderGeplandSlots(context,context==='card'?currentGepland:currentAgendaGepland);
 }
 
-// ── STATS HELPERS ────────────────────────────────────────────────
-function countDagEntries(year, month) {
-  let c = 0;
-  const days = new Date(year, month+1, 0).getDate();
-  for (let d = 1; d <= days; d++) {
-    const dd = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const data = load(key('dag', dd));
-    if (data.inzicht || data.werk_lerenDoel || data.ss_slaap) c++;
-  }
-  return c;
-}
-function countAllDagEntries(year) {
-  let c = 0; for (let m=0;m<12;m++) c += countDagEntries(year,m); return c;
-}
-function getAvgScore(year) {
-  let total = 0, count = 0;
-  for (let m=0;m<12;m++) {
-    const days = new Date(year,m+1,0).getDate();
-    for (let d=1;d<=days;d++) {
-      const dd = `${year}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-      const data = load(key('dag',dd));
-      if (data.voldoening) { total+=parseInt(data.voldoening); count++; }
-    }
-  }
-  return count ? Math.round(total/count*10)/10 : null;
-}
-function getTotalPunten(year) {
-  let t = 0;
-  for (let m=0;m<12;m++) t += getMonthPunten(year,m);
-  return t;
-}
-function getMonthPunten(year, month) {
-  let t = 0;
-  const days = new Date(year,month+1,0).getDate();
-  for (let d=1;d<=days;d++) {
-    const dd = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    t += getDagPts(dd);
-  }
-  return t;
+function removeGeplandSlot(context,idx){
+  if(context==='card')currentGepland.splice(idx,1);
+  else currentAgendaGepland.splice(idx,1);
+  renderGeplandSlots(context,context==='card'?currentGepland:currentAgendaGepland);
 }
 
-// ── EXPORT / IMPORT ───────────────────────────────────────────────
-function exportData() {
-  const allData = {};
-  for (let i = 0; i < localStorage.length; i++) {
-    const k = localStorage.key(i);
-    if (k.startsWith('hemera_')) { try { allData[k] = JSON.parse(localStorage.getItem(k)); } catch(e){} }
-  }
-  const blob = new Blob([JSON.stringify(allData, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url;
-  a.download = `dagboek-backup-${formatDate(today)}.json`;
-  a.click(); URL.revokeObjectURL(url);
+function updateSlot(context,idx,field,val){
+  const slots=context==='card'?currentGepland:currentAgendaGepland;
+  if(slots[idx])slots[idx][field]=val;
 }
-function importData() { document.getElementById('import-file').click(); }
-function handleImport(event) {
-  const file = event.target.files[0]; if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      const data = JSON.parse(e.target.result); let count = 0;
-      Object.entries(data).forEach(([k,v]) => {
-        if (k.startsWith('hemera_')) { localStorage.setItem(k, JSON.stringify(v)); count++; }
-      });
-      alert(`✓ ${count} items geïmporteerd!`);
-      renderView(document.querySelector('.tab-btn.active').dataset.view);
-    } catch(err) { alert('Fout bij importeren: ' + err.message); }
+
+function saveCard(){
+  const cardId=document.getElementById('mc-card-id').value;
+  const projId=document.getElementById('mc-project-id').value;
+  const projs=getProjects();
+  const proj=projs.find(p=>p.id===projId);
+  if(!proj)return;
+  const cardData={
+    titel:document.getElementById('mc-titel').value,
+    beschrijving:document.getElementById('mc-beschrijving').value,
+    prioriteit:document.getElementById('mc-prioriteit').value,
+    deadline:document.getElementById('mc-deadline').value,
+    verantwoordelijke:document.getElementById('mc-verantwoordelijke').value,
+    label:document.getElementById('mc-label').value,
+    notities:document.getElementById('mc-notities').value,
+    checklist:currentSubtaken,
+    gepland:currentGepland
   };
-  reader.readAsText(file); event.target.value = '';
+  if(cardId){
+    const idx=proj.cards.findIndex(c=>c.id===cardId);
+    if(idx>=0)proj.cards[idx]={...proj.cards[idx],...cardData};
+  } else {
+    proj.cards.push({id:uid(),fase:FASES[0],...cardData});
+  }
+  saveProjects(projs);
+  closeModal('modal-card');
+  renderKanban(proj);
 }
 
-// ── INIT ─────────────────────────────────────────────────────────
-renderDashboard();
+function deleteCard(){
+  const cardId=document.getElementById('mc-card-id').value;
+  const projId=document.getElementById('mc-project-id').value;
+  if(!cardId||!confirm('Kaart verwijderen?'))return;
+  const projs=getProjects();
+  const proj=projs.find(p=>p.id===projId);
+  if(!proj)return;
+  proj.cards=proj.cards.filter(c=>c.id!==cardId);
+  saveProjects(projs);
+  closeModal('modal-card');
+  renderKanban(proj);
+}
+
+// ===================== AGENDA =====================
+function renderAgenda(){
+  const items=getAgenda();
+  // Render in week tab
+  const el=document.getElementById('agenda-list-week');
+  if(!el)return;
+  el.innerHTML='';
+  if(items.length===0){el.innerHTML='<p class="text-muted" style="font-size:0.85rem;">Nog geen taken. Klik op "+ Nieuwe taak" om te beginnen.</p>';return;}
+  items.forEach(item=>{
+    const div=document.createElement('div');
+    div.className='agenda-item';
+    div.innerHTML=`<div style="width:4px;flex-shrink:0;background:${item._kleur||'var(--accent)'};border-radius:2px;align-self:stretch;"></div>
+      <div class="agenda-item-body">
+        <div class="agenda-item-title">${escHtml(item.titel)}</div>
+        <div class="agenda-item-meta">
+          <span class="prio-badge prio-${item.prioriteit||'Normaal'}" style="font-size:0.65rem;">${item.prioriteit||'Normaal'}</span>
+          ${item.deadline?`<span style="margin-left:8px;">📅 ${item.deadline}</span>`:''}
+          ${item.label?`<span style="margin-left:8px;">#${escHtml(item.label)}</span>`:''}
+          ${(item.gepland||[]).length>0?`<span style="margin-left:8px;">📆 ${item.gepland.length} gepland</span>`:''}
+        </div>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="openAgendaModal('${item.id}')">Bewerken</button>`;
+    el.appendChild(div);
+  });
+}
+
+let editingAgendaId=null;
+function openAgendaModal(id){
+  const items=getAgenda();
+  const item=id?items.find(x=>x.id===id):null;
+  editingAgendaId=id||null;
+  document.getElementById('modal-agenda-title').textContent=item?'Taak bewerken':'Nieuwe taak';
+  document.getElementById('ma-id').value=id||'';
+  document.getElementById('ma-titel').value=item?item.titel:'';
+  document.getElementById('ma-beschrijving').value=item?item.beschrijving||'':'';
+  document.getElementById('ma-prioriteit').value=item?item.prioriteit||'Normaal':'Normaal';
+  document.getElementById('ma-deadline').value=item?item.deadline||'':'';
+  document.getElementById('ma-verantwoordelijke').value=item?item.verantwoordelijke||'':'';
+  document.getElementById('ma-label').value=item?item.label||'':'';
+  document.getElementById('ma-notities').value=item?item.notities||'':'';
+  renderGeplandSlots('agenda',item?item.gepland||[]:[]);
+  document.getElementById('ma-delete-btn').style.display=item?'':'none';
+  openModal('modal-agenda');
+}
+
+function saveAgendaItem(){
+  const id=document.getElementById('ma-id').value;
+  const items=getAgenda();
+  const data={
+    titel:document.getElementById('ma-titel').value,
+    beschrijving:document.getElementById('ma-beschrijving').value,
+    prioriteit:document.getElementById('ma-prioriteit').value,
+    deadline:document.getElementById('ma-deadline').value,
+    verantwoordelijke:document.getElementById('ma-verantwoordelijke').value,
+    label:document.getElementById('ma-label').value,
+    notities:document.getElementById('ma-notities').value,
+    gepland:currentAgendaGepland,
+    checklist:[]
+  };
+  if(id){
+    const idx=items.findIndex(x=>x.id===id);
+    if(idx>=0)items[idx]={...items[idx],...data};
+  } else {
+    items.push({id:uid(),...data});
+  }
+  saveAgenda(items);
+  closeModal('modal-agenda');
+  renderAgenda();
+}
+
+function deleteAgendaItem(){
+  const id=document.getElementById('ma-id').value;
+  if(!id||!confirm('Taak verwijderen?'))return;
+  const items=getAgenda().filter(x=>x.id!==id);
+  saveAgenda(items);
+  closeModal('modal-agenda');
+  renderAgenda();
+}
+
+// ===================== MANTRA'S =====================
+function renderMantras(){
+  const list=getMantras();
+  const el=document.getElementById('mantras-list');
+  el.innerHTML='';
+  if(list.length===0){el.innerHTML='<p class="text-muted">Geen mantra\'s. Voeg je eerste toe!</p>';return;}
+  list.forEach((m,i)=>{
+    const div=document.createElement('div');
+    div.className='mantra-card';
+    div.innerHTML=`<div style="display:flex;align-items:flex-start;gap:12px;">
+      <div style="flex:1;">"${escHtml(m)}"</div>
+      <button class="btn btn-danger btn-xs" onclick="removeMantra(${i})">×</button>
+    </div>`;
+    el.appendChild(div);
+  });
+}
+
+function addMantra(){
+  const tekst=prompt('Nieuw mantra:');
+  if(!tekst)return;
+  const list=getMantras();
+  list.push(tekst.trim());
+  saveMantras(list);
+  renderMantras();
+}
+
+function removeMantra(idx){
+  const list=getMantras();
+  list.splice(idx,1);
+  saveMantras(list);
+  renderMantras();
+}
+
+// ===================== MODAL UTILS =====================
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(mo=>{
+  mo.addEventListener('click',e=>{if(e.target===mo)mo.classList.remove('open');});
+});
+
+// ===================== TAB SWITCH =====================
+function switchTab(tab){
+  document.querySelectorAll('.nav-tab').forEach(b=>{b.classList.toggle('active',b.dataset.tab===tab);});
+  document.querySelectorAll('.tab-content').forEach(t=>{t.classList.toggle('active',t.id==='tab-'+tab);});
+  renderTab(tab);
+}
+
+// ===================== HTML ESCAPE =====================
+function escHtml(s){
+  if(!s)return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ===================== INIT =====================
+function init(){
+  updateHeaderDate();
+  // Start on dashboard
+  switchTab('dashboard');
+}
+
+init();
 </script>
 </body>
 </html>
