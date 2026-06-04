@@ -169,19 +169,22 @@ textarea{resize:vertical;min-height:72px;line-height:1.5;}
 .sub-page.active{display:block;}
 
 /* WEEK CALENDAR */
-.week-cal-wrap{overflow:auto;border-radius:12px;border:1px solid var(--border);margin-bottom:14px;}
-.week-cal{border-collapse:collapse;min-width:600px;width:100%;}
-.week-cal th{background:var(--navy);color:#fff;font-size:0.7rem;font-weight:500;padding:8px 6px;text-align:center;position:sticky;top:0;z-index:5;white-space:nowrap;}
-.week-cal th.time-th{min-width:48px;width:48px;background:#0a1020;}
-.week-cal td{border:1px solid #f0f0f0;padding:0;vertical-align:top;position:relative;}
-.week-cal td.time-td{font-size:0.6rem;font-weight:600;color:var(--muted);padding:0 5px;text-align:right;background:#f8fafc;vertical-align:top;white-space:nowrap;border-right:2px solid var(--border);}
-.week-cal td.time-td.hr{color:var(--text);font-weight:700;border-top:2px solid #d1d5db;}
-.week-cal tr.hr-row td{border-top:2px solid #e2e8f0;}
-.time-cell{min-height:10px;position:relative;}
-.free-input{width:100%;border:none;background:transparent;font-size:0.7rem;padding:1px 3px;resize:none;min-height:10px;font-family:'Inter',sans-serif;color:var(--text);}
-.free-input:focus{outline:none;background:rgba(59,130,246,0.04);}
-.cal-event{position:absolute;left:2px;right:2px;border-radius:5px;padding:2px 5px;font-size:0.68rem;font-weight:500;color:#fff;overflow:hidden;cursor:pointer;z-index:2;border-left:3px solid rgba(255,255,255,0.4);line-height:1.3;}
-.cal-event:hover{opacity:0.9;}
+.wcal-wrap{overflow:auto;border-radius:12px;border:1px solid var(--border);margin-bottom:14px;max-height:540px;}
+.wcal-container{display:flex;flex-direction:column;min-width:620px;}
+.wcal-header{display:grid;grid-template-columns:48px repeat(7,1fr);background:var(--navy);color:#fff;position:sticky;top:0;z-index:10;}
+.wcal-hcell{padding:8px 6px;text-align:center;font-size:0.7rem;font-weight:500;border-right:1px solid rgba(255,255,255,0.1);}
+.wcal-hcell.time-hcell{background:#0a1020;}
+.wcal-body{display:grid;grid-template-columns:48px repeat(7,1fr);}
+.wcal-time-col{background:#f8fafc;border-right:2px solid var(--border);}
+.wcal-time-slot{height:10px;display:flex;align-items:flex-start;justify-content:flex-end;padding:0 4px;font-size:0.58rem;color:var(--muted);border-bottom:1px solid #f0f0f0;margin-top:-1px;}
+.wcal-time-slot.hr{color:var(--text);font-weight:700;border-bottom:1px solid #d1d5db;}
+.wcal-day-col{position:relative;border-right:1px solid #ebebeb;}
+.wcal-slot{height:10px;border-bottom:1px solid #f5f5f5;}
+.wcal-slot.hr{border-bottom:1px solid #d1d5db;}
+.wcal-free{position:absolute;inset:0;width:100%;height:100%;border:none;background:transparent;font-size:0.65rem;padding:0 2px;font-family:'Inter',sans-serif;color:var(--text);resize:none;z-index:1;}
+.wcal-free:focus{outline:none;background:rgba(59,130,246,0.04);}
+.wcal-event{position:absolute;left:2px;right:2px;border-radius:5px;padding:2px 5px;font-size:0.68rem;font-weight:500;color:#fff;overflow:hidden;cursor:pointer;z-index:3;border-left:3px solid rgba(255,255,255,0.4);line-height:1.3;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+.wcal-event:hover{opacity:0.88;}
 
 /* MAAND CALENDAR */
 .maand-cal{width:100%;border-collapse:collapse;font-size:0.78rem;}
@@ -383,9 +386,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-title">📈 Maandpunten (12 maanden)</div>
-    <svg id="dash-chart" class="chart-svg" height="120"></svg>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">📊 Weekpunten (12 weken)</div>
+      <svg id="dash-week-chart" class="chart-svg" height="110"></svg>
+    </div>
+    <div class="card">
+      <div class="card-title">📈 Maandpunten (12 maanden)</div>
+      <svg id="dash-chart" class="chart-svg" height="110"></svg>
+    </div>
   </div>
 </div>
 
@@ -523,8 +532,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
     </div>
     <div class="card" style="padding:10px;">
       <div class="card-title">Week Planning</div>
-      <div class="week-cal-wrap" id="week-cal-wrap">
-        <table class="week-cal" id="week-cal"></table>
+      <div class="wcal-wrap" id="week-cal-wrap">
+        <div class="wcal-container" id="week-cal"></div>
       </div>
     </div>
   </div>
@@ -598,14 +607,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
           <div style="font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px;">Leren <span style="font-weight:400;color:var(--blue);">+10</span></div>
           <div class="task-row">
             <div class="cb" id="cb-leren" onclick="toggleDagField('lerenDone')"></div>
-            <input type="text" id="d-leren-doel" placeholder="Leerdoel vandaag..." oninput="saveDag()">
+            <input type="text" id="d-leren-doel" placeholder="Leerdoel vandaag..." oninput="saveDag()" style="flex:1;">
+            <button class="btn btn-xs btn-secondary" onclick="openKaartPickerFor('leren')" title="Selecteer uit projectkaart">📋</button>
           </div>
         </div>
         <div style="margin-bottom:8px;">
           <div style="font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px;">EEN <span style="font-weight:400;color:var(--blue);">+15</span></div>
           <div class="task-row">
             <div class="cb" id="cb-een" onclick="toggleDagField('eenDone')"></div>
-            <input type="text" id="d-een-taak" placeholder="De belangrijkste taak..." oninput="saveDag()">
+            <input type="text" id="d-een-taak" placeholder="De belangrijkste taak..." oninput="saveDag()" style="flex:1;">
+            <button class="btn btn-xs btn-secondary" onclick="openKaartPickerFor('een')" title="Selecteer uit projectkaart">📋</button>
           </div>
         </div>
         <div style="margin-bottom:8px;">
@@ -1038,7 +1049,8 @@ function renderDashboard(){
   drawLevenswiel('dash-lw-svg',200,LW_DIMS.map(d=>((kwData.levenswiel||{})[d])||5));
   // Doelen
   renderDashDoelen(data);
-  // Chart
+  // Charts
+  renderWeekChart();
   renderMonthChart();
 }
 
@@ -1131,6 +1143,31 @@ function renderDashDoelen(dagData){
       <span style="${t.done?'color:var(--muted);text-decoration:line-through;':''}">${esc(t.taak)}</span>
     </div>`; });
   el.innerHTML=html||'<div class="empty">Stel doelen in op Jaar, Kwartaal en Week</div>';
+}
+
+function renderWeekChart(){
+  const svg=document.getElementById('dash-week-chart'); if(!svg) return;
+  const W=svg.getBoundingClientRect().width||500; const H=110;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  // Last 12 weeks
+  const weeks=[];
+  let y=curYear, w=isoWeek(NOW);
+  for(let i=11;i>=0;i--){
+    let tw=w-i; let ty=y;
+    while(tw<1){ty--;tw+=52;}
+    weeks.push({label:`W${tw}`,pts:weekPts(ty,tw),y:ty,w:tw});
+  }
+  const maxV=Math.max(...weeks.map(w=>w.pts),1);
+  const barW=Math.floor((W-30)/12*0.6); const step=(W-30)/12;
+  let html='';
+  weeks.forEach((wk,i)=>{
+    const x=15+i*step; const bh=Math.round((wk.pts/maxV)*(H-28)); const by=H-22-bh;
+    const isCur=wk.w===isoWeek(NOW)&&wk.y===NOW.getFullYear();
+    html+=`<rect x="${x}" y="${by}" width="${barW}" height="${bh}" fill="${isCur?'#6366f1':'#3b82f6'}" opacity="${isCur?1:0.6}" rx="3"/>`;
+    html+=`<text x="${x+barW/2}" y="${H-6}" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#64748b">${wk.label}</text>`;
+    if(wk.pts>0) html+=`<text x="${x+barW/2}" y="${by-3}" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="${isCur?'#6366f1':'#3b82f6'}">${wk.pts}</text>`;
+  });
+  svg.innerHTML=html;
 }
 
 function renderMonthChart(){
@@ -1411,11 +1448,17 @@ function renderWeekTakenForm(){
       <button class="plan-slot-del" onclick="delWeekTaakSlot(${i},'${sl.id}')">×</button>
     </div>`).join('')}
     <div style="padding-left:26px;margin-top:4px;">
-      ${(t.subtaken||[]).map((sub,si)=>`<div class="sub-check">
-        <div class="cb ${sub.done?'done':''}" onclick="toggleWeekSub(${i},${si})" style="width:15px;height:15px;"></div>
-        <span style="flex:1;font-size:0.78rem;">${esc(sub.taak||'Subtaak')}</span>
+      ${(t.subtaken||[]).map((sub,si)=>`<div class="sub-check" style="gap:6px;">
+        <div class="cb ${sub.done?'done':''}" onclick="toggleWeekSub(${i},${si})" style="width:15px;height:15px;flex-shrink:0;"></div>
+        <input type="text" value="${esc(sub.taak||'')}" placeholder="Subtaak..." onchange="saveWeekSubTaak(${i},${si},this.value)" style="flex:1;border:none;background:transparent;font-size:0.78rem;padding:2px 4px;border-radius:5px;">
         <button class="plan-pill" onclick="openPlanModal('week-sub',${i},${si})">📅</button>
-      </div>`).join('')}
+        <button style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.82rem;padding:1px 3px;" onclick="delWeekSub(${i},${si})" title="Verwijder">×</button>
+      </div>
+      ${(sub.gepland||[]).map(sl=>`<div style="display:flex;align-items:center;gap:5px;padding:1px 0 1px 22px;font-size:0.68rem;color:var(--muted);">
+        <span style="background:${sl.kleur||'var(--blue)'};color:#fff;border-radius:4px;padding:1px 5px;">${sl.datum||''} ${sl.start||''}${sl.eind?' – '+sl.eind:''}</span>
+        <span>${esc(sl.naam||sub.taak)}</span>
+        <button class="plan-slot-del" onclick="delWeekSubSlot(${i},${si},'${sl.id}')">×</button>
+      </div>`).join('')}`).join('')}
       <button class="btn btn-xs btn-secondary" onclick="addWeekSub(${i})" style="margin-top:4px;">+ Subtaak</button>
     </div>`;
     el.appendChild(div);
@@ -1424,7 +1467,10 @@ function renderWeekTakenForm(){
 
 function toggleWeekTaak(i){ const d=lsWeek(curYear,curWeek); if(!d.taken) return; d.taken[i].done=!d.taken[i].done; LSS(`atlas_week_${curYear}_${curWeek}`,d); renderWeekTakenForm(); }
 function toggleWeekSub(i,si){ const d=lsWeek(curYear,curWeek); if(!d.taken||!d.taken[i].subtaken) return; d.taken[i].subtaken[si].done=!d.taken[i].subtaken[si].done; LSS(`atlas_week_${curYear}_${curWeek}`,d); renderWeekTakenForm(); }
-function addWeekSub(i){ const d=lsWeek(curYear,curWeek); if(!d.taken) d.taken=Array.from({length:5},()=>({id:uid(),taak:'',done:false,linkType:'vrij',gepland:[],subtaken:[]})); if(!d.taken[i].subtaken) d.taken[i].subtaken=[]; const name=prompt('Subtaak:'); if(!name) return; d.taken[i].subtaken.push({id:uid(),taak:name,done:false,gepland:[]}); LSS(`atlas_week_${curYear}_${curWeek}`,d); renderWeekTakenForm(); }
+function addWeekSub(i){ const d=lsWeek(curYear,curWeek); if(!d.taken) d.taken=Array.from({length:5},()=>({id:uid(),taak:'',done:false,linkType:'vrij',gepland:[],subtaken:[]})); if(!d.taken[i].subtaken) d.taken[i].subtaken=[]; d.taken[i].subtaken.push({id:uid(),taak:'',done:false,gepland:[]}); LSS(`atlas_week_${curYear}_${curWeek}`,d); renderWeekTakenForm(); }
+function saveWeekSubTaak(i,si,val){ const d=lsWeek(curYear,curWeek); if(d.taken?.[i]?.subtaken?.[si]) d.taken[i].subtaken[si].taak=val; LSS(`atlas_week_${curYear}_${curWeek}`,d); }
+function delWeekSub(i,si){ const d=lsWeek(curYear,curWeek); if(!d.taken?.[i]?.subtaken) return; d.taken[i].subtaken.splice(si,1); LSS(`atlas_week_${curYear}_${curWeek}`,d); renderWeekTakenForm(); }
+function delWeekSubSlot(i,si,slotId){ const d=lsWeek(curYear,curWeek); if(!d.taken?.[i]?.subtaken?.[si]) return; d.taken[i].subtaken[si].gepland=(d.taken[i].subtaken[si].gepland||[]).filter(s=>s.id!==slotId); LSS(`atlas_week_${curYear}_${curWeek}`,d); renderWeekTakenForm(); }
 function delWeekTaakSlot(i,slotId){ const d=lsWeek(curYear,curWeek); d.taken[i].gepland=(d.taken[i].gepland||[]).filter(s=>s.id!==slotId); LSS(`atlas_week_${curYear}_${curWeek}`,d); renderWeekTakenForm(); }
 function saveWeek(){ const d=lsWeek(curYear,curWeek); d.lessen=document.getElementById('week-lessen')?.value||''; d.focus=document.getElementById('week-focus')?.value||''; LSS(`atlas_week_${curYear}_${curWeek}`,d); }
 
@@ -1450,54 +1496,79 @@ function renderDayStrip(elId, y, w){
   el.innerHTML=html;
 }
 
+// Calendar constants
+const CAL_START=6*60; // 06:00 in minutes
+const CAL_END=23*60;  // 23:00 in minutes
+const PX_PER_MIN=10/30; // 10px per 30-min slot → 0.333px/min
+
+function minToTop(t){ return (t-CAL_START)*PX_PER_MIN; }
+function timeToMin(s){ if(!s) return 0; const[h,m]=s.split(':').map(Number); return h*60+m; }
+function eventTopPx(start){ return minToTop(timeToMin(start)); }
+function eventHeightPx(start,end){
+  if(!start||!end) return 20;
+  return Math.max((timeToMin(end)-timeToMin(start))*PX_PER_MIN, 10);
+}
+const CAL_TOTAL_PX=(CAL_END-CAL_START)*PX_PER_MIN; // total column height
+
 function renderWeekCal(){
   const mon=weekMonday(curYear,curWeek);
-  const tbl=document.getElementById('week-cal'); if(!tbl) return;
-  // Header
-  let html=`<thead><tr><th class="time-th">Tijd</th>`;
-  for(let i=0;i<7;i++){const d=addDays(mon,i);html+=`<th>${DAG_COLS[i]}<br><span style="font-size:0.6rem;font-weight:300;">${d.getDate()} ${MAANDEN_S[d.getMonth()]}</span></th>`;}
-  html+='</tr></thead><tbody>';
-  // Times: 06:00-23:00, every 15 min = 10px per slot
-  const PX=10; // px per 15-min slot
-  const times=[];
-  for(let h=6;h<=22;h++) for(let m=0;m<60;m+=15) times.push({h,m,str:`${p2(h)}:${p2(m)}`});
-  times.push({h:23,m:0,str:'23:00'});
-  // Get all events for week
+  const el=document.getElementById('week-cal'); if(!el) return;
   const events=getScheduledForWeek(curYear,curWeek);
-  // Build cell content
-  times.forEach((t,ti)=>{
-    const isHour=t.m===0;
-    html+=`<tr class="${isHour?'hr-row':''}"><td class="time-td ${isHour?'hr':''}">${isHour?t.str:''}</td>`;
-    for(let di=0;di<7;di++){
-      const d=addDays(mon,di); const ds=fmtDate(d);
-      // Find events starting at this time
-      const evHere=events.filter(e=>e.dayIdx===di&&e.start===t.str);
-      html+=`<td style="height:${PX}px;"><div class="time-cell">`;
-      evHere.forEach(ev=>{
-        // Calculate height
-        const dur=timeDiffSlots(ev.start,ev.eind)*PX;
-        html+=`<div class="cal-event" style="background:${ev.kleur};height:${Math.max(dur,PX*2)}px;" onclick="openActModalEdit('${ev.id}')" title="${esc(ev.naam)}">${ev.icon} ${esc(ev.naam)}</div>`;
-      });
-      html+=`<textarea class="free-input" data-day="${di}" data-time="${t.str}" rows="1" oninput="saveFreeCell(this)">${getFreeCell(ds,t.str)}</textarea>`;
-      html+='</div></td>';
-    }
-    html+='</tr>';
+
+  // Build 30-min time slots for labels
+  const slots=[];
+  for(let m=CAL_START;m<CAL_END;m+=30) slots.push(m);
+
+  // Header
+  let html=`<div class="wcal-header">
+    <div class="wcal-hcell time-hcell">Tijd</div>`;
+  for(let i=0;i<7;i++){
+    const d=addDays(mon,i);
+    html+=`<div class="wcal-hcell">${DAG_COLS[i]}<br><span style="font-size:0.6rem;font-weight:300;">${d.getDate()} ${MAANDEN_S[d.getMonth()]}</span></div>`;
+  }
+  html+='</div>';
+
+  // Body
+  html+='<div class="wcal-body">';
+
+  // Time labels column
+  html+=`<div class="wcal-time-col" style="height:${CAL_TOTAL_PX}px;">`;
+  slots.forEach(m=>{
+    const isHour=m%60===0;
+    html+=`<div class="wcal-time-slot ${isHour?'hr':''}">${isHour?`${p2(m/60|0)}:00`:''}</div>`;
   });
-  html+='</tbody>';
-  tbl.innerHTML=html;
+  html+='</div>';
+
+  // Day columns
+  for(let di=0;di<7;di++){
+    const d=addDays(mon,di); const ds=fmtDate(d);
+    html+=`<div class="wcal-day-col" style="height:${CAL_TOTAL_PX}px;">`;
+    // Grid slot divs (30-min each, just for visual grid lines)
+    slots.forEach(m=>{
+      const isHour=m%60===0;
+      html+=`<div class="wcal-slot ${isHour?'hr':''}"></div>`;
+    });
+    // Free text textarea covering full column
+    html+=`<textarea class="wcal-free" data-day="${di}" oninput="saveFreeCell(this)" style="height:${CAL_TOTAL_PX}px;">${getFreeCell(ds,'free')}</textarea>`;
+    // Events
+    events.filter(e=>e.dayIdx===di).forEach(ev=>{
+      const top=eventTopPx(ev.start);
+      const height=eventHeightPx(ev.start,ev.eind);
+      if(top<0||top>=CAL_TOTAL_PX) return;
+      html+=`<div class="wcal-event" style="top:${top}px;height:${height}px;background:${ev.kleur};" onclick="openActModalEdit('${ev.id}')" title="${esc(ev.naam)}">${ev.icon} ${esc(ev.naam)}<br><span style="font-size:0.6rem;opacity:0.85;">${ev.start||''}${ev.eind?' – '+ev.eind:''}</span></div>`;
+    });
+    html+='</div>';
+  }
+  html+='</div>';
+  el.innerHTML=html;
 }
 
-function timeDiffSlots(start,end){
-  if(!start||!end) return 4;
-  const [sh,sm]=start.split(':').map(Number); const [eh,em]=end.split(':').map(Number);
-  return Math.max(1,((eh*60+em)-(sh*60+sm))/15);
-}
+function getFreeCell(ds){ const d=lsDay(ds); return d.freeText||''; }
 function getFreeCell(ds,t){ const d=lsDay(ds); return ((d.freeSchedule||{})[t])||''; }
 function saveFreeCell(el){
-  const di=parseInt(el.dataset.day); const t=el.dataset.time;
+  const di=parseInt(el.dataset.day);
   const d=addDays(weekMonday(curYear,curWeek),di); const ds=fmtDate(d);
-  const data=lsDay(ds); if(!data.freeSchedule) data.freeSchedule={};
-  if(el.value) data.freeSchedule[t]=el.value; else delete data.freeSchedule[t];
+  const data=lsDay(ds); data.freeText=el.value;
   LSS('atlas_dag_'+ds,data);
 }
 
@@ -1586,7 +1657,8 @@ function renderGroteDrie(data){
   gd.forEach((g,i)=>{
     const row=document.createElement('div'); row.className='task-row';
     row.innerHTML=`<div class="cb ${g.done?'done':''}" onclick="toggleGd(${i})"></div>
-      <input type="text" id="gd-${i}" value="${esc(g.taak||'')}" placeholder="Taak ${i+1}..." oninput="saveGd(${i})">`;
+      <input type="text" id="gd-${i}" value="${esc(g.taak||'')}" placeholder="Taak ${i+1}..." oninput="saveGd(${i})" style="flex:1;">
+      <button class="btn btn-xs btn-secondary" onclick="openKaartPickerFor('gd${i}')" title="Selecteer uit projectkaart">📋</button>`;
     el.appendChild(row);
   });
 }
@@ -1866,22 +1938,40 @@ function savePlanSlot(){
 }
 
 // ── KAART PICKER (De Rest) ────────────────────────────────────────
-function openKaartPicker(){ document.getElementById('kp-search').value=''; renderKaartPicker(); openModal('modal-kaart-picker'); }
+let kaartPickerTarget='rest'; // 'rest' | 'leren' | 'een' | 'gd0' | 'gd1' | 'gd2'
+function openKaartPicker(){ openKaartPickerFor('rest'); }
+function openKaartPickerFor(target){
+  kaartPickerTarget=target;
+  document.getElementById('kp-search').value='';
+  renderKaartPicker();
+  openModal('modal-kaart-picker');
+}
 function renderKaartPicker(){
   const search=(document.getElementById('kp-search')?.value||'').toLowerCase();
   const el=document.getElementById('kp-list'); if(!el) return;
   const all=[];
   getProjs().forEach(p=>(p.cards||[]).forEach(c=>all.push({...c,projNaam:p.naam,projId:p.id})));
   const filtered=all.filter(c=>!search||c.titel.toLowerCase().includes(search));
-  el.innerHTML=filtered.length?filtered.map(c=>`<div class="ac-item" onclick="pickKaart('${c.projId}','${c.id}','${esc(c.titel)}')">
+  el.innerHTML=filtered.length?filtered.map(c=>`<div class="ac-item" onclick="pickKaart('${c.projId}','${c.id}','${esc(c.titel).replace(/'/g,"\\'")}')">
     <div style="font-weight:600;font-size:0.83rem;">${esc(c.titel)}</div>
     <div style="font-size:0.7rem;color:var(--muted);">${esc(c.projNaam)} · ${c.fase}</div>
   </div>`).join(''):'<div class="empty">Geen kaarten gevonden</div>';
 }
 function pickKaart(projId,cardId,titel){
-  const d=lsDay(curDay); if(!d.deRest) d.deRest=[];
-  d.deRest.push({id:uid(),taak:titel,done:false,fromCard:cardId,fromProj:projId});
-  LSS('atlas_dag_'+curDay,d); closeModal('modal-kaart-picker'); renderDag();
+  closeModal('modal-kaart-picker');
+  const target=kaartPickerTarget;
+  if(target==='rest'){
+    const d=lsDay(curDay); if(!d.deRest) d.deRest=[];
+    d.deRest.push({id:uid(),taak:titel,done:false,fromCard:cardId,fromProj:projId});
+    LSS('atlas_dag_'+curDay,d); renderDag();
+  } else if(target==='leren'){
+    document.getElementById('d-leren-doel').value=titel; saveDag();
+  } else if(target==='een'){
+    document.getElementById('d-een-taak').value=titel; saveDag();
+  } else if(target.startsWith('gd')){
+    const i=parseInt(target.slice(2));
+    const inp=document.getElementById('gd-'+i); if(inp){inp.value=titel; saveGd(i);}
+  }
 }
 
 // ── LINK TASK MODAL ───────────────────────────────────────────────
