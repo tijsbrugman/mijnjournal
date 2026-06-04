@@ -1591,12 +1591,12 @@ function renderDag(){
     {key:'schermLoos',label:'Schermvrij uur voor slapen',pts:4},{key:'planningMorgen',label:'Planning morgen gemaakt',pts:2},
     {key:'levenswiel',label:'Levenswiel bekeken',pts:2},{key:'doelenGelezen',label:'Doelen bekeken',pts:2},
   ],data);
-  document.getElementById('d-inzicht').value=data.inzicht||'';
-  document.getElementById('d-contact').value=data.contact||'';
-  document.getElementById('d-moment').value=data.moment||'';
-  document.getElementById('d-morgen').value=data.morgen||'';
   renderScoreBtns('d-succes-btns',5,data.succes,v=>{const d=lsDay(curDay);d.succes=v;LSS('atlas_dag_'+curDay,d);});
   renderScoreBtns('d-voldaan-btns',5,data.voldoening,v=>{const d=lsDay(curDay);d.voldoening=v;LSS('atlas_dag_'+curDay,d);});
+  document.getElementById('d-inzicht').value=data.inzicht||'';
+  document.getElementById('d-moment').value=data.moment||'';
+  document.getElementById('d-morgen').value=data.morgen||'';
+  if(document.getElementById('d-contact')) document.getElementById('d-contact').value=data.contact||'';
   // Werk
   document.getElementById('d-leren-doel').value=data.lerenDoel||'';
   setCb('cb-leren',data.lerenDone);
