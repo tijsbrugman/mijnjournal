@@ -586,12 +586,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
         </div>
       </div>
       <div id="d-av-checks"></div>
-      <div class="form-row" style="margin-top:8px;"><label class="lbl">Inzicht van de dag</label><textarea id="d-inzicht" rows="2" placeholder="Wat leerde ik vandaag?" oninput="saveDag()"></textarea></div>
-      <div class="form-row"><label class="lbl">Met wie had ik contact?</label><input type="text" id="d-contact" placeholder="Namen..." oninput="saveDag()"></div>
+      <div class="form-row" style="margin-top:8px;"><label class="lbl">Succes (1–5)</label><div class="score-row" id="d-succes-btns"></div></div>
+      <div class="form-row"><label class="lbl">Voldoening (1–5)</label><div class="score-row" id="d-voldaan-btns"></div></div>
+      <div class="form-row" style="margin-top:4px;"><label class="lbl">Inzicht van de dag</label><textarea id="d-inzicht" rows="2" placeholder="Wat leerde ik vandaag?" oninput="saveDag()"></textarea></div>
       <div class="form-row"><label class="lbl">Betekenisvol moment</label><textarea id="d-moment" rows="2" placeholder="Eén moment dat telde..." oninput="saveDag()"></textarea></div>
       <div class="form-row"><label class="lbl">Morgen begin ik met...</label><input type="text" id="d-morgen" placeholder="Eerste actie van morgen" oninput="saveDag()"></div>
-      <div class="form-row"><label class="lbl">Succes (1–5)</label><div class="score-row" id="d-succes-btns"></div></div>
-      <div class="form-row"><label class="lbl">Voldoening (1–5)</label><div class="score-row" id="d-voldaan-btns"></div></div>
     </div>
   </div>
 
@@ -1060,49 +1059,35 @@ function renderDashVoortgang(data,sc){
     data.schermLoos&&data.planningMorgen&&data.levenswiel&&data.doelenGelezen&&
     data.lerenDone&&data.eenDone&&!!data.succes&&!!data.voldoening;
 
-  const mkSection=(title,items,pts)=>{
-    const doneCount=items.filter(i=>i.done).length;
-    const ptsEarned=items.reduce((a,i)=>a+(i.done?i.pts:0),0);
-    const allOk=doneCount===items.length;
-    return `<div class="dash-todo-section">
-      <div class="dash-todo-header"><span>${title}</span><span style="color:var(--blue)">${ptsEarned}${pts?' / '+pts:''} pts</span></div>
-      ${items.map(i=>`<div class="dash-todo-item" onclick="goTab('dag')">
-        <div class="dtd ${i.done?'ok':i.partial?'partial':'no'}"></div>
-        <span style="${i.done?'color:var(--muted);text-decoration:line-through;':''}">${esc(i.label)}</span>
-        <span style="margin-left:auto;font-size:0.68rem;color:var(--muted);">+${i.pts}</span>
-      </div>`).join('')}
-    </div>`;
-  };
-
   const gd=data.groteDrie||[{},{},{}];
+  const gdDone=gd.filter(g=>g.done).length;
   const tr=data.training||[]; const on=data.ontspanning||[]; const vb=data.verbinding||[];
   const trDone=tr.filter(x=>x.done).length; const onDone=on.filter(x=>x.done).length; const vbDone=vb.filter(x=>x.done).length;
 
+  // Bereken punten per sectie correct
+  const ssPts=(data.slaap?5:0)+(data.water?1:0)+(data.medi?2:0)+(data.stretch?2:0);
+  const werkPts=(data.lerenDone&&data.lerenDoel?10:0)+(data.eenDone?15:0)+(gdDone*5);
+  const trPts=tr.length?(trDone===tr.length?10:trDone>0?5:0):0;
+  const onPts=on.length?(onDone===on.length?10:onDone>0?5:0):0;
+  const vbPts=vb.length?(vbDone===vb.length?10:vbDone>0?5:0):0;
+  const voPts=data.voeding==='getrackt'?10:data.voeding==='gezond'?7:0;
+  const avPts=(data.schermLoos?4:0)+(data.planningMorgen?2:0)+(data.levenswiel?2:0)+(data.doelenGelezen?2:0);
+
+  const mkRow=(icon,label,earned,max,done)=>`
+    <div class="dash-todo-item" onclick="goTab('dag')" style="cursor:pointer;">
+      <div class="dtd ${earned===max&&max>0?'ok':earned>0?'partial':'no'}"></div>
+      <span style="${done?'color:var(--muted);':''}">${icon} ${label}</span>
+      <span style="margin-left:auto;font-size:0.72rem;font-weight:600;color:${earned===max&&max>0?'var(--green)':earned>0?'var(--amber)':'var(--muted)'};">${earned} / ${max} pts</span>
+    </div>`;
+
   let html='';
-  html+=mkSection('⭐ Start Sterk',[
-    {label:'Slaap 7-9 uur',done:!!data.slaap,pts:5},
-    {label:'Water bij opstaan',done:!!data.water,pts:1},
-    {label:'Mediteren',done:!!data.medi,pts:2},
-    {label:'Stretchen',done:!!data.stretch,pts:2},
-  ],10);
-  html+=mkSection('💼 Werk',[
-    {label:'Leren'+(data.lerenDoel?`: ${data.lerenDoel.slice(0,30)}`:' (stel leerdoel in)'),done:!!data.lerenDone,pts:10},
-    {label:'EEN'+(data.eenTaak?`: ${data.eenTaak.slice(0,30)}`:' (stel taak in)'),done:!!data.eenDone,pts:15},
-    {label:`Grote Drie (${gd.filter(g=>g.done).length}/3)`,done:gd.filter(g=>g.done).length===3,partial:gd.some(g=>g.done),pts:15},
-  ],40);
-  if(tr.length) html+=mkSection('🏋️ Training',[{label:`${trDone}/${tr.length} doelen`,done:trDone===tr.length,partial:trDone>0,pts:trDone===tr.length?10:trDone>0?5:0}],10);
-  if(on.length) html+=mkSection('🧘 Ontspanning',[{label:`${onDone}/${on.length} doelen`,done:onDone===on.length,partial:onDone>0,pts:onDone===on.length?10:onDone>0?5:0}],10);
-  if(vb.length) html+=mkSection('❤️ Verbinding',[{label:`${vbDone}/${vb.length} doelen`,done:vbDone===vb.length,partial:vbDone>0,pts:vbDone===vb.length?10:vbDone>0?5:0}],10);
-  html+=mkSection('🥗 Voeding',[{label:data.voeding==='getrackt'?'Getrackt':data.voeding==='gezond'?'Gezond (80/20)':'Niet gelogd',done:!!data.voeding,pts:data.voeding==='getrackt'?10:7}],10);
-  html+=mkSection('🌙 Sluit Goed Af',[
-    {label:'Inzicht van de dag',done:!!(data.inzicht&&data.inzicht.trim()),pts:0},
-    {label:'Schermvrij uur',done:!!data.schermLoos,pts:4},
-    {label:'Planning morgen gemaakt',done:!!data.planningMorgen,pts:2},
-    {label:'Levenswiel bekeken',done:!!data.levenswiel,pts:2},
-    {label:'Doelen bekeken',done:!!data.doelenGelezen,pts:2},
-    {label:'Succes gescoord',done:!!data.succes,pts:0},
-    {label:'Voldoening gescoord',done:!!data.voldoening,pts:0},
-  ],10);
+  html+=mkRow('⭐','Start Sterk',ssPts,10,ssPts===10);
+  html+=mkRow('💼','Werk',werkPts,40,werkPts===40);
+  html+=mkRow('🏋️','Training',trPts,10,trPts===10);
+  html+=mkRow('🧘','Ontspanning',onPts,10,onPts===10);
+  html+=mkRow('❤️','Verbinding',vbPts,10,vbPts===10);
+  html+=mkRow('🥗','Voeding',voPts,10,voPts===10);
+  html+=mkRow('🌙','Sluit Goed Af',avPts,10,avPts===10);
   html+=`<div class="dash-pts-total"><span>Totaal punten vandaag</span><strong>${sc.total} pts</strong></div>`;
   if(allDone) html+=`<div class="dag-voltooid">✅ DAG VOLTOOID</div>`;
   el.innerHTML=html;
