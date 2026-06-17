@@ -3,13 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Atlas</title>
+<title>True North OS</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --navy:#0f172a;--blue:#3b82f6;--blue2:#6366f1;--blue-light:#eff6ff;
-  --bg:#f0f2f5;--card:#fff;--border:#e2e8f0;--text:#0f172a;--muted:#64748b;
-  --green:#22c55e;--red:#ef4444;--amber:#f59e0b;--cyan:#06b6d4;
+  --navy:#11161f;--blue:#e5322f;--blue2:#c42420;--blue-light:#fdecec;
+  --bg:#eceef2;--card:#fff;--card2:#f5f7fa;--border:#e4e7ec;--border2:#d4d9e0;
+  --text:#1a1f2b;--muted:#6b7480;
+  --green:#16a34a;--red:#e5322f;--amber:#d97706;--cyan:#e5322f;
   --radius:16px;--shadow:0 1px 4px rgba(0,0,0,0.07),0 0 0 1px rgba(0,0,0,0.04);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -49,11 +50,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 /* BUTTONS */
 .btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:10px;font-family:'Inter',sans-serif;font-size:0.8rem;font-weight:500;cursor:pointer;transition:all .15s;padding:8px 16px;}
 .btn-primary{background:var(--blue);color:#fff;}
-.btn-primary:hover{background:#2563eb;}
-.btn-secondary{background:#f1f5f9;color:#475569;border:1px solid var(--border);}
-.btn-secondary:hover{background:#e2e8f0;}
-.btn-danger{background:#fef2f2;color:var(--red);border:1px solid #fecaca;}
-.btn-danger:hover{background:#fee2e2;}
+.btn-primary:hover{background:#e23b3b;}
+.btn-secondary{background:var(--card2);color:#475569;border:1px solid var(--border);}
+.btn-secondary:hover{background:var(--border2);}
+.btn-danger{background:rgba(255,71,71,0.12);color:var(--red);border:1px solid rgba(255,71,71,0.35);}
+.btn-danger:hover{background:rgba(255,71,71,0.18);}
 .btn-sm{padding:5px 10px;font-size:0.72rem;border-radius:7px;}
 .btn-xs{padding:3px 8px;font-size:0.68rem;border-radius:6px;}
 .btn-icon{padding:5px 8px;font-size:0.85rem;}
@@ -62,7 +63,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 label.lbl{display:block;font-size:0.7rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
 input[type=text],input[type=date],input[type=time],input[type=number],select,textarea{
   width:100%;font-family:'Inter',sans-serif;font-size:0.85rem;padding:8px 12px;
-  border:1px solid var(--border);border-radius:9px;background:#fff;color:var(--text);
+  border:1px solid var(--border);border-radius:9px;background:var(--card2);color:var(--text);
   transition:border-color .15s;outline:none;
 }
 input:focus,select:focus,textarea:focus{border-color:var(--blue);}
@@ -73,7 +74,7 @@ textarea{resize:vertical;min-height:72px;line-height:1.5;}
 
 /* SCORE BTNS */
 .score-row{display:flex;gap:5px;flex-wrap:wrap;}
-.sc-btn{width:32px;height:32px;border:1px solid var(--border);background:#f8fafc;border-radius:8px;font-size:0.8rem;font-weight:500;cursor:pointer;transition:all .15s;color:var(--muted);}
+.sc-btn{width:32px;height:32px;border:1px solid var(--border);background:var(--card2);border-radius:8px;font-size:0.8rem;font-weight:500;cursor:pointer;transition:all .15s;color:var(--muted);}
 .sc-btn:hover{border-color:var(--blue);color:var(--blue);}
 .sc-btn.sel{background:var(--blue);color:#fff;border-color:var(--blue);}
 
@@ -89,9 +90,9 @@ textarea{resize:vertical;min-height:72px;line-height:1.5;}
 .stat-lbl{font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:3px;}
 
 /* CHECKLIST */
-.check-item{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid #f8fafc;}
+.check-item{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--card2);}
 .check-item:last-child{border-bottom:none;}
-.cb{width:18px;height:18px;border:1.5px solid #cbd5e1;border-radius:5px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;margin-top:1px;background:#fff;}
+.cb{width:18px;height:18px;border:1.5px solid var(--border2);border-radius:5px;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;margin-top:1px;background:var(--card2);}
 .cb.done{background:var(--blue);border-color:var(--blue);}
 .cb.done::after{content:'✓';color:#fff;font-size:0.65rem;font-weight:700;}
 .ci-text{flex:1;font-size:0.85rem;line-height:1.4;}
@@ -105,20 +106,20 @@ textarea{resize:vertical;min-height:72px;line-height:1.5;}
 .dag-cluster-title{font-size:0.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;}
 .dag-cluster-inner{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 @media(max-width:700px){.dag-cluster-inner{grid-template-columns:1fr;}}
-.dag-sub{background:#f8fafc;border:1px solid var(--border);border-radius:12px;padding:12px;}
+.dag-sub{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:12px;}
 .dag-sub-title{font-size:0.78rem;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
 .dag-sub-pts{font-size:0.65rem;font-weight:600;color:var(--blue);background:var(--blue-light);padding:2px 7px;border-radius:99px;margin-left:auto;}
 
 /* TASK ROW */
-.task-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #f1f5f9;}
+.task-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--card2);}
 .task-row:last-child{border-bottom:none;}
 .task-row input[type=text]{flex:1;border:none;background:transparent;padding:4px 6px;font-size:0.84rem;border-radius:6px;}
-.task-row input[type=text]:focus{background:#f0f7ff;outline:none;}
+.task-row input[type=text]:focus{background:var(--blue-light);outline:none;}
 .task-row-actions{display:flex;gap:4px;flex-shrink:0;}
 
 /* VOEDING TOGGLE */
 .voed-opts{display:flex;gap:6px;flex-wrap:wrap;}
-.voed-btn{padding:6px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:0.78rem;font-weight:500;cursor:pointer;background:#fff;transition:all .15s;}
+.voed-btn{padding:6px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:0.78rem;font-weight:500;cursor:pointer;background:var(--card2);transition:all .15s;}
 .voed-btn:hover{border-color:var(--blue);}
 .voed-btn.sel{background:var(--blue);color:#fff;border-color:var(--blue);}
 
@@ -127,7 +128,7 @@ textarea{resize:vertical;min-height:72px;line-height:1.5;}
 .wb-left h2{font-size:1.1rem;font-weight:600;}
 .wb-left p{font-size:0.75rem;color:#94a3b8;margin-top:3px;}
 .wb-streaks{display:flex;gap:12px;margin-top:8px;}
-.streak-chip{background:rgba(59,130,246,0.2);border:1px solid rgba(59,130,246,0.3);border-radius:8px;padding:4px 10px;font-size:0.72rem;color:#93c5fd;}
+.streak-chip{background:rgba(255,71,71,0.18);border:1px solid rgba(255,71,71,0.3);border-radius:8px;padding:4px 10px;font-size:0.72rem;color:#ff8b8b;}
 .wb-right{text-align:right;}
 .wb-pct{font-size:2.2rem;font-weight:700;line-height:1;}
 .wb-sub{font-size:0.7rem;color:#94a3b8;margin-top:2px;}
@@ -141,21 +142,21 @@ textarea{resize:vertical;min-height:72px;line-height:1.5;}
 /* DASH TODO */
 .dash-todo-section{margin-bottom:6px;}
 .dash-todo-header{font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:6px 0 3px;display:flex;justify-content:space-between;}
-.dash-todo-item{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:0.82rem;border-bottom:1px solid #f8fafc;}
+.dash-todo-item{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:0.82rem;border-bottom:1px solid var(--card2);}
 .dash-todo-item:last-child{border-bottom:none;}
 .dtd{width:14px;height:14px;border-radius:4px;flex-shrink:0;}
 .dtd.ok{background:var(--green);}
-.dtd.no{background:#fee2e2;border:1.5px solid #fca5a5;}
-.dtd.partial{background:#fef3c7;border:1.5px solid #fcd34d;}
-.dash-pts-total{background:var(--blue-light);border:1px solid #bfdbfe;border-radius:10px;padding:8px 14px;display:flex;justify-content:space-between;margin-top:8px;font-size:0.82rem;}
-.dag-voltooid{background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:8px 14px;text-align:center;font-size:0.82rem;font-weight:600;color:#15803d;margin-top:8px;}
+.dtd.no{background:rgba(255,71,71,0.18);border:1.5px solid rgba(255,71,71,0.5);}
+.dtd.partial{background:rgba(245,181,74,0.2);border:1.5px solid rgba(245,181,74,0.5);}
+.dash-pts-total{background:var(--blue-light);border:1px solid var(--border);border-radius:10px;padding:8px 14px;display:flex;justify-content:space-between;margin-top:8px;font-size:0.82rem;}
+.dag-voltooid{background:rgba(52,211,153,0.14);border:1px solid rgba(52,211,153,0.4);border-radius:10px;padding:8px 14px;text-align:center;font-size:0.82rem;font-weight:600;color:#34d399;margin-top:8px;}
 
 /* DAY STRIP */
 .day-strip{display:flex;gap:6px;overflow-x:auto;}
-.day-chip{flex:0 0 auto;min-width:70px;background:#f8fafc;border:1.5px solid var(--border);border-radius:12px;padding:8px 6px;text-align:center;cursor:pointer;transition:all .15s;}
+.day-chip{flex:0 0 auto;min-width:70px;background:var(--card2);border:1.5px solid var(--border);border-radius:12px;padding:8px 6px;text-align:center;cursor:pointer;transition:all .15s;}
 .day-chip:hover{border-color:var(--blue);background:var(--blue-light);}
 .day-chip.today{background:var(--blue-light);border-color:var(--blue);}
-.day-chip.total{background:#f0fdf4;border-color:#86efac;}
+.day-chip.total{background:rgba(52,211,153,0.14);border-color:rgba(52,211,153,0.4);}
 .dc-name{font-size:0.58rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
 .dc-num{font-size:1.1rem;font-weight:700;color:var(--text);}
 .dc-pts{font-size:0.68rem;font-weight:600;color:var(--blue);margin-top:1px;}
@@ -175,23 +176,23 @@ textarea{resize:vertical;min-height:72px;line-height:1.5;}
 .wcal-hcell{padding:8px 6px;text-align:center;font-size:0.7rem;font-weight:500;border-right:1px solid rgba(255,255,255,0.1);}
 .wcal-hcell.time-hcell{background:#0a1020;}
 .wcal-body{display:grid;grid-template-columns:48px repeat(7,1fr);}
-.wcal-time-col{background:#f8fafc;border-right:2px solid var(--border);}
-.wcal-time-slot{height:24px;display:flex;align-items:flex-start;justify-content:flex-end;padding:2px 6px 0;font-size:0.62rem;color:var(--muted);border-bottom:1px solid #ebebeb;box-sizing:border-box;}
-.wcal-time-slot.hr{color:var(--text);font-weight:700;border-bottom:1px solid #c8d0dc;}
-.wcal-day-col{position:relative;border-right:1px solid #ebebeb;}
-.wcal-slot{height:24px;border-bottom:1px solid #f0f0f0;box-sizing:border-box;}
-.wcal-slot.hr{border-bottom:1px solid #c8d0dc;}
+.wcal-time-col{background:var(--card2);border-right:2px solid var(--border);}
+.wcal-time-slot{height:24px;display:flex;align-items:flex-start;justify-content:flex-end;padding:2px 6px 0;font-size:0.62rem;color:var(--muted);border-bottom:1px solid var(--border);box-sizing:border-box;}
+.wcal-time-slot.hr{color:var(--text);font-weight:700;border-bottom:1px solid var(--border2);}
+.wcal-day-col{position:relative;border-right:1px solid var(--border);}
+.wcal-slot{height:24px;border-bottom:1px solid var(--border);box-sizing:border-box;}
+.wcal-slot.hr{border-bottom:1px solid var(--border2);}
 .wcal-free{position:absolute;inset:0;width:100%;height:100%;border:none;background:transparent;font-size:0.65rem;padding:0 2px;font-family:'Inter',sans-serif;color:var(--text);resize:none;z-index:1;}
-.wcal-free:focus{outline:none;background:rgba(59,130,246,0.04);}
+.wcal-free:focus{outline:none;background:rgba(255,71,71,0.06);}
 .wcal-event{position:absolute;left:2px;right:2px;border-radius:5px;padding:2px 5px;font-size:0.68rem;font-weight:500;color:#fff;overflow:hidden;cursor:pointer;z-index:3;border-left:3px solid rgba(255,255,255,0.4);line-height:1.3;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
 .wcal-event:hover{opacity:0.88;}
 
 /* MAAND CALENDAR */
 .maand-cal{width:100%;border-collapse:collapse;font-size:0.78rem;}
-.maand-cal th{background:#f8fafc;border:1px solid var(--border);padding:6px;text-align:center;font-weight:600;font-size:0.7rem;color:var(--muted);}
+.maand-cal th{background:var(--card2);border:1px solid var(--border);padding:6px;text-align:center;font-weight:600;font-size:0.7rem;color:var(--muted);}
 .maand-cal td{border:1px solid var(--border);padding:4px;vertical-align:top;min-height:70px;min-width:80px;}
-.maand-cal td.wk-num{background:#f8fafc;font-weight:700;font-size:0.7rem;color:var(--muted);text-align:center;width:32px;}
-.maand-cal td.other-month{background:#fafafa;opacity:.5;}
+.maand-cal td.wk-num{background:var(--card2);font-weight:700;font-size:0.7rem;color:var(--muted);text-align:center;width:32px;}
+.maand-cal td.other-month{background:var(--bg);opacity:.5;}
 .maand-cal td.today-cell{background:var(--blue-light);}
 .mc-day-num{font-weight:700;font-size:0.78rem;color:var(--text);margin-bottom:2px;}
 .mc-event{background:var(--blue);color:#fff;border-radius:4px;padding:1px 5px;font-size:0.65rem;margin-bottom:1px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -200,16 +201,16 @@ textarea{resize:vertical;min-height:72px;line-height:1.5;}
 
 /* KANBAN */
 .kanban-board{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;}
-.kanban-col{background:#f8fafc;border-radius:12px;border:1px solid var(--border);min-width:200px;flex:0 0 200px;padding:12px;}
+.kanban-col{background:var(--card2);border-radius:12px;border:1px solid var(--border);min-width:200px;flex:0 0 200px;padding:12px;}
 .kanban-col-title{font-size:0.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
 .kanban-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:8px;cursor:pointer;transition:all .15s;box-shadow:0 1px 3px rgba(0,0,0,0.05);}
-.kanban-card:hover{box-shadow:0 3px 10px rgba(0,0,0,0.1);border-color:#c7d2fe;}
+.kanban-card:hover{box-shadow:0 3px 10px rgba(0,0,0,0.1);border-color:var(--border2);}
 .kc-title{font-size:0.82rem;font-weight:600;margin-bottom:4px;}
 .kc-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
 .prio-badge{font-size:0.6rem;font-weight:700;padding:2px 6px;border-radius:99px;}
-.prio-Hoog{background:#fee2e2;color:#b91c1c;}
-.prio-Normaal{background:var(--blue-light);color:#1d4ed8;}
-.prio-Laag{background:#dcfce7;color:#15803d;}
+.prio-Hoog{background:rgba(255,71,71,0.18);color:#ff8b8b;}
+.prio-Normaal{background:var(--blue-light);color:#ff8b8b;}
+.prio-Laag{background:rgba(52,211,153,0.16);color:#34d399;}
 .cat-chip{font-size:0.7rem;padding:2px 6px;border-radius:6px;color:#fff;}
 .kc-progress{font-size:0.65rem;color:var(--muted);}
 
@@ -226,13 +227,13 @@ textarea{resize:vertical;min-height:72px;line-height:1.5;}
 .modal-bg.open{display:flex;}
 .modal-box{background:var(--card);border-radius:20px;padding:24px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
 .modal-box.lg{max-width:720px;}
-.modal-close{position:absolute;top:16px;right:16px;background:#f1f5f9;border:none;border-radius:8px;width:30px;height:30px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);}
-.modal-close:hover{background:#e2e8f0;}
+.modal-close{position:absolute;top:16px;right:16px;background:var(--card2);border:none;border-radius:8px;width:30px;height:30px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);}
+.modal-close:hover{background:var(--border2);}
 .modal-title{font-size:1rem;font-weight:700;margin-bottom:18px;padding-right:40px;}
 
 /* KATEGORIE SELECTOR */
 .cat-opts{display:flex;flex-wrap:wrap;gap:6px;}
-.cat-opt{border:1.5px solid var(--border);border-radius:8px;padding:5px 10px;font-size:0.72rem;font-weight:500;cursor:pointer;background:#fff;transition:all .15s;display:flex;align-items:center;gap:4px;}
+.cat-opt{border:1.5px solid var(--border);border-radius:8px;padding:5px 10px;font-size:0.72rem;font-weight:500;cursor:pointer;background:var(--card2);transition:all .15s;display:flex;align-items:center;gap:4px;}
 .cat-opt:hover{border-color:var(--blue);}
 .cat-opt.sel{border-width:2px;}
 
@@ -241,7 +242,7 @@ textarea{resize:vertical;min-height:72px;line-height:1.5;}
 .lw-sliders{flex:1;min-width:200px;}
 .lw-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
 .lw-lbl{font-size:0.72rem;font-weight:500;min-width:90px;color:var(--text);}
-input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:#e2e8f0;border-radius:2px;outline:none;padding:0;}
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:var(--border2);border-radius:2px;outline:none;padding:0;}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--blue);cursor:pointer;}
 .lw-val{font-size:0.78rem;font-weight:600;color:var(--blue);min-width:18px;text-align:right;}
 
@@ -262,29 +263,29 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 /* SCROLL helper */
 ::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:99px;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px;}
 
 /* SUBTASK MINI */
 .sub-check{display:flex;align-items:center;gap:6px;padding:3px 0;font-size:0.78rem;}
 .sub-check .cb{width:15px;height:15px;border-radius:4px;}
 .plan-pill{font-size:0.62rem;font-weight:600;background:var(--blue-light);color:var(--blue);border-radius:5px;padding:1px 6px;cursor:pointer;}
-.plan-pill:hover{background:#bfdbfe;}
+.plan-pill:hover{background:var(--border);}
 
 /* LINK TASK */
 .link-type-row{display:flex;gap:8px;margin-bottom:12px;}
-.lt-btn{flex:1;padding:8px;border:1.5px solid var(--border);border-radius:9px;background:#fff;font-size:0.78rem;font-weight:500;cursor:pointer;text-align:center;transition:all .15s;}
+.lt-btn{flex:1;padding:8px;border:1.5px solid var(--border);border-radius:9px;background:var(--card2);font-size:0.78rem;font-weight:500;cursor:pointer;text-align:center;transition:all .15s;}
 .lt-btn:hover{border-color:var(--blue);}
 .lt-btn.sel{background:var(--blue-light);border-color:var(--blue);color:var(--blue);}
 
 /* PLANNED SLOT */
-.plan-slot{display:flex;align-items:center;gap:8px;padding:5px 8px;background:#f8fafc;border-radius:8px;margin-bottom:5px;font-size:0.78rem;}
+.plan-slot{display:flex;align-items:center;gap:8px;padding:5px 8px;background:var(--card2);border-radius:8px;margin-bottom:5px;font-size:0.78rem;}
 .plan-slot-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.85rem;padding:2px;}
 .plan-slot-del:hover{color:var(--red);}
 
 /* GOAL CARD KWARTAAL */
-.goal-card{background:#f8fafc;border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px;}
+.goal-card{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px;}
 .goal-card-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
-.goal-done-cb{width:20px;height:20px;border:1.5px solid #cbd5e1;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:#fff;}
+.goal-done-cb{width:20px;height:20px;border:1.5px solid var(--border2);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--card2);}
 .goal-done-cb.done{background:var(--green);border-color:var(--green);}
 .goal-done-cb.done::after{content:'✓';color:#fff;font-size:0.7rem;font-weight:700;}
 .goal-title{font-size:0.88rem;font-weight:700;}
@@ -304,17 +305,55 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 
 /* AUTOCOMPLETE */
 .ac-wrap{position:relative;}
-.ac-list{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:9px;box-shadow:0 8px 24px rgba(0,0,0,0.1);z-index:100;max-height:200px;overflow-y:auto;}
-.ac-item{padding:8px 12px;font-size:0.83rem;cursor:pointer;border-bottom:1px solid #f8fafc;}
+.ac-list{position:absolute;top:100%;left:0;right:0;background:var(--card2);border:1px solid var(--border);border-radius:9px;box-shadow:0 8px 24px rgba(0,0,0,0.1);z-index:100;max-height:200px;overflow-y:auto;}
+.ac-item{padding:8px 12px;font-size:0.83rem;cursor:pointer;border-bottom:1px solid var(--card2);}
 .ac-item:hover{background:var(--blue-light);}
 .ac-item:last-child{border-bottom:none;}
+
+/* DASH DATEBAR + CONTROLE */
+.dash-datebar{background:var(--navy);color:#fff;border-radius:var(--radius);padding:14px 20px;margin-bottom:16px;font-size:1rem;font-weight:500;}
+.dash-datebar span{color:#9aa4b6;font-weight:400;margin-left:10px;font-size:0.82rem;}
+.ctrl-grp-title{font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:10px 0 4px;}
+.ctrl-grp-title:first-child{margin-top:0;}
+.ctrl-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:0.82rem;}
+.ctrl-row:last-child{border-bottom:none;}
+.ctrl-ic{width:17px;height:17px;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.66rem;font-weight:700;color:#fff;}
+.ctrl-ic.ok{background:var(--green);}
+.ctrl-ic.no{background:var(--red);}
+
+/* REMINDERS */
+.rem-wrap{margin-top:8px;}
+.rem-head{font-size:0.58rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;}
+.rem-item{display:flex;align-items:center;gap:6px;font-size:0.75rem;padding:4px 8px;background:var(--card2);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:6px;margin-bottom:3px;cursor:pointer;}
+.rem-item:hover{border-color:var(--border2);}
+.rem-item.planned{opacity:.55;}
+.rem-item.planned .rem-txt{text-decoration:line-through;}
+.rem-txt{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.rem-meta{font-size:0.6rem;color:var(--muted);flex-shrink:0;text-transform:uppercase;letter-spacing:.04em;}
+.week-rem-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+.week-rem-day{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:6px;min-height:40px;}
+.week-rem-day .wr-day-lbl{font-size:0.58rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px;}
+.week-rem-chip{font-size:0.66rem;padding:2px 5px;border-radius:5px;margin-bottom:3px;color:#fff;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.week-rem-chip.planned{opacity:.5;text-decoration:line-through;}
+@media(max-width:700px){.week-rem-grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 
 <!-- HEADER -->
 <header class="hdr">
-  <div class="hdr-logo">Atlas<span>.</span></div>
+  <div class="hdr-logo" aria-label="True North OS">
+    <svg width="150" height="26" viewBox="0 0 150 26" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+      <text x="0" y="19" font-family="'Inter',sans-serif" font-size="18" font-weight="600" letter-spacing="-0.3" fill="#fff">true n</text>
+      <g transform="translate(74,12)">
+        <circle r="8.2" fill="none" stroke="#fff" stroke-width="2"/>
+        <polygon points="0,-4.8 2.6,0 0,1.2 -2.6,0" fill="#ff4747"/>
+        <polygon points="0,4.8 2.6,0 0,-1.2 -2.6,0" fill="#fff"/>
+      </g>
+      <text x="85" y="19" font-family="'Inter',sans-serif" font-size="18" font-weight="600" letter-spacing="-0.3" fill="#fff">rth</text>
+      <text x="116" y="19" font-family="'Inter',sans-serif" font-size="18" font-weight="600" letter-spacing="0.5" fill="#ff4747">OS</text>
+    </svg>
+  </div>
   <nav class="pill-nav">
     <div class="pill-nav-inner" id="main-nav">
       <button class="pill-btn active" data-tab="dashboard">Dashboard</button>
@@ -338,20 +377,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 
 <!-- ===== DASHBOARD ===== -->
 <div class="page active" id="tab-dashboard">
-  <div class="welcome-banner">
-    <div class="wb-left">
-      <h2 id="wb-greeting">Goedemorgen</h2>
-      <p id="wb-date"></p>
-      <div class="wb-streaks">
-        <div class="streak-chip" id="streak-start">🔥 0d Start Sterk</div>
-        <div class="streak-chip" id="streak-sluit">🌙 0d Sluit Goed Af</div>
-      </div>
-    </div>
-    <div class="wb-right">
-      <div class="wb-pct" id="wb-pct">0%</div>
-      <div class="wb-sub">dag afgerond</div>
-    </div>
-  </div>
+  <div class="dash-datebar" id="dash-datebar"></div>
 
   <div class="kpi-row">
     <div class="kpi-card"><div class="kpi-val" id="kpi-dag">0</div><div class="kpi-lbl">Punten vandaag</div></div>
@@ -360,39 +386,46 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   </div>
 
   <div class="g2">
+    <div class="card">
+      <div class="card-title">Openstaande deadlines deze week</div>
+      <div id="dash-open-deadlines"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Controle</div>
+      <div id="dash-controle"></div>
+    </div>
+  </div>
+
+  <div class="g2">
     <div>
       <div class="card">
-        <div class="card-title">✅ Voortgang vandaag</div>
+        <div class="card-title">Voortgang vandaag</div>
         <div id="dash-voortgang"></div>
       </div>
       <div class="card">
-        <div class="card-title">🗓 Dagplanning</div>
+        <div class="card-title">Dagplanning</div>
         <div id="dash-planning"></div>
       </div>
     </div>
     <div>
       <div class="card">
-        <div class="card-title">📊 Dagpunten deze week</div>
+        <div class="card-title">Dagpunten deze week</div>
         <div class="day-strip" id="dash-week-strip"></div>
       </div>
       <div class="card">
-        <div class="card-title">🕸 Levenswiel <span style="font-size:0.7rem;color:var(--muted);font-weight:400;margin-left:4px;" id="lw-kwartaal-lbl"></span></div>
+        <div class="card-title">Levenswiel <span style="font-size:0.7rem;color:var(--muted);font-weight:400;margin-left:4px;" id="lw-kwartaal-lbl"></span></div>
         <svg id="dash-lw-svg" width="200" height="200" style="display:block;margin:0 auto;"></svg>
-      </div>
-      <div class="card">
-        <div class="card-title">🎯 Doelen</div>
-        <div id="dash-doelen"></div>
       </div>
     </div>
   </div>
 
   <div class="g2">
     <div class="card">
-      <div class="card-title">📊 Weekpunten (12 weken)</div>
+      <div class="card-title">Weekpunten (12 weken)</div>
       <svg id="dash-week-chart" class="chart-svg" height="110"></svg>
     </div>
     <div class="card">
-      <div class="card-title">📈 Maandpunten (12 maanden)</div>
+      <div class="card-title">Maandpunten (12 maanden)</div>
       <svg id="dash-chart" class="chart-svg" height="110"></svg>
     </div>
   </div>
@@ -408,18 +441,25 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   </div>
   <div class="stats-row" id="jaar-stats"></div>
   <div class="card">
-    <div class="card-title">Jaarkalender</div>
-    <div class="jaar-cal" id="jaar-cal"></div>
+    <div class="card-title">Nulmeting — reflectie van <span id="jaar-prev-lbl" style="color:var(--blue);"></span></div>
+    <div class="form-2">
+      <div class="form-row"><label class="lbl">Wat ging goed afgelopen jaar?</label><textarea id="jaar-nm-goed" rows="3" oninput="saveJaarReflectie(-1)"></textarea></div>
+      <div class="form-row"><label class="lbl">Wat kon beter afgelopen jaar?</label><textarea id="jaar-nm-beter" rows="3" oninput="saveJaarReflectie(-1)"></textarea></div>
+      <div class="form-row"><label class="lbl">Welke verandering is nodig om het anders te doen?</label><textarea id="jaar-nm-verandering" rows="3" oninput="saveJaarReflectie(-1)"></textarea></div>
+      <div class="form-row"><label class="lbl">Wat is de focus voor volgend jaar?</label><textarea id="jaar-nm-focus" rows="3" oninput="saveJaarReflectie(-1)"></textarea></div>
+    </div>
   </div>
   <div class="card">
-    <div class="card-title">Jaardoelen</div>
+    <div class="card-title">Jaardoelen <div class="ct-right"><button class="btn btn-secondary btn-sm" onclick="addJaarDoel()">+ Doel</button></div></div>
     <div id="jaar-doelen"></div>
   </div>
   <div class="card">
-    <div class="card-title">Jaarreflectie</div>
+    <div class="card-title">Reflectie afgelopen jaar (<span id="jaar-cur-lbl" style="color:var(--blue);"></span>)</div>
     <div class="form-2">
-      <div class="form-row"><label class="lbl">Waar ben ik trots op?</label><textarea id="jaar-trots" rows="4" oninput="saveJaar()"></textarea></div>
-      <div class="form-row"><label class="lbl">Wat wil ik volgend jaar anders?</label><textarea id="jaar-anders" rows="4" oninput="saveJaar()"></textarea></div>
+      <div class="form-row"><label class="lbl">Wat ging goed afgelopen jaar?</label><textarea id="jaar-rf-goed" rows="3" oninput="saveJaarReflectie(0)"></textarea></div>
+      <div class="form-row"><label class="lbl">Wat kon beter afgelopen jaar?</label><textarea id="jaar-rf-beter" rows="3" oninput="saveJaarReflectie(0)"></textarea></div>
+      <div class="form-row"><label class="lbl">Welke verandering is nodig om het anders te doen?</label><textarea id="jaar-rf-verandering" rows="3" oninput="saveJaarReflectie(0)"></textarea></div>
+      <div class="form-row"><label class="lbl">Wat is de focus voor volgend jaar?</label><textarea id="jaar-rf-focus" rows="3" oninput="saveJaarReflectie(0)"></textarea></div>
     </div>
   </div>
 </div>
@@ -434,7 +474,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   </div>
   <div class="g4" id="kw-sel"></div>
   <div class="card">
-    <div class="card-title">🕸 Levenswiel</div>
+    <div class="card-title">Nulmeting — reflectie van <span id="kw-prev-lbl" style="color:var(--blue);"></span></div>
+    <div class="form-2">
+      <div class="form-row"><label class="lbl">Wat ging goed afgelopen kwartaal?</label><textarea id="kw-nm-goed" rows="3" oninput="saveKwReflectie(-1)"></textarea></div>
+      <div class="form-row"><label class="lbl">Wat kon beter afgelopen kwartaal?</label><textarea id="kw-nm-beter" rows="3" oninput="saveKwReflectie(-1)"></textarea></div>
+      <div class="form-row"><label class="lbl">Welke verandering is nodig om het anders te doen?</label><textarea id="kw-nm-verandering" rows="3" oninput="saveKwReflectie(-1)"></textarea></div>
+      <div class="form-row"><label class="lbl">Wat is de focus voor volgend kwartaal?</label><textarea id="kw-nm-focus" rows="3" oninput="saveKwReflectie(-1)"></textarea></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Levenswiel</div>
     <div class="lw-wrap">
       <div class="lw-sliders" id="lw-sliders"></div>
       <svg id="lw-svg" width="240" height="240" style="flex-shrink:0;"></svg>
@@ -445,10 +494,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
     <div id="kw-doelen"></div>
   </div>
   <div class="card">
-    <div class="card-title">Kwartaalreview</div>
-    <div class="form-row"><label class="lbl">Wat ging goed?</label><textarea id="kw-goed" rows="3" oninput="saveKw()"></textarea></div>
-    <div class="form-row"><label class="lbl">Wat kan beter?</label><textarea id="kw-beter" rows="3" oninput="saveKw()"></textarea></div>
-    <div class="form-row"><label class="lbl">Focus voor volgend kwartaal</label><textarea id="kw-focus" rows="3" oninput="saveKw()"></textarea></div>
+    <div class="card-title">Reflectie afgelopen kwartaal (<span id="kw-cur-lbl" style="color:var(--blue);"></span>)</div>
+    <div class="form-2">
+      <div class="form-row"><label class="lbl">Wat ging goed afgelopen kwartaal?</label><textarea id="kw-rf-goed" rows="3" oninput="saveKwReflectie(0)"></textarea></div>
+      <div class="form-row"><label class="lbl">Wat kon beter afgelopen kwartaal?</label><textarea id="kw-rf-beter" rows="3" oninput="saveKwReflectie(0)"></textarea></div>
+      <div class="form-row"><label class="lbl">Welke verandering is nodig om het anders te doen?</label><textarea id="kw-rf-verandering" rows="3" oninput="saveKwReflectie(0)"></textarea></div>
+      <div class="form-row"><label class="lbl">Wat is de focus voor volgend kwartaal?</label><textarea id="kw-rf-focus" rows="3" oninput="saveKwReflectie(0)"></textarea></div>
+    </div>
   </div>
 </div>
 
@@ -464,13 +516,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   <div class="card">
     <div class="card-title">Maanddoelen</div>
     <div class="form-3">
-      <div class="form-row"><label class="lbl">💼 Zakelijk</label><textarea id="maand-zakelijk" rows="3" oninput="saveMaand()"></textarea></div>
-      <div class="form-row"><label class="lbl">🏃 Gezondheid</label><textarea id="maand-gezondheid" rows="3" oninput="saveMaand()"></textarea></div>
-      <div class="form-row"><label class="lbl">❤️ Relaties</label><textarea id="maand-relaties" rows="3" oninput="saveMaand()"></textarea></div>
+      <div class="form-row"><label class="lbl">Zakelijk</label><textarea id="maand-zakelijk" rows="3" oninput="saveMaand()"></textarea></div>
+      <div class="form-row"><label class="lbl">Gezondheid</label><textarea id="maand-gezondheid" rows="3" oninput="saveMaand()"></textarea></div>
+      <div class="form-row"><label class="lbl">Relaties</label><textarea id="maand-relaties" rows="3" oninput="saveMaand()"></textarea></div>
     </div>
   </div>
   <div class="card" style="overflow-x:auto;">
-    <div class="card-title">Maandkalender</div>
+    <div class="card-title">Maandkalender <div class="ct-right"><button class="btn btn-primary btn-sm" onclick="openActModal(fmtDate(new Date(curYear,curMonth,1)))">+ Nieuwe activiteit</button></div></div>
     <table class="maand-cal" id="maand-cal"></table>
   </div>
   <div class="card">
@@ -503,21 +555,21 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   <!-- INTENTIE -->
   <div class="sub-page active" id="week-intentie">
     <div class="card">
-      <div class="card-title">🎯 Kwartaaldoelen (context)</div>
+      <div class="card-title">Kwartaaldoelen (context)</div>
       <div id="week-kw-context" class="g2"></div>
     </div>
     <div class="card">
-      <div class="card-title">🔄 Reflectie vorige week</div>
+      <div class="card-title">Reflectie vorige week</div>
       <div class="g4" style="margin-bottom:12px;" id="week-refl-scores"></div>
       <div class="form-row"><label class="lbl">3 Lessen van vorige week</label><textarea id="week-lessen" rows="3" placeholder="1.&#10;2.&#10;3." oninput="saveWeek()"></textarea></div>
       <div id="week-refl-suggestie" style="font-size:0.75rem;color:var(--muted);font-style:italic;margin-top:6px;"></div>
     </div>
     <div class="card">
-      <div class="card-title">🎯 Focus deze week</div>
+      <div class="card-title">Focus deze week</div>
       <input type="text" id="week-focus" placeholder="Wat is jouw focus intentie deze week?" oninput="saveWeek()">
     </div>
     <div class="card">
-      <div class="card-title">⭐ 5 Strategische focustaken
+      <div class="card-title">5 Strategische focustaken
         <div class="ct-right"><button class="btn btn-secondary btn-sm" onclick="renderWeekTakenForm()">↺</button></div>
       </div>
       <div id="week-taken-list"></div>
@@ -535,6 +587,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
       <div class="wcal-wrap" id="week-cal-wrap">
         <div class="wcal-container" id="week-cal"></div>
       </div>
+      <div class="rem-head" style="margin-top:12px;">Deadlines deze week (uit projecten) — doorgestreept = al ingepland</div>
+      <div class="week-rem-grid" id="week-reminders"></div>
     </div>
   </div>
 </div>
@@ -565,7 +619,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   <!-- TOP: Start Sterk + Sluit Goed Af -->
   <div class="dag-top">
     <div class="dag-sub" style="background:var(--card);border:1px solid var(--border);">
-      <div class="dag-sub-title">⭐ Start Sterk <span class="dag-sub-pts" id="pts-start">0/10</span></div>
+      <div class="dag-sub-title">Start Sterk <span class="dag-sub-pts" id="pts-start">0/10</span></div>
       <div class="form-row"><label class="lbl">Intentie van de dag</label><input type="text" id="d-intentie" placeholder="Vandaag is het een goede dag als..." oninput="saveDag()"></div>
       <div id="d-ss-checks"></div>
       <div class="form-row" style="margin-top:8px;"><label class="lbl">Dankbaarheid — 3 dingen</label><textarea id="d-dankbaar" rows="2" placeholder="1. ..." oninput="saveDag()"></textarea></div>
@@ -578,7 +632,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
     </div>
 
     <div class="dag-sub" style="background:var(--card);border:1px solid var(--border);">
-      <div class="dag-sub-title">🌙 Sluit Goed Af <span class="dag-sub-pts" id="pts-avond">0/10</span></div>
+      <div class="dag-sub-title">Sluit Goed Af <span class="dag-sub-pts" id="pts-avond">0/10</span></div>
       <div class="form-row"><label class="lbl">Energieniveau avond</label>
         <div style="display:flex;align-items:center;gap:8px;">
           <input type="range" id="d-energie-av" min="1" max="10" value="5" oninput="document.getElementById('d-ea-val').textContent=this.value;saveDag()">
@@ -601,57 +655,63 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 
       <!-- WERK -->
       <div class="dag-sub">
-        <div class="dag-sub-title">💼 Werk <span class="dag-sub-pts" id="pts-werk">0/40</span></div>
+        <div class="dag-sub-title">Werk <span class="dag-sub-pts" id="pts-werk">0/30</span></div>
         <div style="margin-bottom:8px;">
-          <div style="font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px;">Leren <span style="font-weight:400;color:var(--blue);">+10</span></div>
-          <div class="task-row">
-            <div class="cb" id="cb-leren" onclick="toggleDagField('lerenDone')"></div>
-            <input type="text" id="d-leren-doel" placeholder="Leerdoel vandaag..." oninput="saveDag()" style="flex:1;">
-            <button class="btn btn-xs btn-secondary" onclick="openKaartPickerFor('leren')" title="Selecteer uit projectkaart">📋</button>
-          </div>
-        </div>
-        <div style="margin-bottom:8px;">
-          <div style="font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px;">EEN <span style="font-weight:400;color:var(--blue);">+15</span></div>
+          <div style="font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px;">Focus 1 <span style="font-weight:400;color:var(--blue);">+15</span></div>
           <div class="task-row">
             <div class="cb" id="cb-een" onclick="toggleDagField('eenDone')"></div>
             <input type="text" id="d-een-taak" placeholder="De belangrijkste taak..." oninput="saveDag()" style="flex:1;">
-            <button class="btn btn-xs btn-secondary" onclick="openKaartPickerFor('een')" title="Selecteer uit projectkaart">📋</button>
+            <button class="btn btn-xs btn-secondary" onclick="openKaartPickerFor('een')" title="Selecteer uit projectkaart"></button>
           </div>
         </div>
         <div style="margin-bottom:8px;">
-          <div style="font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px;">Grote Drie <span style="font-weight:400;color:var(--blue);">+5 elk</span></div>
+          <div style="font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px;">Volgende 3 <span style="font-weight:400;color:var(--blue);">+5 elk</span></div>
           <div id="d-grote-drie"></div>
         </div>
         <div>
-          <div style="font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px;">De Rest <span style="font-weight:400;color:var(--muted);font-size:0.62rem;">+0</span> <button class="btn btn-xs btn-secondary" onclick="addDeRest()" style="margin-left:6px;">+</button></div>
+          <div style="font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px;">De rest <span style="font-weight:400;color:var(--muted);font-size:0.62rem;">+0</span> <button class="btn btn-xs btn-secondary" onclick="addDeRest()" style="margin-left:6px;">+</button></div>
           <div id="d-de-rest"></div>
-          <button class="btn btn-xs btn-secondary" onclick="openKaartPicker()" style="margin-top:4px;">📋 Selecteer uit projectkaart</button>
+          <button class="btn btn-xs btn-secondary" onclick="openKaartPicker()" style="margin-top:4px;">Selecteer uit projectkaart</button>
         </div>
+        <div id="rem-werk"></div>
       </div>
 
-      <!-- VOEDING -->
+      <!-- GROEIEN + BEWEGEN + RUST & HERSTEL + VERBINDEN + BRANDSTOF -->
       <div class="dag-sub">
-        <div class="dag-sub-title">🥗 Voeding <span class="dag-sub-pts" id="pts-voeding">0/10</span></div>
-        <div class="voed-opts" id="d-voed-opts">
-          <button class="voed-btn sel" onclick="setVoeding('')">Niet gelogd</button>
-          <button class="voed-btn" onclick="setVoeding('gezond')">😊 Gezond (80/20) +7</button>
-          <button class="voed-btn" onclick="setVoeding('getrackt')">📊 Getrackt +10</button>
+        <div class="dag-sub-title">Groeien <span class="dag-sub-pts" id="pts-groeien">0/10</span></div>
+        <div class="task-row">
+          <div class="cb" id="cb-leren" onclick="toggleDagField('lerenDone')"></div>
+          <input type="text" id="d-leren-doel" placeholder="Leerdoel vandaag..." oninput="saveDag()" style="flex:1;">
+          <button class="btn btn-xs btn-secondary" onclick="openKaartPickerFor('leren')" title="Selecteer uit projectkaart"></button>
         </div>
+        <div id="rem-groeien"></div>
 
         <div class="sep"></div>
-        <div class="dag-sub-title" style="margin-top:4px;">🏋️ Training <span class="dag-sub-pts" id="pts-training">0/10</span></div>
+        <div class="dag-sub-title">Bewegen <span class="dag-sub-pts" id="pts-training">0/10</span></div>
         <div id="d-training"></div>
         <button class="btn btn-xs btn-secondary" onclick="addGoal('training')" id="btn-add-training" style="margin-top:4px;">+ Doel</button>
+        <div id="rem-bewegen"></div>
 
         <div class="sep"></div>
-        <div class="dag-sub-title">🧘 Ontspanning <span class="dag-sub-pts" id="pts-ontsp">0/10</span></div>
+        <div class="dag-sub-title">Rust & Herstel <span class="dag-sub-pts" id="pts-ontsp">0/10</span></div>
         <div id="d-ontspanning"></div>
         <button class="btn btn-xs btn-secondary" onclick="addGoal('ontspanning')" id="btn-add-ontspanning" style="margin-top:4px;">+ Doel</button>
+        <div id="rem-rust"></div>
 
         <div class="sep"></div>
-        <div class="dag-sub-title">❤️ Verbinding <span class="dag-sub-pts" id="pts-verb">0/10</span></div>
+        <div class="dag-sub-title">Verbinden <span class="dag-sub-pts" id="pts-verb">0/10</span></div>
         <div id="d-verbinding"></div>
         <button class="btn btn-xs btn-secondary" onclick="addGoal('verbinding')" id="btn-add-verbinding" style="margin-top:4px;">+ Doel</button>
+        <div id="rem-verbinden"></div>
+
+        <div class="sep"></div>
+        <div class="dag-sub-title">Brandstof <span class="dag-sub-pts" id="pts-voeding">0/10</span></div>
+        <div class="voed-opts" id="d-voed-opts">
+          <button class="voed-btn sel" onclick="setVoeding('')">Niet gelogd</button>
+          <button class="voed-btn" onclick="setVoeding('gezond')">Gezond (80/20) +7</button>
+          <button class="voed-btn" onclick="setVoeding('getrackt')">Getrackt +10</button>
+        </div>
+        <div id="rem-brandstof"></div>
       </div>
 
     </div>
@@ -659,7 +719,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 
   <!-- NOTITIES -->
   <div class="card">
-    <div class="card-title">📝 Notities</div>
+    <div class="card-title">Notities</div>
     <textarea id="d-notities" rows="4" placeholder="Vrije ruimte voor ideeën, gedachten..." oninput="saveDag()"></textarea>
   </div>
 </div>
@@ -728,15 +788,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
     </div>
     <div class="form-2">
       <div class="form-row"><label class="lbl">Label</label><input type="text" id="mc-label"></div>
-      <div class="form-row"><label class="lbl">Categorie</label><div class="cat-opts" id="mc-cat"></div></div>
+      <div class="form-row"><label class="lbl">Categorie</label><div class="cat-opts" id="mc-cat"></div>
+        <select id="mc-werktype" style="display:none;margin-top:6px;"><option value="uitvoering">Uitvoering</option><option value="afspraak">Afspraak</option></select>
+      </div>
     </div>
     <div class="form-row"><label class="lbl">Notities</label><textarea id="mc-notities" rows="2"></textarea></div>
     <div class="sep"></div>
-    <div class="card-title" style="margin-bottom:8px;">📋 Checklist</div>
+    <div class="card-title" style="margin-bottom:8px;">Checklist</div>
     <div id="mc-checklist"></div>
     <button class="btn btn-secondary btn-sm" onclick="addChecklistItem()" style="margin-bottom:12px;">+ Subtaak</button>
     <div class="sep"></div>
-    <div class="card-title" style="margin-bottom:8px;">📅 Inplannen</div>
+    <div class="card-title" style="margin-bottom:8px;">Inplannen</div>
     <div id="mc-gepland"></div>
     <button class="btn btn-secondary btn-sm" onclick="addGeplandSlot('card')" style="margin-bottom:12px;">+ Moment toevoegen</button>
     <div class="sep"></div>
@@ -766,7 +828,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
       <div class="form-row"><label class="lbl">Start</label><input type="time" id="act-start"></div>
       <div class="form-row"><label class="lbl">Eind</label><input type="time" id="act-eind"></div>
     </div>
-    <div class="form-row"><label class="lbl">Categorie</label><div class="cat-opts" id="act-cat"></div></div>
+    <div class="form-row"><label class="lbl">Categorie</label><div class="cat-opts" id="act-cat"></div>
+      <select id="act-werktype" style="display:none;margin-top:6px;"><option value="uitvoering">Uitvoering</option><option value="afspraak">Afspraak</option></select>
+    </div>
     <div class="sep"></div>
     <div style="display:flex;gap:8px;justify-content:flex-end;">
       <button class="btn btn-danger btn-sm" onclick="deleteAct()" id="act-del-btn" style="display:none;">Verwijderen</button>
@@ -789,7 +853,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
       <div class="form-row"><label class="lbl">Start</label><input type="time" id="plan-start"></div>
       <div class="form-row"><label class="lbl">Eind</label><input type="time" id="plan-eind"></div>
     </div>
-    <div class="form-row"><label class="lbl">Categorie</label><div class="cat-opts" id="plan-cat"></div></div>
+    <div class="form-row"><label class="lbl">Categorie</label><div class="cat-opts" id="plan-cat"></div>
+      <select id="plan-werktype" style="display:none;margin-top:6px;"><option value="uitvoering">Uitvoering</option><option value="afspraak">Afspraak</option></select>
+    </div>
     <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px;">
       <button class="btn btn-primary" onclick="savePlanSlot()">Opslaan</button>
     </div>
@@ -813,9 +879,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
     <div class="modal-title">Focustaak instellen</div>
     <input type="hidden" id="link-idx">
     <div class="link-type-row">
-      <button class="lt-btn sel" id="lt-vrij" onclick="setLinkType('vrij')">✏️ Vrij schrijven</button>
-      <button class="lt-btn" id="lt-kaart" onclick="setLinkType('kaart')">📋 Projectkaart</button>
-      <button class="lt-btn" id="lt-kw" onclick="setLinkType('kw')">🎯 Kwartaaldoel</button>
+      <button class="lt-btn sel" id="lt-vrij" onclick="setLinkType('vrij')">Vrij schrijven</button>
+      <button class="lt-btn" id="lt-kaart" onclick="setLinkType('kaart')">Projectkaart</button>
+      <button class="lt-btn" id="lt-kw" onclick="setLinkType('kw')">Kwartaaldoel</button>
     </div>
     <div id="link-vrij-fields">
       <div class="form-row"><label class="lbl">Taak</label><input type="text" id="link-taak" placeholder="Wat ga je doen?"></div>
@@ -850,19 +916,24 @@ const DAG_COLS = ['Ma','Di','Wo','Do','Vr','Za','Zo'];
 const PROJ_COLORS = ['#3b82f6','#6366f1','#8b5cf6','#ec4899','#ef4444','#f97316','#eab308','#22c55e','#14b8a6','#64748b'];
 const FASES = ['Idee','Gepland','Bezig','Wacht op','Gedaan'];
 const CATEGORIEEN = [
-  {id:'werk-uitv',label:'Werk uitvoering',icon:'💻',kleur:'#3b82f6'},
-  {id:'werk-afsp',label:'Werk afspraak',icon:'🤝',kleur:'#1e3a8a'},
-  {id:'sporten',label:'Sporten',icon:'🏋️',kleur:'#16a34a'},
-  {id:'sociaal',label:'Sociaal',icon:'🫂',kleur:'#dc2626'},
-  {id:'ontwikk',label:'Pers. ontwikkeling',icon:'📚',kleur:'#0891b2'},
-  {id:'rust',label:'Rust & herstel',icon:'🌿',kleur:'#ca8a04'},
-  {id:'admin',label:'Administratie',icon:'📋',kleur:'#475569'},
+  {id:'werk',label:'Werk',kleur:'#1e293b'},
+  {id:'groeien',label:'Groeien',kleur:'#7c3aed'},
+  {id:'bewegen',label:'Bewegen',kleur:'#16a34a'},
+  {id:'verbinden',label:'Verbinden',kleur:'#db2777'},
+  {id:'rust',label:'Rust & Herstel',kleur:'#0891b2'},
+  {id:'brandstof',label:'Brandstof',kleur:'#d97706'},
 ];
+// Brandstof is alleen een dag-/doelcategorie, niet kiesbaar voor agenda-afspraken
+const AGENDA_CATS = CATEGORIEEN.filter(c=>c.id!=='brandstof');
+const WERKTYPES = ['uitvoering','afspraak'];
+// migratie van oude categorie-id's naar de nieuwe set
+const LEGACY_CAT = {'werk-uitv':'werk','werk-afsp':'werk','sporten':'bewegen','sociaal':'verbinden','ontwikk':'groeien','admin':'werk','ontspanning':'rust','training':'bewegen','verbinding':'verbinden'};
+function normCat(id){ return LEGACY_CAT[id]||id; }
 const LW_DIMS = ['werk','plezier','sociaal','geven','geld','groei','gezondheid','liefde'];
 const LW_LABELS = ['Werk','Plezier','Sociaal','Geven','Geld','Groei','Gezondheid','Liefde'];
 const KW_CATS = ['werk','training','ontspanning','verbinding'];
-const KW_CAT_ICONS = {werk:'💼',training:'🏋️',ontspanning:'🧘',verbinding:'❤️'};
-const KW_CAT_LABELS = {werk:'Werk',training:'Training',ontspanning:'Ontspanning',verbinding:'Verbinding'};
+const KW_CAT_ICONS = {werk:'',training:'',ontspanning:'',verbinding:''};
+const KW_CAT_LABELS = {werk:'Werk',training:'Bewegen',ontspanning:'Rust & Herstel',verbinding:'Verbinden'};
 
 // ── STATE ────────────────────────────────────────────────────────
 const NOW = new Date();
@@ -916,15 +987,16 @@ function addDays(d,n){ const r=new Date(d); r.setDate(r.getDate()+n); return r; 
 function isToday(s){ return s===fmtDate(NOW); }
 function uid(){ return Math.random().toString(36).slice(2,10); }
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function catById(id){ return CATEGORIEEN.find(c=>c.id===id)||null; }
-function catColor(id){ const c=catById(id); return c?c.kleur:'#3b82f6'; }
-function catIcon(id){ const c=catById(id); return c?c.icon:'📅'; }
+function catById(id){ id=normCat(id); return CATEGORIEEN.find(c=>c.id===id)||null; }
+function catColor(id){ const c=catById(id); return c?c.kleur:'#94a3b8'; }
+function catLabel(id){ const c=catById(id); return c?c.label:''; }
+function catIcon(id){ return ''; }
 
 // ── SCORING ──────────────────────────────────────────────────────
 function calcScore(data){
-  let ss=0,werk=0,tr=0,on=0,vb=0,vo=0,av=0;
+  let ss=0,werk=0,gr=0,tr=0,on=0,vb=0,vo=0,av=0;
   if(data.slaap) ss+=5; if(data.water) ss+=1; if(data.medi) ss+=2; if(data.stretch) ss+=2;
-  if(data.lerenDone&&data.lerenDoel) werk+=10;
+  if(data.lerenDone&&data.lerenDoel) gr+=10;
   if(data.eenDone) werk+=15;
   (data.groteDrie||[]).forEach(g=>{ if(g.done) werk+=5; });
   const trArr=data.training||[]; if(trArr.length){const d=trArr.filter(x=>x.done).length; tr=d===trArr.length?10:d>0?5:0;}
@@ -932,7 +1004,7 @@ function calcScore(data){
   const vbArr=data.verbinding||[]; if(vbArr.length){const d=vbArr.filter(x=>x.done).length; vb=d===vbArr.length?10:d>0?5:0;}
   if(data.voeding==='getrackt') vo=10; else if(data.voeding==='gezond') vo=7;
   if(data.schermLoos) av+=4; if(data.planningMorgen) av+=2; if(data.levenswiel) av+=2; if(data.doelenGelezen) av+=2;
-  return {total:ss+werk+tr+on+vb+vo+av, ss,werk,tr,on,vb,vo,av};
+  return {total:ss+werk+gr+tr+on+vb+vo+av, ss,werk,gr,tr,on,vb,vo,av};
 }
 function dagPts(dateStr){ return calcScore(lsDay(dateStr)).total; }
 function weekPts(y,w){ let t=0; const mon=weekMonday(y,w); for(let i=0;i<7;i++) t+=dagPts(fmtDate(addDays(mon,i))); return t; }
@@ -951,16 +1023,16 @@ function avStreak(){ return calcStreak(d=>d.schermLoos&&d.planningMorgen&&d.leve
 function getScheduledForDate(dateStr){
   const items=[];
   // Agenda
-  getAgenda().forEach(a=>{ if(a.datum===dateStr) items.push({naam:a.naam,start:a.start,eind:a.eind,kleur:catColor(a.categorie),icon:catIcon(a.categorie),id:a.id,type:'agenda'}); });
+  getAgenda().forEach(a=>{ if(a.datum===dateStr) items.push({naam:a.naam,start:a.start,eind:a.eind,kleur:catColor(a.categorie),icon:'',categorie:normCat(a.categorie),id:a.id,type:'agenda'}); });
   // Project cards
   getProjs().forEach(proj=>{ (proj.cards||[]).forEach(card=>{
-    (card.gepland||[]).forEach(sl=>{ if(sl.datum===dateStr) items.push({naam:sl.naam||card.titel,start:sl.start,eind:sl.eind,kleur:sl.kleur||catColor(card.categorie)||proj.kleur,icon:catIcon(card.categorie),id:sl.id,type:'card',projId:proj.id,cardId:card.id}); });
-    (card.checklist||[]).forEach(sub=>{ (sub.gepland||[]).forEach(sl=>{ if(sl.datum===dateStr) items.push({naam:sl.naam||sub.tekst,start:sl.start,eind:sl.eind,kleur:sl.kleur||catColor(card.categorie)||proj.kleur,icon:catIcon(card.categorie),id:sl.id,type:'sub',projId:proj.id,cardId:card.id,subId:sub.id}); }); });
+    (card.gepland||[]).forEach(sl=>{ if(sl.datum===dateStr) items.push({naam:sl.naam||card.titel,start:sl.start,eind:sl.eind,kleur:sl.kleur||catColor(card.categorie)||proj.kleur,icon:'',categorie:normCat(card.categorie),id:sl.id,type:'card',projId:proj.id,cardId:card.id}); });
+    (card.checklist||[]).forEach(sub=>{ (sub.gepland||[]).forEach(sl=>{ if(sl.datum===dateStr) items.push({naam:sl.naam||sub.tekst,start:sl.start,eind:sl.eind,kleur:sl.kleur||catColor(card.categorie)||proj.kleur,icon:'',categorie:normCat(card.categorie),id:sl.id,type:'sub',projId:proj.id,cardId:card.id,subId:sub.id}); }); });
   });});
   // Week taken
   const wd=lsWeek(curYear,curWeek);
-  (wd.taken||[]).forEach(t=>{ (t.gepland||[]).forEach(sl=>{ if(sl.datum===dateStr) items.push({naam:sl.naam||t.taak,start:sl.start,eind:sl.eind,kleur:sl.kleur||'#6366f1',icon:'⭐',id:sl.id,type:'week-taak'}); });
-    (t.subtaken||[]).forEach(sub=>{ (sub.gepland||[]).forEach(sl=>{ if(sl.datum===dateStr) items.push({naam:sl.naam||sub.taak,start:sl.start,eind:sl.eind,kleur:sl.kleur||'#6366f1',icon:'⭐',id:sl.id,type:'week-sub'}); }); });
+  (wd.taken||[]).forEach(t=>{ (t.gepland||[]).forEach(sl=>{ if(sl.datum===dateStr) items.push({naam:sl.naam||t.taak,start:sl.start,eind:sl.eind,kleur:sl.kleur||catColor(sl.categorie),icon:'',categorie:normCat(sl.categorie),id:sl.id,type:'week-taak'}); });
+    (t.subtaken||[]).forEach(sub=>{ (sub.gepland||[]).forEach(sl=>{ if(sl.datum===dateStr) items.push({naam:sl.naam||sub.taak,start:sl.start,eind:sl.eind,kleur:sl.kleur||catColor(sl.categorie),icon:'',categorie:normCat(sl.categorie),id:sl.id,type:'week-sub'}); }); });
   });
   items.sort((a,b)=>(a.start||'').localeCompare(b.start||''));
   return items;
@@ -969,6 +1041,52 @@ function getScheduledForWeek(y,w){
   const mon=weekMonday(y,w); const all=[];
   for(let i=0;i<7;i++){ const d=fmtDate(addDays(mon,i)); getScheduledForDate(d).forEach(it=>all.push({...it,datum:d,dayIdx:i})); }
   return all;
+}
+// ── REMINDERS / DOORREKENING ─────────────────────────────────────
+function mondayOf(dateStr){ const d=new Date(dateStr); const day=d.getDay(); const diff=(day===0?-6:1-day); const m=new Date(d); m.setDate(d.getDate()+diff); return m; }
+function weekDatesFor(dateStr){ const m=mondayOf(dateStr); const arr=[]; for(let i=0;i<7;i++) arr.push(fmtDate(addDays(m,i))); return arr; }
+// Reminders per dag, gegroepeerd per dag-sectie. planned=true → tijd-geblokt in de week → doorgestreept tonen.
+function getDayReminders(dateStr){
+  const sections={werk:[],groeien:[],bewegen:[],rust:[],verbinden:[],brandstof:[]};
+  const wdates=weekDatesFor(dateStr);
+  const seen=new Set();
+  const add=(catId,obj)=>{ const sec=normCat(catId); if(sections[sec]) sections[sec].push(obj); };
+  // 1) Items die vandaag een tijdslot hebben (worden doorgestreept getoond)
+  getScheduledForDate(dateStr).forEach(it=>{
+    if(!it.categorie) return;
+    if(it.cardId) seen.add('c'+it.cardId); if(it.subId) seen.add('s'+it.subId);
+    add(it.categorie,{titel:it.naam,planned:!!it.start,meta:it.start?it.start:'gepland',projId:it.projId,cardId:it.cardId});
+  });
+  // 2) Projectkaarten/subtaken met een deadline vandaag (open tenzij deze week ingepland)
+  getProjs().forEach(proj=>{ (proj.cards||[]).forEach(card=>{
+    if(card.deadline===dateStr && !seen.has('c'+card.id)){
+      const planned=(card.gepland||[]).some(sl=>sl.start&&wdates.includes(sl.datum));
+      add(card.categorie,{titel:card.titel,planned,meta:'deadline',projId:proj.id,cardId:card.id});
+    }
+    (card.checklist||[]).forEach(sub=>{
+      if(sub.deadline===dateStr && !seen.has('s'+sub.id)){
+        const planned=(sub.gepland||[]).some(sl=>sl.start&&wdates.includes(sl.datum));
+        add(card.categorie,{titel:card.titel+': '+(sub.tekst||''),planned,meta:'deadline',projId:proj.id,cardId:card.id});
+      }
+    });
+  });});
+  return sections;
+}
+// Reminders per dag voor de hele week (deadlines uit projecten)
+function getWeekDeadlineReminders(y,w){
+  const mon=weekMonday(y,w); const wdates=[]; for(let i=0;i<7;i++) wdates.push(fmtDate(addDays(mon,i)));
+  const byDay=wdates.map(()=>[]);
+  getProjs().forEach(proj=>{ (proj.cards||[]).forEach(card=>{
+    const idx=wdates.indexOf(card.deadline);
+    if(idx>=0){ const planned=(card.gepland||[]).some(sl=>sl.start&&wdates.includes(sl.datum)); byDay[idx].push({titel:card.titel,planned,projId:proj.id,cardId:card.id,categorie:normCat(card.categorie)}); }
+    (card.checklist||[]).forEach(sub=>{ const si=wdates.indexOf(sub.deadline); if(si>=0){ const planned=(sub.gepland||[]).some(sl=>sl.start&&wdates.includes(sl.datum)); byDay[si].push({titel:card.titel+': '+(sub.tekst||''),planned,projId:proj.id,cardId:card.id,categorie:normCat(card.categorie)}); } });
+  });});
+  return byDay;
+}
+function openCardFromReminder(projId,cardId){ if(!projId||!cardId) return; goTab('projecten'); openKanban(projId); openCardModal(cardId); }
+function renderRemList(items){
+  if(!items||!items.length) return '';
+  return `<div class="rem-wrap"><div class="rem-head">Herinneringen</div>${items.map(r=>`<div class="rem-item ${r.planned?'planned':''}" ${r.cardId?`onclick="openCardFromReminder('${r.projId}','${r.cardId}')"`:''}><span class="rem-txt">${esc(r.titel)}</span><span class="rem-meta">${r.planned?(r.meta&&r.meta!=='gepland'&&r.meta!=='deadline'?r.meta:'gepland'):r.meta}</span></div>`).join('')}</div>`;
 }
 
 // ── TAB NAVIGATION ───────────────────────────────────────────────
@@ -1010,31 +1128,21 @@ function switchSub(tab,sub,btn){
 function initHeader(){
   const d=NOW;
   document.getElementById('hdr-date').textContent=`${DAGEN[d.getDay()]} ${d.getDate()} ${MAANDEN_S[d.getMonth()]}`;
-  const h=d.getHours();
-  const greeting=h<12?'Goedemorgen':h<18?'Goedemiddag':'Goedenavond';
-  document.getElementById('wb-greeting').textContent=greeting;
-  document.getElementById('wb-date').textContent=`${DAGEN[d.getDay()]} ${d.getDate()} ${MAANDEN[d.getMonth()]} ${d.getFullYear()} · Week ${isoWeek(d)}`;
 }
 
 // ── DASHBOARD ────────────────────────────────────────────────────
 function renderDashboard(){
   const data=lsDay(fmtDate(NOW));
   const sc=calcScore(data);
-  // Streaks
-  document.getElementById('streak-start').textContent=`🔥 ${ssStreak()}d Start Sterk`;
-  document.getElementById('streak-sluit').textContent=`🌙 ${avStreak()}d Sluit Goed Af`;
+  // Datebar: alleen dag, datum, week
+  renderDashDatebar();
   // KPI
   document.getElementById('kpi-dag').textContent=sc.total;
   document.getElementById('kpi-week').textContent=weekPts(NOW.getFullYear(),isoWeek(NOW));
   document.getElementById('kpi-maand').textContent=maandPts(NOW.getFullYear(),NOW.getMonth());
-  // Progress %
-  const checks=[data.slaap,data.water,data.medi,data.stretch,data.lerenDone,data.eenDone,
-    ...(data.groteDrie||[]).map(g=>g.done),...(data.training||[]).map(g=>g.done),
-    ...(data.ontspanning||[]).map(g=>g.done),...(data.verbinding||[]).map(g=>g.done),
-    !!data.voeding,data.schermLoos,data.planningMorgen,data.levenswiel,data.doelenGelezen,!!data.succes,!!data.voldoening];
-  const total=checks.length, done=checks.filter(Boolean).length;
-  const pct=total?Math.round(done/total*100):0;
-  document.getElementById('wb-pct').textContent=pct+'%';
+  // Openstaande deadlines + controle
+  renderOpenDeadlines();
+  renderControle();
   // Voortgang vandaag
   renderDashVoortgang(data,sc);
   // Dagplanning
@@ -1046,11 +1154,50 @@ function renderDashboard(){
   const kwData=lsKw(NOW.getFullYear(),q);
   document.getElementById('lw-kwartaal-lbl').textContent=`Q${q+1} ${NOW.getFullYear()}`;
   drawLevenswiel('dash-lw-svg',200,LW_DIMS.map(d=>((kwData.levenswiel||{})[d])||5));
-  // Doelen
-  renderDashDoelen(data);
   // Charts
   renderWeekChart();
   renderMonthChart();
+}
+function renderDashDatebar(){
+  const d=NOW; const el=document.getElementById('dash-datebar'); if(!el) return;
+  el.innerHTML=`${DAGEN[d.getDay()]} ${d.getDate()} ${MAANDEN[d.getMonth()]} ${d.getFullYear()}<span>Week ${isoWeek(d)} · Q${Math.floor(d.getMonth()/3)+1}</span>`;
+}
+function getOpenWeekDeadlines(){
+  const byDay=getWeekDeadlineReminders(NOW.getFullYear(),isoWeek(NOW)); const open=[];
+  byDay.forEach((items,i)=>items.forEach(r=>{ if(!r.planned) open.push({...r,dayIdx:i}); }));
+  return open;
+}
+function renderOpenDeadlines(){
+  const el=document.getElementById('dash-open-deadlines'); if(!el) return;
+  const open=getOpenWeekDeadlines();
+  if(!open.length){ el.innerHTML='<div class="empty">Alle deadlines van deze week zijn ingepland</div>'; return; }
+  el.innerHTML=open.map(r=>`<div class="rem-item" style="border-left-color:${catColor(r.categorie)}" onclick="openCardFromReminder('${r.projId}','${r.cardId}')"><span class="rem-txt">${esc(r.titel)}</span><span class="rem-meta">${DAG_COLS[r.dayIdx]}</span></div>`).join('');
+}
+// Controle-predicaten (worden in Fase E aangepast aan de nieuwe Jaar/Kwartaal-structuur)
+function jaarReflected(y){ const r=lsJaar(y).reflectie||{}; return ['goed','beter','verandering','focus'].some(f=>(r[f]||'').trim()); }
+function jaarGoalsCount(y){ return getJaarDoelen(lsJaar(y)).filter(g=>(g.tekst||'').trim()).length; }
+function kwReflected(y,q){ const r=lsKw(y,q).reflectie||{}; return ['goed','beter','verandering','focus'].some(f=>(r[f]||'').trim()); }
+function kwLevenswielDone(y,q){ const d=lsKw(y,q); return !!(d.levenswiel&&Object.keys(d.levenswiel).length); }
+function kwGoalsSet(y,q){ const d=lsKw(y,q); return !!(d.doelen&&Object.values(d.doelen).some(c=>c&&(c.doel||'').trim())); }
+function goKwartaal(y,q){ curYear=y; curQuarter=q; goTab('kwartaal'); }
+function renderControle(){
+  const el=document.getElementById('dash-controle'); if(!el) return;
+  const y=NOW.getFullYear();
+  const ic=ok=>`<div class="ctrl-ic ${ok?'ok':'no'}">${ok?'✓':'!'}</div>`;
+  const gc=jaarGoalsCount(y);
+  let html=`<div class="ctrl-grp-title">Jaar ${y}</div>`;
+  html+=`<div class="ctrl-row" onclick="jaarNav(0)" style="cursor:pointer;">${ic(jaarReflected(y))}<span>Reflectie / nulmeting ingevuld</span></div>`;
+  html+=`<div class="ctrl-row" onclick="jaarNav(0)" style="cursor:pointer;">${ic(gc>=3)}<span>Minstens 3 jaardoelen (${gc}/3)</span></div>`;
+  html+=`<div class="ctrl-grp-title">Kwartalen ${y}</div>`;
+  for(let q=0;q<4;q++){
+    html+=`<div class="ctrl-row" onclick="goKwartaal(${y},${q})" style="cursor:pointer;">
+      <strong style="min-width:26px;">Q${q+1}</strong>
+      ${ic(kwReflected(y,q))}<span style="font-size:0.72rem;">reflectie</span>
+      ${ic(kwLevenswielDone(y,q))}<span style="font-size:0.72rem;">levenswiel</span>
+      ${ic(kwGoalsSet(y,q))}<span style="font-size:0.72rem;">doelen</span>
+    </div>`;
+  }
+  el.innerHTML=html;
 }
 
 function renderDashVoortgang(data,sc){
@@ -1066,7 +1213,8 @@ function renderDashVoortgang(data,sc){
 
   // Bereken punten per sectie correct
   const ssPts=(data.slaap?5:0)+(data.water?1:0)+(data.medi?2:0)+(data.stretch?2:0);
-  const werkPts=(data.lerenDone&&data.lerenDoel?10:0)+(data.eenDone?15:0)+(gdDone*5);
+  const werkPts=(data.eenDone?15:0)+(gdDone*5);
+  const grPts=(data.lerenDone&&data.lerenDoel?10:0);
   const trPts=tr.length?(trDone===tr.length?10:trDone>0?5:0):0;
   const onPts=on.length?(onDone===on.length?10:onDone>0?5:0):0;
   const vbPts=vb.length?(vbDone===vb.length?10:vbDone>0?5:0):0;
@@ -1081,15 +1229,16 @@ function renderDashVoortgang(data,sc){
     </div>`;
 
   let html='';
-  html+=mkRow('⭐','Start Sterk',ssPts,10,ssPts===10);
-  html+=mkRow('💼','Werk',werkPts,40,werkPts===40);
-  html+=mkRow('🏋️','Training',trPts,10,trPts===10);
-  html+=mkRow('🧘','Ontspanning',onPts,10,onPts===10);
-  html+=mkRow('❤️','Verbinding',vbPts,10,vbPts===10);
-  html+=mkRow('🥗','Voeding',voPts,10,voPts===10);
-  html+=mkRow('🌙','Sluit Goed Af',avPts,10,avPts===10);
+  html+=mkRow('','Start Sterk',ssPts,10,ssPts===10);
+  html+=mkRow('','Werk',werkPts,30,werkPts===30);
+  html+=mkRow('','Groeien',grPts,10,grPts===10);
+  html+=mkRow('','Bewegen',trPts,10,trPts===10);
+  html+=mkRow('','Rust & Herstel',onPts,10,onPts===10);
+  html+=mkRow('','Verbinden',vbPts,10,vbPts===10);
+  html+=mkRow('','Brandstof',voPts,10,voPts===10);
+  html+=mkRow('','Sluit Goed Af',avPts,10,avPts===10);
   html+=`<div class="dash-pts-total"><span>Totaal punten vandaag</span><strong>${sc.total} pts</strong></div>`;
-  if(allDone) html+=`<div class="dag-voltooid">✅ DAG VOLTOOID</div>`;
+  if(allDone) html+=`<div class="dag-voltooid">DAG VOLTOOID</div>`;
   el.innerHTML=html;
 }
 
@@ -1097,9 +1246,9 @@ function renderDashPlanning(){
   const el=document.getElementById('dash-planning'); if(!el) return;
   const items=getScheduledForDate(fmtDate(NOW));
   if(!items.length){ el.innerHTML='<div class="empty">Niets gepland vandaag</div>'; return; }
-  el.innerHTML=items.map(it=>`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #f8fafc;font-size:0.82rem;">
+  el.innerHTML=items.map(it=>`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--card2);font-size:0.82rem;">
     <span style="background:${it.kleur};color:#fff;border-radius:6px;padding:2px 8px;font-size:0.68rem;font-weight:600;white-space:nowrap;">${it.start||''}${it.eind?' – '+it.eind:''}</span>
-    <span>${it.icon||'📅'} ${esc(it.naam)}</span>
+    <span>${it.icon||''} ${esc(it.naam)}</span>
   </div>`).join('');
 }
 
@@ -1148,9 +1297,9 @@ function renderWeekChart(){
   weeks.forEach((wk,i)=>{
     const x=15+i*step; const bh=Math.round((wk.pts/maxV)*(H-28)); const by=H-22-bh;
     const isCur=wk.w===isoWeek(NOW)&&wk.y===NOW.getFullYear();
-    html+=`<rect x="${x}" y="${by}" width="${barW}" height="${bh}" fill="${isCur?'#6366f1':'#3b82f6'}" opacity="${isCur?1:0.6}" rx="3"/>`;
+    html+=`<rect x="${x}" y="${by}" width="${barW}" height="${bh}" fill="${isCur?'#e5322f':'#e5322f'}" opacity="${isCur?1:0.6}" rx="3"/>`;
     html+=`<text x="${x+barW/2}" y="${H-6}" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#64748b">${wk.label}</text>`;
-    if(wk.pts>0) html+=`<text x="${x+barW/2}" y="${by-3}" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="${isCur?'#6366f1':'#3b82f6'}">${wk.pts}</text>`;
+    if(wk.pts>0) html+=`<text x="${x+barW/2}" y="${by-3}" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="${isCur?'#e5322f':'#e5322f'}">${wk.pts}</text>`;
   });
   svg.innerHTML=html;
 }
@@ -1167,9 +1316,9 @@ function renderMonthChart(){
   months.forEach((m,i)=>{
     const x=20+i*step; const bh=Math.round((m.pts/maxV)*(H-30)); const by=H-24-bh;
     const alpha=0.3+0.7*(i/11);
-    html+=`<rect x="${x}" y="${by}" width="${barW}" height="${bh}" fill="#3b82f6" opacity="${alpha}" rx="3"/>`;
+    html+=`<rect x="${x}" y="${by}" width="${barW}" height="${bh}" fill="#e5322f" opacity="${alpha}" rx="3"/>`;
     html+=`<text x="${x+barW/2}" y="${H-6}" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#64748b">${m.label}</text>`;
-    if(m.pts>0) html+=`<text x="${x+barW/2}" y="${by-3}" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#3b82f6">${m.pts}</text>`;
+    if(m.pts>0) html+=`<text x="${x+barW/2}" y="${by-3}" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#e5322f">${m.pts}</text>`;
   });
   svg.innerHTML=html;
 }
@@ -1181,12 +1330,12 @@ function drawLevenswiel(svgId,size,vals){
   let html='';
   for(let ring=2;ring<=10;ring+=2){
     const pts=Array.from({length:n},(_,i)=>{const a=i*2*Math.PI/n-Math.PI/2;return `${cx+r*(ring/10)*Math.cos(a)},${cy+r*(ring/10)*Math.sin(a)}`;}).join(' ');
-    html+=`<polygon points="${pts}" fill="none" stroke="#e2e8f0" stroke-width="${ring===10?1.5:.7}"/>`;
+    html+=`<polygon points="${pts}" fill="none" stroke="var(--border2)" stroke-width="${ring===10?1.5:.7}"/>`;
   }
-  for(let i=0;i<n;i++){const a=i*2*Math.PI/n-Math.PI/2;html+=`<line x1="${cx}" y1="${cy}" x2="${cx+r*Math.cos(a)}" y2="${cy+r*Math.sin(a)}" stroke="#e2e8f0" stroke-width="1"/>`;const lx=cx+(r+14)*Math.cos(a),ly=cy+(r+14)*Math.sin(a);html+=`<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle" font-family="Inter,sans-serif" font-size="9" fill="#64748b">${LW_LABELS[i]}</text>`;}
+  for(let i=0;i<n;i++){const a=i*2*Math.PI/n-Math.PI/2;html+=`<line x1="${cx}" y1="${cy}" x2="${cx+r*Math.cos(a)}" y2="${cy+r*Math.sin(a)}" stroke="var(--border2)" stroke-width="1"/>`;const lx=cx+(r+14)*Math.cos(a),ly=cy+(r+14)*Math.sin(a);html+=`<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle" font-family="Inter,sans-serif" font-size="9" fill="#64748b">${LW_LABELS[i]}</text>`;}
   const dp=vals.map((v,i)=>{const a=i*2*Math.PI/n-Math.PI/2;return `${cx+r*(Math.max(v,1)/10)*Math.cos(a)},${cy+r*(Math.max(v,1)/10)*Math.sin(a)}`;}).join(' ');
-  html+=`<polygon points="${dp}" fill="rgba(59,130,246,0.15)" stroke="#3b82f6" stroke-width="2"/>`;
-  vals.forEach((v,i)=>{const a=i*2*Math.PI/n-Math.PI/2;const px=cx+r*(Math.max(v,1)/10)*Math.cos(a),py=cy+r*(Math.max(v,1)/10)*Math.sin(a);html+=`<circle cx="${px}" cy="${py}" r="4" fill="#3b82f6" stroke="#fff" stroke-width="1.5"/>`;});
+  html+=`<polygon points="${dp}" fill="rgba(229,50,47,0.13)" stroke="#e5322f" stroke-width="2"/>`;
+  vals.forEach((v,i)=>{const a=i*2*Math.PI/n-Math.PI/2;const px=cx+r*(Math.max(v,1)/10)*Math.cos(a),py=cy+r*(Math.max(v,1)/10)*Math.sin(a);html+=`<circle cx="${px}" cy="${py}" r="4" fill="#e5322f" stroke="#fff" stroke-width="1.5"/>`;});
   svg.innerHTML=html; svg.setAttribute('viewBox',`0 0 ${size} ${size}`);
 }
 
@@ -1200,35 +1349,41 @@ function renderJaar(){
   document.getElementById('jaar-stats').innerHTML=`
     <div class="stat-box"><div class="stat-num">${curYear}</div><div class="stat-lbl">Jaar</div></div>
     <div class="stat-box"><div class="stat-num">${dagen}</div><div class="stat-lbl">Dagen gelogd</div></div>`;
-  // Calendar
-  const cal=document.getElementById('jaar-cal'); cal.innerHTML='';
-  for(let m=0;m<12;m++){
-    const days=new Date(curYear,m+1,0).getDate(); let cnt=0;
-    for(let d=1;d<=days;d++){const dd=lsDay(`${curYear}-${p2(m+1)}-${p2(d)}`);if(dd.slaap||dd.inzicht) cnt++;}
-    const isCur=curYear===NOW.getFullYear()&&m===NOW.getMonth();
-    const div=document.createElement('div'); div.className='maand-mini'+(isCur?' cur':'')+(cnt>0?' has':'');
-    div.innerHTML=`<div class="mm-name">${MAANDEN_S[m]}</div><div class="mm-cnt">${cnt||'—'}</div>`;
-    div.onclick=()=>{curMonth=m;curYear=curYear;goTab('maand');};
-    cal.appendChild(div);
-  }
+  // Reflectie: nulmeting bovenaan = reflectie vorig jaar, onderaan = reflectie dit jaar (gedeelde bron)
+  document.getElementById('jaar-prev-lbl').textContent=curYear-1;
+  document.getElementById('jaar-cur-lbl').textContent=curYear;
+  loadReflectieFields('jaar-nm', jaarReflectie(curYear-1));
+  loadReflectieFields('jaar-rf', jaarReflectie(curYear));
   // Doelen
-  const dl=document.getElementById('jaar-doelen'); dl.innerHTML='';
-  [1,2,3].forEach(i=>{
-    const row=document.createElement('div'); row.className='check-item';
-    row.innerHTML=`<div class="cb ${data['done'+i]?'done':''}" onclick="toggleJaarDoel(${i})"></div>
-      <input type="text" id="jaar-doel-${i}" value="${esc(data['doel'+i]||'')}" placeholder="Doel ${i}..." oninput="saveJaar()" style="border:none;background:transparent;flex:1;padding:4px 6px;font-size:0.85rem;">`;
-    dl.appendChild(row);
-  });
-  document.getElementById('jaar-trots').value=data.trots||'';
-  document.getElementById('jaar-anders').value=data.anders||'';
+  renderJaarDoelen(data);
 }
-function toggleJaarDoel(i){ const d=lsJaar(curYear); d['done'+i]=!d['done'+i]; LSS('atlas_jaar_'+curYear,d); renderJaar(); }
-function saveJaar(){
-  const d=lsJaar(curYear);
-  [1,2,3].forEach(i=>{d['doel'+i]=document.getElementById('jaar-doel-'+i)?.value||'';});
-  d.trots=document.getElementById('jaar-trots').value; d.anders=document.getElementById('jaar-anders').value;
-  LSS('atlas_jaar_'+curYear,d);
+function jaarReflectie(y){ return lsJaar(y).reflectie||{}; }
+function loadReflectieFields(prefix,r){ ['goed','beter','verandering','focus'].forEach(f=>{ const el=document.getElementById(prefix+'-'+f); if(el) el.value=r[f]||''; }); }
+function readReflectieFields(prefix){ const r={}; ['goed','beter','verandering','focus'].forEach(f=>{ const el=document.getElementById(prefix+'-'+f); r[f]=el?el.value:''; }); return r; }
+function saveJaarReflectie(offset){ const y=curYear+offset; const d=lsJaar(y); d.reflectie=readReflectieFields(offset===-1?'jaar-nm':'jaar-rf'); LSS('atlas_jaar_'+y,d); }
+function getJaarDoelen(data){
+  if(Array.isArray(data.doelen)) return data.doelen;
+  const arr=[]; [1,2,3].forEach(i=>{ if((data['doel'+i]||'').trim()||data['done'+i]) arr.push({tekst:data['doel'+i]||'',done:!!data['done'+i],categorie:''}); });
+  return arr.length?arr:[{tekst:'',done:false,categorie:''},{tekst:'',done:false,categorie:''},{tekst:'',done:false,categorie:''}];
 }
+function captureJaarDoelen(){ const d=lsJaar(curYear); return getJaarDoelen(d).map((g,j)=>({tekst:document.getElementById('jd-'+j)?document.getElementById('jd-'+j).value:g.tekst,done:!!g.done,categorie:document.getElementById('jd-cat-'+j)?document.getElementById('jd-cat-'+j).value:g.categorie})); }
+function renderJaarDoelen(data){
+  const dl=document.getElementById('jaar-doelen'); if(!dl) return;
+  const doelen=getJaarDoelen(data);
+  dl.innerHTML=doelen.map((g,i)=>`<div class="task-row">
+    <div class="cb ${g.done?'done':''}" onclick="toggleJaarDoel(${i})"></div>
+    <input type="text" id="jd-${i}" value="${esc(g.tekst||'')}" placeholder="Jaardoel ${i+1}..." oninput="saveJaarDoelen()" style="flex:1;">
+    <select id="jd-cat-${i}" onchange="saveJaarDoelen()" style="width:150px;font-size:0.72rem;padding:5px 6px;">
+      <option value="">Categorie…</option>
+      ${CATEGORIEEN.map(c=>`<option value="${c.id}" ${normCat(g.categorie)===c.id?'selected':''}>${c.label}</option>`).join('')}
+    </select>
+    <button class="btn btn-xs" style="color:var(--red);background:none;border:none;cursor:pointer;padding:2px 4px;" onclick="delJaarDoel(${i})">×</button>
+  </div>`).join('');
+}
+function saveJaarDoelen(){ const d=lsJaar(curYear); d.doelen=captureJaarDoelen(); LSS('atlas_jaar_'+curYear,d); }
+function addJaarDoel(){ const d=lsJaar(curYear); const arr=captureJaarDoelen(); arr.push({tekst:'',done:false,categorie:''}); d.doelen=arr; LSS('atlas_jaar_'+curYear,d); renderJaar(); }
+function delJaarDoel(i){ const d=lsJaar(curYear); const arr=captureJaarDoelen(); arr.splice(i,1); d.doelen=arr; LSS('atlas_jaar_'+curYear,d); renderJaar(); }
+function toggleJaarDoel(i){ const d=lsJaar(curYear); const arr=captureJaarDoelen(); if(arr[i]) arr[i].done=!arr[i].done; d.doelen=arr; LSS('atlas_jaar_'+curYear,d); renderJaar(); }
 
 // ── KWARTAAL ─────────────────────────────────────────────────────
 function kwNav(d){ if(d===0){curYear=NOW.getFullYear();curQuarter=Math.floor(NOW.getMonth()/3);}else{curQuarter+=d;if(curQuarter>3){curQuarter=0;curYear++;}if(curQuarter<0){curQuarter=3;curYear--;}} renderKwartaal(); }
@@ -1240,7 +1395,7 @@ function renderKwartaal(){
   for(let q=0;q<4;q++){
     const isNow=curYear===NOW.getFullYear()&&q===Math.floor(NOW.getMonth()/3);
     const div=document.createElement('div'); div.className='card'+(q===curQuarter?' '+' ':'')+' ';
-    div.style.cssText=`cursor:pointer;border:${q===curQuarter?'2px solid var(--blue)':isNow?'2px solid #86efac':'1px solid var(--border)'};background:${q===curQuarter?'var(--blue-light)':'var(--card)'}`;
+    div.style.cssText=`cursor:pointer;border:${q===curQuarter?'2px solid var(--blue)':isNow?'2px solid rgba(52,211,153,0.4)':'1px solid var(--border)'};background:${q===curQuarter?'var(--blue-light)':'var(--card)'}`;
     div.innerHTML=`<div style="font-size:1rem;font-weight:700;">${qNames[q]}</div><div style="font-size:0.68rem;color:var(--muted);">${qM[q]}</div>`;
     div.onclick=()=>{curQuarter=q;renderKwartaal();}; sel.appendChild(div);
   }
@@ -1268,13 +1423,19 @@ function renderKwartaal(){
       <div class="form-row"><label class="lbl">Wat levert het je op?</label><textarea id="kw-${cat}-opbr" rows="2" oninput="saveKw()">${esc(cd.opbrengst||'')}</textarea></div>
       <div class="form-row"><label class="lbl">Gevolgen als je het NIET haalt?</label><textarea id="kw-${cat}-gev" rows="2" oninput="saveKw()">${esc(cd.gevolgen||'')}</textarea></div>
     </div>
-    <div class="form-row"><label class="lbl">🎁 Beloning als je het haalt</label><input type="text" id="kw-${cat}-bel" value="${esc(cd.beloning||'')}" oninput="saveKw()"></div>`;
+    <div class="form-row"><label class="lbl">Beloning als je het haalt</label><input type="text" id="kw-${cat}-bel" value="${esc(cd.beloning||'')}" oninput="saveKw()"></div>`;
     dd.appendChild(div);
   });
-  document.getElementById('kw-goed').value=data.goed||'';
-  document.getElementById('kw-beter').value=data.beter||'';
-  document.getElementById('kw-focus').value=data.focus||'';
+  // Reflectie: nulmeting bovenaan = vorig kwartaal, onderaan = dit kwartaal (gedeelde bron)
+  const pq=prevQuarter(curYear,curQuarter);
+  document.getElementById('kw-prev-lbl').textContent=`Q${pq.q+1} ${pq.y}`;
+  document.getElementById('kw-cur-lbl').textContent=`${qNames[curQuarter]} ${curYear}`;
+  loadReflectieFields('kw-nm', kwReflectie(pq.y,pq.q));
+  loadReflectieFields('kw-rf', kwReflectie(curYear,curQuarter));
 }
+function prevQuarter(y,q){ return q>0?{y,q:q-1}:{y:y-1,q:3}; }
+function kwReflectie(y,q){ return lsKw(y,q).reflectie||{}; }
+function saveKwReflectie(offset){ const tgt=offset===-1?prevQuarter(curYear,curQuarter):{y:curYear,q:curQuarter}; const d=lsKw(tgt.y,tgt.q); d.reflectie=readReflectieFields(offset===-1?'kw-nm':'kw-rf'); LSS(`atlas_kw_${tgt.y}_${tgt.q}`,d); }
 function updateLw(){ const v=LW_DIMS.map(d=>{const sl=document.querySelector(`[data-dim="${d}"]`);return sl?parseInt(sl.value):5;}); drawLevenswiel('lw-svg',240,v); saveKw(); }
 function toggleKwDoel(cat){ const d=lsKw(curYear,curQuarter); if(!d.doelen) d.doelen={}; if(!d.doelen[cat]) d.doelen[cat]={}; d.doelen[cat].done=!d.doelen[cat].done; LSS(`atlas_kw_${curYear}_${curQuarter}`,d); renderKwartaal(); }
 function saveKw(){
@@ -1287,7 +1448,6 @@ function saveKw(){
     cd.gevolgen=document.getElementById(`kw-${cat}-gev`)?.value||'';
     cd.beloning=document.getElementById(`kw-${cat}-bel`)?.value||'';
   });
-  d.goed=document.getElementById('kw-goed').value; d.beter=document.getElementById('kw-beter').value; d.focus=document.getElementById('kw-focus').value;
   LSS(`atlas_kw_${curYear}_${curQuarter}`,d);
 }
 
@@ -1407,7 +1567,7 @@ function renderWeekIntentie(){
   const mon=weekMonday(curYear,curWeek);
   let trainDays=0; for(let i=0;i<7;i++){const dd=lsDay(fmtDate(addDays(mon,i)));if((dd.training||[]).some(t=>t.done)) trainDays++;}
   const sugg=document.getElementById('week-refl-suggestie');
-  if(trainDays>0) sugg.textContent=`💡 Je hebt ${trainDays}x getraind afgelopen week.`; else sugg.textContent='';
+  if(trainDays>0) sugg.textContent=`Je hebt ${trainDays}x getraind afgelopen week.`; else sugg.textContent='';
   renderWeekTakenForm();
 }
 
@@ -1418,14 +1578,14 @@ function renderWeekTakenForm(){
   el.innerHTML='';
   taken.forEach((t,i)=>{
     const div=document.createElement('div'); div.style.marginBottom='10px';
-    div.innerHTML=`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f1f5f9;">
+    div.innerHTML=`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--card2);">
       <div class="cb ${t.done?'done':''}" onclick="toggleWeekTaak(${i})"></div>
       <span style="flex:1;font-size:0.85rem;${t.done?'text-decoration:line-through;color:var(--muted);':''}">
-        ${t.linkType==='kaart'?'📋 ':t.linkType==='kw'?'🎯 ':''}${esc(t.taak||`Taak ${i+1}`)}
+        ${t.linkType==='kaart'?'':t.linkType==='kw'?'':''}${esc(t.taak||`Taak ${i+1}`)}
         ${t.weekDoel?`<span style="display:block;font-size:0.72rem;color:var(--muted);">→ ${esc(t.weekDoel)}</span>`:''}
       </span>
-      <button class="btn btn-xs btn-secondary" onclick="openLinkModal(${i})">✏️ Instellen</button>
-      <button class="btn btn-xs btn-secondary" onclick="openPlanModal('week-taak',${i},-1)">📅 Plan</button>
+      <button class="btn btn-xs btn-secondary" onclick="openLinkModal(${i})">Instellen</button>
+      <button class="btn btn-xs btn-secondary" onclick="openPlanModal('week-taak',${i},-1)">Plan</button>
     </div>
     ${(t.gepland||[]).map(sl=>`<div style="display:flex;align-items:center;gap:6px;padding:2px 0 2px 26px;font-size:0.72rem;color:var(--muted);">
       <span style="background:${sl.kleur||'var(--blue)'};color:#fff;border-radius:4px;padding:1px 6px;">${sl.datum||''} ${sl.start||''}${sl.eind?' – '+sl.eind:''}</span>
@@ -1436,7 +1596,7 @@ function renderWeekTakenForm(){
       ${(t.subtaken||[]).map((sub,si)=>`<div class="sub-check" style="gap:6px;">
         <div class="cb ${sub.done?'done':''}" onclick="toggleWeekSub(${i},${si})" style="width:15px;height:15px;flex-shrink:0;"></div>
         <input type="text" value="${esc(sub.taak||'')}" placeholder="Subtaak..." onchange="saveWeekSubTaak(${i},${si},this.value)" style="flex:1;border:none;background:transparent;font-size:0.78rem;padding:2px 4px;border-radius:5px;">
-        <button class="plan-pill" onclick="openPlanModal('week-sub',${i},${si})">📅</button>
+        <button class="plan-pill" onclick="openPlanModal('week-sub',${i},${si})"></button>
         <button style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.82rem;padding:1px 3px;" onclick="delWeekSub(${i},${si})" title="Verwijder">×</button>
       </div>
       ${(sub.gepland||[]).map(sl=>`<div style="display:flex;align-items:center;gap:5px;padding:1px 0 1px 22px;font-size:0.68rem;color:var(--muted);">
@@ -1546,6 +1706,17 @@ function renderWeekCal(){
   }
   html+='</div>';
   el.innerHTML=html;
+  renderWeekReminders();
+}
+function renderWeekReminders(){
+  const el=document.getElementById('week-reminders'); if(!el) return;
+  const byDay=getWeekDeadlineReminders(curYear,curWeek);
+  const mon=weekMonday(curYear,curWeek);
+  el.innerHTML=byDay.map((items,i)=>{
+    const d=addDays(mon,i);
+    const chips=items.map(r=>`<div class="week-rem-chip ${r.planned?'planned':''}" style="background:${catColor(r.categorie)}" onclick="openCardFromReminder('${r.projId}','${r.cardId}')" title="${esc(r.titel)}">${esc(r.titel)}</div>`).join('')||'<div style="font-size:0.6rem;color:var(--muted);">—</div>';
+    return `<div class="week-rem-day"><div class="wr-day-lbl">${DAG_COLS[i]} ${d.getDate()}</div>${chips}</div>`;
+  }).join('');
 }
 
 function getFreeCell(ds){ const d=lsDay(ds); return d.freeText||''; }
@@ -1565,14 +1736,15 @@ function renderDag(){
   const data=lsDay(curDay);
   const sc=calcScore(data);
   document.getElementById('dag-score-big').textContent=sc.total;
-  document.getElementById('dag-breakdown').innerHTML=`Start Sterk: ${sc.ss}<br>Werk: ${sc.werk}<br>Training: ${sc.tr}<br>Ontspanning: ${sc.on}<br>Verbinding: ${sc.vb}<br>Voeding: ${sc.vo}<br>Avond: ${sc.av}`;
+  document.getElementById('dag-breakdown').innerHTML=`Start Sterk: ${sc.ss}<br>Werk: ${sc.werk}<br>Groeien: ${sc.gr}<br>Bewegen: ${sc.tr}<br>Rust & Herstel: ${sc.on}<br>Verbinden: ${sc.vb}<br>Brandstof: ${sc.vo}<br>Sluit Goed Af: ${sc.av}`;
   const checks=[data.slaap,data.water,data.medi,data.stretch,data.lerenDone,data.eenDone,...(data.groteDrie||[]).map(g=>g.done),...(data.training||[]).map(g=>g.done),...(data.ontspanning||[]).map(g=>g.done),...(data.verbinding||[]).map(g=>g.done),!!data.voeding,data.schermLoos,data.planningMorgen,data.levenswiel,data.doelenGelezen];
   const tot=checks.length,dn=checks.filter(Boolean).length,pct=tot?Math.round(dn/tot*100):0;
   document.getElementById('dag-progress-bar').style.width=pct+'%';
   document.getElementById('dag-progress-txt').textContent=`${pct}% afgerond`;
   document.getElementById('pts-start').textContent=`${sc.ss}/10`;
   document.getElementById('pts-avond').textContent=`${sc.av}/10`;
-  document.getElementById('pts-werk').textContent=`${sc.werk}/40`;
+  document.getElementById('pts-werk').textContent=`${sc.werk}/30`;
+  const pg=document.getElementById('pts-groeien'); if(pg) pg.textContent=`${sc.gr}/10`;
   document.getElementById('pts-training').textContent=`${sc.tr}/10`;
   document.getElementById('pts-ontsp').textContent=`${sc.on}/10`;
   document.getElementById('pts-verb').textContent=`${sc.vb}/10`;
@@ -1616,6 +1788,12 @@ function renderDag(){
   else if(data.voeding==='gezond') vOpts[1].classList.add('sel');
   else vOpts[0].classList.add('sel');
   document.getElementById('d-notities').value=data.notities||'';
+  renderDayReminders();
+}
+function renderDayReminders(){
+  const rem=getDayReminders(curDay);
+  const map={werk:'rem-werk',groeien:'rem-groeien',bewegen:'rem-bewegen',rust:'rem-rust',verbinden:'rem-verbinden',brandstof:'rem-brandstof'};
+  Object.keys(map).forEach(k=>{ const el=document.getElementById(map[k]); if(el) el.innerHTML=renderRemList(rem[k]); });
 }
 
 function renderCheckItems(elId,items,data){
@@ -1643,7 +1821,7 @@ function renderGroteDrie(data){
     const row=document.createElement('div'); row.className='task-row';
     row.innerHTML=`<div class="cb ${g.done?'done':''}" onclick="toggleGd(${i})"></div>
       <input type="text" id="gd-${i}" value="${esc(g.taak||'')}" placeholder="Taak ${i+1}..." oninput="saveGd(${i})" style="flex:1;">
-      <button class="btn btn-xs btn-secondary" onclick="openKaartPickerFor('gd${i}')" title="Selecteer uit projectkaart">📋</button>`;
+      <button class="btn btn-xs btn-secondary" onclick="openKaartPickerFor('gd${i}')" title="Selecteer uit projectkaart"></button>`;
     el.appendChild(row);
   });
 }
@@ -1750,8 +1928,8 @@ function renderKanban(){
           <div class="kc-title">${esc(c.titel)}</div>
           <div class="kc-meta">
             <span class="prio-badge prio-${c.prioriteit||'Normaal'}">${c.prioriteit||'Normaal'}</span>
-            ${cat?`<span class="cat-chip" style="background:${cat.kleur}">${cat.icon}</span>`:''}
-            ${c.deadline?`<span style="font-size:0.65rem;color:var(--muted);">📅${c.deadline}</span>`:''}
+            ${cat?`<span class="cat-chip" style="background:${cat.kleur}">${cat.label}${c.werktype?' · '+c.werktype:''}</span>`:''}
+            ${c.deadline?`<span style="font-size:0.65rem;color:var(--muted);">${c.deadline}</span>`:''}
           </div>
           ${(c.checklist||[]).length?`<div class="kc-progress" style="margin-top:4px;">${done}/${c.checklist.length} subtaken</div>`:''}
         </div>`;
@@ -1780,8 +1958,9 @@ function openCardModal(cardId, defaultFase){
   document.getElementById('mc-verantw').value=card?card.verantwoordelijke||'':'';
   document.getElementById('mc-label').value=card?card.label||'':'';
   document.getElementById('mc-notities').value=card?card.notities||'':'';
-  selectedMcCat=card?card.categorie||'':'';
+  selectedMcCat=card?normCat(card.categorie||''):'';
   renderCatOpts('mc-cat',selectedMcCat,v=>{selectedMcCat=v;});
+  document.getElementById('mc-werktype').value=card?.werktype||'uitvoering';
   renderMcChecklist(card);
   renderMcGepland(card);
   openModal('modal-card');
@@ -1792,7 +1971,8 @@ function renderMcChecklist(card){
   el.innerHTML=items.map((sub,i)=>`<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
     <div class="cb ${sub.done?'done':''}" onclick="toggleMcSub(${i})" style="flex-shrink:0;"></div>
     <input type="text" id="mc-sub-${i}" value="${esc(sub.tekst||'')}" placeholder="Subtaak..." style="flex:1;font-size:0.83rem;">
-    <button class="plan-pill" onclick="openSubPlanModal(${i},'${sub.id||''}')">📅 Plan</button>
+    <input type="date" id="mc-sub-dl-${i}" value="${sub.deadline||''}" title="Deadline subtaak" style="width:130px;font-size:0.72rem;padding:4px 6px;">
+    <button class="plan-pill" onclick="openSubPlanModal(${i},'${sub.id||''}')">Plan</button>
     <button style="background:none;border:none;color:var(--muted);cursor:pointer;" onclick="delMcSub(${i})">×</button>
   </div>
   ${(sub.gepland||[]).map(sl=>`<div style="font-size:0.7rem;color:var(--muted);padding:1px 0 1px 28px;">${sl.datum||''} ${sl.start||''}${sl.eind?' – '+sl.eind:''} ${esc(sl.naam||sub.tekst)} <button style="background:none;border:none;color:var(--red);cursor:pointer;font-size:0.7rem;" onclick="delSubPlanSlot(${i},'${sl.id}')">×</button></div>`).join('')}
@@ -1807,7 +1987,7 @@ function addChecklistItem(){
 function toggleMcSub(i){ saveCard(false); const projs=getProjs();const p=projs.find(x=>x.id===currentProjId);const cid=document.getElementById('mc-card-id').value;const c=p?.cards?.find(x=>x.id===cid);if(c&&c.checklist[i]){c.checklist[i].done=!c.checklist[i].done;saveProjs(projs);renderMcChecklist(c);} }
 function delMcSub(i){ const projs=getProjs();const p=projs.find(x=>x.id===currentProjId);const cid=document.getElementById('mc-card-id').value;const c=p?.cards?.find(x=>x.id===cid);if(c){c.checklist.splice(i,1);saveProjs(projs);renderMcChecklist(c);} }
 function delSubPlanSlot(subIdx,slotId){ const projs=getProjs();const p=projs.find(x=>x.id===currentProjId);const cid=document.getElementById('mc-card-id').value;const c=p?.cards?.find(x=>x.id===cid);if(c&&c.checklist[subIdx]){c.checklist[subIdx].gepland=(c.checklist[subIdx].gepland||[]).filter(s=>s.id!==slotId);saveProjs(projs);renderMcChecklist(c);} }
-function openSubPlanModal(subIdx, subId){ currentGeplandCtx={type:'sub',subIdx}; currentSubPlanSlotId=null; openModal('modal-plan'); document.getElementById('plan-naam').value=''; document.getElementById('plan-datum').value=fmtDate(NOW); document.getElementById('plan-start').value=''; document.getElementById('plan-eind').value=''; renderCatOpts('plan-cat','',v=>{selectedPlanCat=v;}); }
+function openSubPlanModal(subIdx, subId){ currentGeplandCtx={type:'sub',subIdx}; currentSubPlanSlotId=null; openModal('modal-plan'); document.getElementById('plan-naam').value=''; document.getElementById('plan-datum').value=fmtDate(NOW); document.getElementById('plan-start').value=''; document.getElementById('plan-eind').value=''; selectedPlanCat=''; document.getElementById('plan-werktype').value='uitvoering'; renderCatOpts('plan-cat','',v=>{selectedPlanCat=v;},{agendaOnly:true}); }
 function renderMcGepland(card){
   const el=document.getElementById('mc-gepland'); if(!el) return;
   const slots=card?card.gepland||[]:[];
@@ -1818,12 +1998,14 @@ function renderMcGepland(card){
   </div>`).join('');
 }
 function addGeplandSlot(ctx){
+  saveCard(false); // zorg dat de kaart bestaat en wijzigingen bewaard zijn voordat we inplannen
   currentGeplandCtx={type:'card'};
   document.getElementById('plan-naam').value=document.getElementById('mc-titel')?.value||'';
   document.getElementById('plan-datum').value=fmtDate(NOW);
   document.getElementById('plan-start').value=''; document.getElementById('plan-eind').value='';
   selectedPlanCat=selectedMcCat;
-  renderCatOpts('plan-cat',selectedPlanCat,v=>{selectedPlanCat=v;});
+  document.getElementById('plan-werktype').value=document.getElementById('mc-werktype')?.value||'uitvoering';
+  renderCatOpts('plan-cat',selectedPlanCat,v=>{selectedPlanCat=v;},{agendaOnly:true});
   openModal('modal-plan');
 }
 function delCardGepland(slotId){ const projs=getProjs();const p=projs.find(x=>x.id===currentProjId);const cid=document.getElementById('mc-card-id').value;const c=p?.cards?.find(x=>x.id===cid);if(c){c.gepland=(c.gepland||[]).filter(s=>s.id!==slotId);saveProjs(projs);renderMcGepland(c);} }
@@ -1843,30 +2025,32 @@ function saveCard(closeAfter=true){
   c.label=document.getElementById('mc-label').value;
   c.notities=document.getElementById('mc-notities').value;
   c.categorie=selectedMcCat;
+  c.werktype=selectedMcCat==='werk'?document.getElementById('mc-werktype').value:'';
   // Save checklist text
-  (c.checklist||[]).forEach((sub,i)=>{ const inp=document.getElementById(`mc-sub-${i}`); if(inp) sub.tekst=inp.value; });
+  (c.checklist||[]).forEach((sub,i)=>{ const inp=document.getElementById(`mc-sub-${i}`); if(inp) sub.tekst=inp.value; const dl=document.getElementById(`mc-sub-dl-${i}`); if(dl) sub.deadline=dl.value; });
   document.getElementById('mc-card-id').value=c.id;
   saveProjs(projs);
   if(closeAfter){closeModal('modal-card');renderKanban();}
 }
 
 // ── ACTIVITY MODAL ───────────────────────────────────────────────
-function openActModal(){
+function openActModal(defaultDate){
   currentActId=null; selectedActCat='';
   document.getElementById('act-modal-title').textContent='Nieuwe activiteit';
   document.getElementById('act-id').value='';
   document.getElementById('act-naam').value='';
   document.getElementById('act-beschr').value='';
-  document.getElementById('act-datum').value=fmtDate(weekMonday(curYear,curWeek));
+  document.getElementById('act-datum').value=defaultDate||fmtDate(weekMonday(curYear,curWeek));
   document.getElementById('act-start').value='';
   document.getElementById('act-eind').value='';
   document.getElementById('act-del-btn').style.display='none';
-  renderCatOpts('act-cat','',v=>{selectedActCat=v;});
+  document.getElementById('act-werktype').value='uitvoering';
+  renderCatOpts('act-cat','',v=>{selectedActCat=v;},{agendaOnly:true});
   openModal('modal-act');
 }
 function openActModalEdit(id){
   const items=getAgenda(); const item=items.find(x=>x.id===id); if(!item) return;
-  currentActId=id; selectedActCat=item.categorie||'';
+  currentActId=id; selectedActCat=normCat(item.categorie||'');
   document.getElementById('act-modal-title').textContent='Activiteit bewerken';
   document.getElementById('act-id').value=id;
   document.getElementById('act-naam').value=item.naam||'';
@@ -1875,18 +2059,20 @@ function openActModalEdit(id){
   document.getElementById('act-start').value=item.start||'';
   document.getElementById('act-eind').value=item.eind||'';
   document.getElementById('act-del-btn').style.display='';
-  renderCatOpts('act-cat',selectedActCat,v=>{selectedActCat=v;});
+  document.getElementById('act-werktype').value=item.werktype||'uitvoering';
+  renderCatOpts('act-cat',selectedActCat,v=>{selectedActCat=v;},{agendaOnly:true});
   openModal('modal-act');
 }
 function saveAct(){
   const items=getAgenda();
   const id=document.getElementById('act-id').value||uid();
-  const item={id,naam:document.getElementById('act-naam').value,beschrijving:document.getElementById('act-beschr').value,datum:document.getElementById('act-datum').value,start:document.getElementById('act-start').value,eind:document.getElementById('act-eind').value,categorie:selectedActCat,kleur:catColor(selectedActCat)};
+  const item={id,naam:document.getElementById('act-naam').value,beschrijving:document.getElementById('act-beschr').value,datum:document.getElementById('act-datum').value,start:document.getElementById('act-start').value,eind:document.getElementById('act-eind').value,categorie:selectedActCat,werktype:selectedActCat==='werk'?document.getElementById('act-werktype').value:'',kleur:catColor(selectedActCat)};
   const idx=items.findIndex(x=>x.id===id);
   if(idx>=0) items[idx]=item; else items.push(item);
-  saveAgenda(items); closeModal('modal-act'); renderWeekCal();
+  saveAgenda(items); closeModal('modal-act'); refreshAgendaViews();
 }
-function deleteAct(){ if(!confirm('Activiteit verwijderen?')) return; const id=document.getElementById('act-id').value; const items=getAgenda().filter(x=>x.id!==id); saveAgenda(items); closeModal('modal-act'); renderWeekCal(); }
+function refreshAgendaViews(){ if(document.getElementById('tab-week')?.classList.contains('active')) renderWeekCal(); if(document.getElementById('tab-maand')?.classList.contains('active')) renderMaandKal(); if(document.getElementById('tab-dag')?.classList.contains('active')) renderDag(); }
+function deleteAct(){ if(!confirm('Activiteit verwijderen?')) return; const id=document.getElementById('act-id').value; const items=getAgenda().filter(x=>x.id!==id); saveAgenda(items); closeModal('modal-act'); refreshAgendaViews(); }
 
 // ── PLAN SLOT MODAL ───────────────────────────────────────────────
 function openPlanModal(type,weekIdx,weekSubIdx){
@@ -1897,7 +2083,7 @@ function openPlanModal(type,weekIdx,weekSubIdx){
   document.getElementById('plan-naam').value=naam;
   document.getElementById('plan-datum').value=fmtDate(weekMonday(curYear,curWeek));
   document.getElementById('plan-start').value=''; document.getElementById('plan-eind').value='';
-  selectedPlanCat=''; renderCatOpts('plan-cat','',v=>{selectedPlanCat=v;});
+  selectedPlanCat=''; document.getElementById('plan-werktype').value='uitvoering'; renderCatOpts('plan-cat','',v=>{selectedPlanCat=v;},{agendaOnly:true});
   openModal('modal-plan');
 }
 function savePlanSlot(){
@@ -1905,7 +2091,7 @@ function savePlanSlot(){
   const datum=document.getElementById('plan-datum').value;
   const start=document.getElementById('plan-start').value;
   const eind=document.getElementById('plan-eind').value;
-  const slot={id:uid(),naam,datum,start,eind,kleur:catColor(selectedPlanCat),categorie:selectedPlanCat};
+  const slot={id:uid(),naam,datum,start,eind,kleur:catColor(selectedPlanCat),categorie:selectedPlanCat,werktype:selectedPlanCat==='werk'?document.getElementById('plan-werktype').value:''};
   const ctx=currentGeplandCtx;
   if(!ctx) return;
   if(ctx.type==='card'){
@@ -2043,16 +2229,25 @@ function renderScoreBtns(elId,max,val,onSelect){
     el.appendChild(b);
   }
 }
-function renderCatOpts(elId,selected,onChange){
+function renderCatOpts(elId,selected,onChange,opts){
   const el=document.getElementById(elId); if(!el) return;
-  el.innerHTML=CATEGORIEEN.map(c=>`<button class="cat-opt ${c.id===selected?'sel':''}" style="${c.id===selected?'border-color:'+c.kleur+';background:'+c.kleur+'20;':''}" onclick="selectCat('${elId}','${c.id}',this,'${c.kleur}')">${c.icon} ${c.label}</button>`).join('');
+  opts=opts||{}; selected=normCat(selected);
+  const list=opts.agendaOnly?AGENDA_CATS:CATEGORIEEN;
+  el.innerHTML=list.map(c=>`<button class="cat-opt ${c.id===selected?'sel':''}" style="${c.id===selected?'border-color:'+c.kleur+';background:'+c.kleur+'20;':''}" onclick="selectCat('${elId}','${c.id}',this,'${c.kleur}')">${c.label}</button>`).join('');
   el._onChange=onChange;
+  toggleWerktype(elId,selected);
 }
 function selectCat(elId,id,btn,kleur){
   const el=document.getElementById(elId); if(!el) return;
   el.querySelectorAll('.cat-opt').forEach(b=>{b.classList.remove('sel');b.style.borderColor='';b.style.background='';});
   btn.classList.add('sel'); btn.style.borderColor=kleur; btn.style.background=kleur+'20';
+  toggleWerktype(elId,id);
   if(el._onChange) el._onChange(id);
+}
+// Toon het Werk-subtype (afspraak/uitvoering) alleen als categorie Werk gekozen is
+function toggleWerktype(elId,id){
+  const sel=document.getElementById(elId.replace('-cat','-werktype'));
+  if(sel) sel.style.display=(id==='werk')?'block':'none';
 }
 
 // ── MODAL HELPERS ────────────────────────────────────────────────
