@@ -321,6 +321,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 .ctrl-ic.ok{background:var(--green);}
 .ctrl-ic.no{background:var(--red);}
 
+/* DAG PUNTEN PILL */
+.dag-pts-pill{display:inline-flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--border);border-radius:99px;padding:6px 14px;font-size:1rem;}
+.dag-pts-pill .dot{width:8px;height:8px;border-radius:50%;background:var(--blue);}
+.dag-pts-pill strong{font-weight:700;}
+.dag-pts-pill .dag-pts-max{font-size:0.72rem;color:var(--muted);}
+
 /* REMINDERS */
 .rem-wrap{margin-top:8px;}
 .rem-head{font-size:0.58rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;}
@@ -342,16 +348,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 
 <!-- HEADER -->
 <header class="hdr">
-  <div class="hdr-logo" aria-label="True North OS">
-    <svg width="150" height="26" viewBox="0 0 150 26" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
-      <text x="0" y="19" font-family="'Inter',sans-serif" font-size="18" font-weight="600" letter-spacing="-0.3" fill="#fff">true n</text>
-      <g transform="translate(74,12)">
-        <circle r="8.2" fill="none" stroke="#fff" stroke-width="2"/>
-        <polygon points="0,-4.8 2.6,0 0,1.2 -2.6,0" fill="#ff4747"/>
-        <polygon points="0,4.8 2.6,0 0,-1.2 -2.6,0" fill="#fff"/>
+  <div class="hdr-logo" aria-label="True North">
+    <svg width="132" height="26" viewBox="0 0 132 26" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+      <text x="0" y="19" font-family="'Inter',sans-serif" font-size="18" font-weight="700" letter-spacing="-0.4" fill="#ff5a4d">true</text>
+      <text x="41" y="19" font-family="'Inter',sans-serif" font-size="18" font-weight="700" letter-spacing="-0.4" fill="#fff">n</text>
+      <g transform="translate(63,11.5)">
+        <circle r="8.6" fill="none" stroke="#fff" stroke-width="2"/>
+        <circle r="8.6" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="2.5 5" opacity="0.5"/>
+        <polygon points="0,-6 2.3,0 0,6 -2.3,0" fill="#fff"/>
+        <polygon points="0,-6 2.3,0 0,0 -2.3,0" fill="#ff5a4d"/>
       </g>
-      <text x="85" y="19" font-family="'Inter',sans-serif" font-size="18" font-weight="600" letter-spacing="-0.3" fill="#fff">rth</text>
-      <text x="116" y="19" font-family="'Inter',sans-serif" font-size="18" font-weight="600" letter-spacing="0.5" fill="#ff4747">OS</text>
+      <text x="73" y="19" font-family="'Inter',sans-serif" font-size="18" font-weight="700" letter-spacing="-0.4" fill="#fff">rth</text>
     </svg>
   </div>
   <nav class="pill-nav">
@@ -379,10 +386,20 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 <div class="page active" id="tab-dashboard">
   <div class="dash-datebar" id="dash-datebar"></div>
 
-  <div class="kpi-row">
-    <div class="kpi-card"><div class="kpi-val" id="kpi-dag">0</div><div class="kpi-lbl">Punten vandaag</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="kpi-week">0</div><div class="kpi-lbl">Punten deze week</div></div>
-    <div class="kpi-card"><div class="kpi-val" id="kpi-maand">0</div><div class="kpi-lbl">Punten deze maand</div></div>
+  <div class="card">
+    <div class="card-title">Punten deze week</div>
+    <div class="day-strip" id="dash-week-strip"></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Dagplanning</div>
+      <div id="dash-planning"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Voortgang vandaag</div>
+      <div id="dash-voortgang"></div>
+    </div>
   </div>
 
   <div class="g2">
@@ -391,31 +408,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
       <div id="dash-open-deadlines"></div>
     </div>
     <div class="card">
-      <div class="card-title">Controle</div>
-      <div id="dash-controle"></div>
-    </div>
-  </div>
-
-  <div class="g2">
-    <div>
-      <div class="card">
-        <div class="card-title">Voortgang vandaag</div>
-        <div id="dash-voortgang"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Dagplanning</div>
-        <div id="dash-planning"></div>
-      </div>
-    </div>
-    <div>
-      <div class="card">
-        <div class="card-title">Dagpunten deze week</div>
-        <div class="day-strip" id="dash-week-strip"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">Levenswiel <span style="font-size:0.7rem;color:var(--muted);font-weight:400;margin-left:4px;" id="lw-kwartaal-lbl"></span></div>
-        <svg id="dash-lw-svg" width="200" height="200" style="display:block;margin:0 auto;"></svg>
-      </div>
+      <div class="card-title">Levenswiel <span style="font-size:0.7rem;color:var(--muted);font-weight:400;margin-left:4px;" id="lw-kwartaal-lbl"></span></div>
+      <svg id="dash-lw-svg" width="200" height="200" style="display:block;margin:0 auto;"></svg>
     </div>
   </div>
 
@@ -425,8 +419,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
       <svg id="dash-week-chart" class="chart-svg" height="110"></svg>
     </div>
     <div class="card">
-      <div class="card-title">Maandpunten (12 maanden)</div>
-      <svg id="dash-chart" class="chart-svg" height="110"></svg>
+      <div class="card-title">Controle</div>
+      <div id="dash-controle"></div>
     </div>
   </div>
 </div>
@@ -598,22 +592,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
   <div class="period-nav">
     <button class="btn btn-secondary btn-sm" onclick="dagNav(-1)">◀ Gisteren</button>
     <div class="period-title" id="dag-title">Vandaag</div>
+    <span class="dag-pts-pill" id="dag-pts-pill"><span class="dot"></span><strong id="dag-pts-num">0</strong> <span class="dag-pts-max">/ 100 punten</span></span>
     <button class="btn btn-secondary btn-sm" onclick="dagNav(1)">Morgen ▶</button>
     <button class="btn btn-secondary btn-sm" onclick="dagNav(0)">Vandaag</button>
-  </div>
-
-  <div class="card" style="background:linear-gradient(135deg,var(--navy),#1e3a5f);border:none;margin-bottom:14px;">
-    <div style="display:flex;align-items:center;justify-content:space-between;color:#fff;">
-      <div>
-        <div style="font-size:1.6rem;font-weight:700;" id="dag-score-big">0</div>
-        <div style="font-size:0.7rem;color:#94a3b8;">punten vandaag</div>
-      </div>
-      <div id="dag-breakdown" style="font-size:0.7rem;color:#94a3b8;text-align:right;line-height:1.9;"></div>
-    </div>
-    <div style="margin-top:10px;background:rgba(255,255,255,.1);border-radius:99px;height:6px;overflow:hidden;">
-      <div id="dag-progress-bar" style="height:100%;background:linear-gradient(90deg,var(--blue),#a5b4fc);border-radius:99px;transition:width .3s;width:0%;"></div>
-    </div>
-    <div style="font-size:0.68rem;color:#94a3b8;margin-top:4px;" id="dag-progress-txt">0% afgerond</div>
   </div>
 
   <!-- TOP: Start Sterk + Sluit Goed Af -->
@@ -1136,10 +1117,6 @@ function renderDashboard(){
   const sc=calcScore(data);
   // Datebar: alleen dag, datum, week
   renderDashDatebar();
-  // KPI
-  document.getElementById('kpi-dag').textContent=sc.total;
-  document.getElementById('kpi-week').textContent=weekPts(NOW.getFullYear(),isoWeek(NOW));
-  document.getElementById('kpi-maand').textContent=maandPts(NOW.getFullYear(),NOW.getMonth());
   // Openstaande deadlines + controle
   renderOpenDeadlines();
   renderControle();
@@ -1156,7 +1133,6 @@ function renderDashboard(){
   drawLevenswiel('dash-lw-svg',200,LW_DIMS.map(d=>((kwData.levenswiel||{})[d])||5));
   // Charts
   renderWeekChart();
-  renderMonthChart();
 }
 function renderDashDatebar(){
   const d=NOW; const el=document.getElementById('dash-datebar'); if(!el) return;
@@ -1735,12 +1711,7 @@ function renderDag(){
   document.getElementById('dag-title').textContent=`${DAGEN[cd.getDay()]} ${cd.getDate()} ${MAANDEN[cd.getMonth()]} ${cd.getFullYear()}${isToday(curDay)?' — Vandaag':''}`;
   const data=lsDay(curDay);
   const sc=calcScore(data);
-  document.getElementById('dag-score-big').textContent=sc.total;
-  document.getElementById('dag-breakdown').innerHTML=`Start Sterk: ${sc.ss}<br>Werk: ${sc.werk}<br>Groeien: ${sc.gr}<br>Bewegen: ${sc.tr}<br>Rust & Herstel: ${sc.on}<br>Verbinden: ${sc.vb}<br>Brandstof: ${sc.vo}<br>Sluit Goed Af: ${sc.av}`;
-  const checks=[data.slaap,data.water,data.medi,data.stretch,data.lerenDone,data.eenDone,...(data.groteDrie||[]).map(g=>g.done),...(data.training||[]).map(g=>g.done),...(data.ontspanning||[]).map(g=>g.done),...(data.verbinding||[]).map(g=>g.done),!!data.voeding,data.schermLoos,data.planningMorgen,data.levenswiel,data.doelenGelezen];
-  const tot=checks.length,dn=checks.filter(Boolean).length,pct=tot?Math.round(dn/tot*100):0;
-  document.getElementById('dag-progress-bar').style.width=pct+'%';
-  document.getElementById('dag-progress-txt').textContent=`${pct}% afgerond`;
+  document.getElementById('dag-pts-num').textContent=sc.total;
   document.getElementById('pts-start').textContent=`${sc.ss}/10`;
   document.getElementById('pts-avond').textContent=`${sc.av}/10`;
   document.getElementById('pts-werk').textContent=`${sc.werk}/30`;
@@ -1887,7 +1858,7 @@ function saveDag(){
   LSS('atlas_dag_'+curDay,d);
   // update score display
   const sc=calcScore(d);
-  document.getElementById('dag-score-big').textContent=sc.total;
+  document.getElementById('dag-pts-num').textContent=sc.total;
 }
 
 // ── PROJECTEN ────────────────────────────────────────────────────
