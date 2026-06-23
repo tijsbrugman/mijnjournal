@@ -321,6 +321,20 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 .ctrl-ic.ok{background:var(--green);}
 .ctrl-ic.no{background:var(--red);}
 
+/* DRAG & DROP */
+.kanban-card{cursor:grab;}
+.kanban-card:active{cursor:grabbing;}
+.kanban-col.drag-over{background:var(--blue-light);outline:2px dashed var(--blue);outline-offset:-4px;}
+.proj-card.drag-over{outline:2px dashed var(--blue);outline-offset:-3px;}
+.proj-act{background:none;border:none;cursor:pointer;color:var(--muted);font-size:0.85rem;padding:1px 5px;border-radius:6px;line-height:1;}
+.proj-act:hover{background:var(--card2);color:var(--text);}
+
+/* LOCK */
+.lock-btn{background:var(--card2);border:1px solid var(--border);border-radius:7px;font-size:0.66rem;font-weight:600;color:var(--muted);cursor:pointer;padding:3px 9px;margin-left:auto;}
+.lock-btn:hover{border-color:var(--blue);color:var(--blue);}
+.lock-btn.locked{background:var(--blue-light);border-color:var(--blue);color:var(--blue);}
+.lockable.locked{pointer-events:none;opacity:0.6;}
+
 /* DAG PUNTEN PILL */
 .dag-pts-pill{display:inline-flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--border);border-radius:99px;padding:6px 14px;font-size:1rem;}
 .dag-pts-pill .dot{width:8px;height:8px;border-radius:50%;background:var(--blue);}
@@ -595,44 +609,49 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
     <span class="dag-pts-pill" id="dag-pts-pill"><span class="dot"></span><strong id="dag-pts-num">0</strong> <span class="dag-pts-max">/ 100 punten</span></span>
     <button class="btn btn-secondary btn-sm" onclick="dagNav(1)">Morgen ▶</button>
     <button class="btn btn-secondary btn-sm" onclick="dagNav(0)">Vandaag</button>
+    <button class="btn btn-secondary btn-sm" id="dag-lock-btn" onclick="toggleLock('dag')">Dag afronden</button>
   </div>
 
   <!-- TOP: Start Sterk + Sluit Goed Af -->
   <div class="dag-top">
     <div class="dag-sub" style="background:var(--card);border:1px solid var(--border);">
-      <div class="dag-sub-title">Start Sterk <span class="dag-sub-pts" id="pts-start">0/10</span></div>
-      <div class="form-row"><label class="lbl">Intentie van de dag</label><input type="text" id="d-intentie" placeholder="Vandaag is het een goede dag als..." oninput="saveDag()"></div>
-      <div id="d-ss-checks"></div>
-      <div class="form-row" style="margin-top:8px;"><label class="lbl">Dankbaarheid — 3 dingen</label><textarea id="d-dankbaar" rows="2" placeholder="1. ..." oninput="saveDag()"></textarea></div>
-      <div class="form-row"><label class="lbl">Energieniveau ochtend</label>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <input type="range" id="d-energie-och" min="1" max="10" value="5" oninput="document.getElementById('d-eo-val').textContent=this.value;saveDag()">
-          <span id="d-eo-val" style="font-size:0.8rem;font-weight:600;color:var(--blue);min-width:16px;">5</span>
+      <div class="dag-sub-title">Start Sterk <span class="dag-sub-pts" id="pts-start">0/10</span><button class="lock-btn" id="lock-start-btn" onclick="toggleLock('start')">Afronden</button></div>
+      <div class="lockable" id="body-start">
+        <div class="form-row"><label class="lbl">Intentie van de dag</label><input type="text" id="d-intentie" placeholder="Vandaag is het een goede dag als..." oninput="saveDag()"></div>
+        <div id="d-ss-checks"></div>
+        <div class="form-row" style="margin-top:8px;"><label class="lbl">Dankbaarheid — 3 dingen</label><textarea id="d-dankbaar" rows="2" placeholder="1. ..." oninput="saveDag()"></textarea></div>
+        <div class="form-row"><label class="lbl">Energieniveau ochtend</label>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <input type="range" id="d-energie-och" min="1" max="10" value="5" oninput="document.getElementById('d-eo-val').textContent=this.value;saveDag()">
+            <span id="d-eo-val" style="font-size:0.8rem;font-weight:600;color:var(--blue);min-width:16px;">5</span>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="dag-sub" style="background:var(--card);border:1px solid var(--border);">
-      <div class="dag-sub-title">Sluit Goed Af <span class="dag-sub-pts" id="pts-avond">0/10</span></div>
-      <div class="form-row"><label class="lbl">Energieniveau avond</label>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <input type="range" id="d-energie-av" min="1" max="10" value="5" oninput="document.getElementById('d-ea-val').textContent=this.value;saveDag()">
-          <span id="d-ea-val" style="font-size:0.8rem;font-weight:600;color:var(--blue);min-width:16px;">5</span>
+      <div class="dag-sub-title">Sluit Goed Af <span class="dag-sub-pts" id="pts-avond">0/10</span><button class="lock-btn" id="lock-avond-btn" onclick="toggleLock('avond')">Afronden</button></div>
+      <div class="lockable" id="body-avond">
+        <div class="form-row"><label class="lbl">Energieniveau avond</label>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <input type="range" id="d-energie-av" min="1" max="10" value="5" oninput="document.getElementById('d-ea-val').textContent=this.value;saveDag()">
+            <span id="d-ea-val" style="font-size:0.8rem;font-weight:600;color:var(--blue);min-width:16px;">5</span>
+          </div>
         </div>
+        <div id="d-av-checks"></div>
+        <div class="form-row" style="margin-top:8px;"><label class="lbl">Succes (1–5)</label><div class="score-row" id="d-succes-btns"></div></div>
+        <div class="form-row"><label class="lbl">Voldoening (1–5)</label><div class="score-row" id="d-voldaan-btns"></div></div>
+        <div class="form-row" style="margin-top:4px;"><label class="lbl">Inzicht van de dag</label><textarea id="d-inzicht" rows="2" placeholder="Wat leerde ik vandaag?" oninput="saveDag()"></textarea></div>
+        <div class="form-row"><label class="lbl">Betekenisvol moment</label><textarea id="d-moment" rows="2" placeholder="Eén moment dat telde..." oninput="saveDag()"></textarea></div>
+        <div class="form-row"><label class="lbl">Morgen begin ik met...</label><input type="text" id="d-morgen" placeholder="Eerste actie van morgen" oninput="saveDag()"></div>
       </div>
-      <div id="d-av-checks"></div>
-      <div class="form-row" style="margin-top:8px;"><label class="lbl">Succes (1–5)</label><div class="score-row" id="d-succes-btns"></div></div>
-      <div class="form-row"><label class="lbl">Voldoening (1–5)</label><div class="score-row" id="d-voldaan-btns"></div></div>
-      <div class="form-row" style="margin-top:4px;"><label class="lbl">Inzicht van de dag</label><textarea id="d-inzicht" rows="2" placeholder="Wat leerde ik vandaag?" oninput="saveDag()"></textarea></div>
-      <div class="form-row"><label class="lbl">Betekenisvol moment</label><textarea id="d-moment" rows="2" placeholder="Eén moment dat telde..." oninput="saveDag()"></textarea></div>
-      <div class="form-row"><label class="lbl">Morgen begin ik met...</label><input type="text" id="d-morgen" placeholder="Eerste actie van morgen" oninput="saveDag()"></div>
     </div>
   </div>
 
   <!-- CLUSTER: Werk + Voeding + Ontspanning + Verbinding -->
   <div class="dag-cluster">
     <div class="dag-cluster-title">Uitvoering</div>
-    <div class="dag-cluster-inner">
+    <div class="dag-cluster-inner lockable" id="cluster-body">
 
       <!-- WERK -->
       <div class="dag-sub">
@@ -740,13 +759,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 <div class="modal-bg" id="modal-new-proj">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('modal-new-proj')">×</button>
-    <div class="modal-title">Nieuw project</div>
+    <div class="modal-title" id="np-title">Nieuw project</div>
     <div class="form-row"><label class="lbl">Naam</label><input type="text" id="np-naam" placeholder="Projectnaam..."></div>
     <div class="form-row"><label class="lbl">Kleur</label>
       <div class="color-opts" id="np-colors"></div>
     </div>
     <div class="form-row"><label class="lbl">Categorie</label><div class="cat-opts" id="np-cat"></div></div>
-    <button class="btn btn-primary" onclick="saveNewProj()">Aanmaken</button>
+    <button class="btn btn-primary" onclick="saveNewProj()" id="np-save-btn">Aanmaken</button>
   </div>
 </div>
 
@@ -1065,6 +1084,25 @@ function getWeekDeadlineReminders(y,w){
   return byDay;
 }
 function openCardFromReminder(projId,cardId){ if(!projId||!cardId) return; goTab('projecten'); openKanban(projId); openCardModal(cardId); }
+// Klik-doel voor een gepland item (agenda/kaart/subtaak/weektaak)
+function schedClick(ev){
+  if(ev.type==='agenda') return `openActModalEdit('${ev.id}')`;
+  if(ev.type==='card'||ev.type==='sub') return `openCardFromReminder('${ev.projId||''}','${ev.cardId||''}')`;
+  return `goTab('week')`;
+}
+// Overlappende afspraken naast elkaar plaatsen (kolom-toewijzing)
+function layoutDayEvents(evs){
+  const sorted=evs.slice().sort((a,b)=>timeToMin(a.start)-timeToMin(b.start)||timeToMin(a.eind)-timeToMin(b.eind));
+  let cluster=[],clusterEnd=-1; const out=[];
+  const flush=()=>{
+    const colsEnd=[];
+    cluster.forEach(ev=>{ let placed=false; for(let i=0;i<colsEnd.length;i++){ if(timeToMin(ev.start)>=colsEnd[i]){ ev._col=i; colsEnd[i]=timeToMin(ev.eind); placed=true; break; } } if(!placed){ ev._col=colsEnd.length; colsEnd.push(timeToMin(ev.eind)); } });
+    const n=Math.max(1,colsEnd.length); cluster.forEach(ev=>{ ev._cols=n; out.push(ev); }); cluster=[]; clusterEnd=-1;
+  };
+  sorted.forEach(ev=>{ const s=timeToMin(ev.start),e=timeToMin(ev.eind); if(cluster.length && s>=clusterEnd){ flush(); } cluster.push(ev); clusterEnd=Math.max(clusterEnd,e); });
+  flush();
+  return out;
+}
 function renderRemList(items){
   if(!items||!items.length) return '';
   return `<div class="rem-wrap"><div class="rem-head">Herinneringen</div>${items.map(r=>`<div class="rem-item ${r.planned?'planned':''}" ${r.cardId?`onclick="openCardFromReminder('${r.projId}','${r.cardId}')"`:''}><span class="rem-txt">${esc(r.titel)}</span><span class="rem-meta">${r.planned?(r.meta&&r.meta!=='gepland'&&r.meta!=='deadline'?r.meta:'gepland'):r.meta}</span></div>`).join('')}</div>`;
@@ -1222,9 +1260,9 @@ function renderDashPlanning(){
   const el=document.getElementById('dash-planning'); if(!el) return;
   const items=getScheduledForDate(fmtDate(NOW));
   if(!items.length){ el.innerHTML='<div class="empty">Niets gepland vandaag</div>'; return; }
-  el.innerHTML=items.map(it=>`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--card2);font-size:0.82rem;">
+  el.innerHTML=items.map(it=>`<div onclick="${schedClick(it)}" style="display:flex;align-items:center;gap:8px;padding:6px 4px;border-bottom:1px solid var(--card2);font-size:0.82rem;cursor:pointer;border-radius:6px;" onmouseover="this.style.background='var(--card2)'" onmouseout="this.style.background='transparent'">
     <span style="background:${it.kleur};color:#fff;border-radius:6px;padding:2px 8px;font-size:0.68rem;font-weight:600;white-space:nowrap;">${it.start||''}${it.eind?' – '+it.eind:''}</span>
-    <span>${it.icon||''} ${esc(it.naam)}</span>
+    <span>${esc(it.naam)}</span>
   </div>`).join('');
 }
 
@@ -1671,12 +1709,14 @@ function renderWeekCal(){
     });
     // Free text textarea covering full column
     html+=`<textarea class="wcal-free" data-day="${di}" oninput="saveFreeCell(this)" style="height:${CAL_TOTAL_PX}px;">${getFreeCell(ds,'free')}</textarea>`;
-    // Events
-    events.filter(e=>e.dayIdx===di).forEach(ev=>{
+    // Events met overlap-layout (naast elkaar, allemaal klikbaar)
+    layoutDayEvents(events.filter(e=>e.dayIdx===di)).forEach(ev=>{
       const top=eventTopPx(ev.start);
       const height=eventHeightPx(ev.start,ev.eind);
       if(top<0||top>=CAL_TOTAL_PX) return;
-      html+=`<div class="wcal-event" style="top:${top}px;height:${height}px;background:${ev.kleur};" onclick="openActModalEdit('${ev.id}')" title="${esc(ev.naam)}">${ev.icon} ${esc(ev.naam)}<br><span style="font-size:0.6rem;opacity:0.85;">${ev.start||''}${ev.eind?' – '+ev.eind:''}</span></div>`;
+      const left=`calc(2px + ${ev._col} * (100% - 4px) / ${ev._cols})`;
+      const width=`calc((100% - 4px) / ${ev._cols} - 1px)`;
+      html+=`<div class="wcal-event" style="top:${top}px;height:${height}px;left:${left};width:${width};right:auto;background:${ev.kleur};" onclick="${schedClick(ev)}" title="${esc(ev.naam)}">${esc(ev.naam)}<br><span style="font-size:0.6rem;opacity:0.85;">${ev.start||''}${ev.eind?' – '+ev.eind:''}</span></div>`;
     });
     html+='</div>';
   }
@@ -1760,6 +1800,21 @@ function renderDag(){
   else vOpts[0].classList.add('sel');
   document.getElementById('d-notities').value=data.notities||'';
   renderDayReminders();
+  applyDagLocks(data);
+}
+function toggleLock(which){ const d=lsDay(curDay); if(!d.locks) d.locks={}; d.locks[which]=!d.locks[which]; LSS('atlas_dag_'+curDay,d); renderDag(); }
+function applyLock(which, sectionLocked, dayLocked){
+  const body=document.getElementById('body-'+which);
+  const btn=document.getElementById('lock-'+which+'-btn');
+  if(body) body.classList.toggle('locked', sectionLocked||dayLocked);
+  if(btn){ btn.textContent=sectionLocked?'Ontgrendelen':'Afronden'; btn.classList.toggle('locked',sectionLocked); btn.disabled=dayLocked; btn.style.opacity=dayLocked?'0.4':''; }
+}
+function applyDagLocks(data){
+  const locks=data.locks||{};
+  applyLock('start', !!locks.start, !!locks.dag);
+  applyLock('avond', !!locks.avond, !!locks.dag);
+  const c=document.getElementById('cluster-body'); if(c) c.classList.toggle('locked', !!locks.dag);
+  const db=document.getElementById('dag-lock-btn'); if(db) db.textContent=locks.dag?'Dag ontgrendelen':'Dag afronden';
 }
 function renderDayReminders(){
   const rem=getDayReminders(curDay);
@@ -1868,10 +1923,18 @@ function renderProjOverview(){
   const el=document.getElementById('proj-grid'); el.innerHTML='';
   const projs=getProjs();
   if(!projs.length){ el.innerHTML='<div class="empty">Nog geen projecten</div>'; return; }
-  projs.forEach(p=>{
-    const div=document.createElement('div'); div.className='proj-card';
+  projs.forEach((p,idx)=>{
+    const div=document.createElement('div'); div.className='proj-card'; div.draggable=true;
+    div.ondragstart=(e)=>{dragProjIdx=idx;e.dataTransfer.effectAllowed='move';};
+    div.ondragover=(e)=>{e.preventDefault();div.classList.add('drag-over');};
+    div.ondragleave=()=>div.classList.remove('drag-over');
+    div.ondrop=(e)=>{e.preventDefault();div.classList.remove('drag-over');dropProjReorder(idx);};
     div.innerHTML=`<div class="proj-color-bar" style="background:${p.kleur||'var(--blue)'}"></div>
-      <div class="proj-name">${esc(p.naam)}</div>
+      <div style="display:flex;align-items:flex-start;gap:6px;">
+        <div class="proj-name" style="flex:1;">${esc(p.naam)}</div>
+        <button class="proj-act" title="Bewerken" onclick="event.stopPropagation();openEditProjModal('${p.id}')">✎</button>
+        <button class="proj-act" title="Verwijderen" style="color:var(--red);" onclick="event.stopPropagation();deleteProj('${p.id}')">×</button>
+      </div>
       <div class="proj-sub">${(p.cards||[]).length} kaarten</div>`;
     div.onclick=()=>openKanban(p.id);
     el.appendChild(div);
@@ -1890,12 +1953,15 @@ function renderKanban(){
   const board=document.getElementById('kanban-board'); board.innerHTML='';
   const p=getProjs().find(x=>x.id===currentProjId); if(!p) return;
   FASES.forEach(fase=>{
-    const col=document.createElement('div'); col.className='kanban-col';
+    const col=document.createElement('div'); col.className='kanban-col'; col.dataset.fase=fase;
+    col.ondragover=(e)=>{e.preventDefault();col.classList.add('drag-over');};
+    col.ondragleave=()=>col.classList.remove('drag-over');
+    col.ondrop=(e)=>{e.preventDefault();col.classList.remove('drag-over');dropCardToFase(fase);};
     const cards=(p.cards||[]).filter(c=>c.fase===fase);
     col.innerHTML=`<div class="kanban-col-title">${fase} <span class="badge">${cards.length}</span></div>
       ${cards.map(c=>{
         const cat=catById(c.categorie); const done=(c.checklist||[]).filter(x=>x.done).length;
-        return `<div class="kanban-card" onclick="openCardModal('${c.id}')">
+        return `<div class="kanban-card" draggable="true" ondragstart="dragCardStart(event,'${c.id}')" onclick="openCardModal('${c.id}')">
           <div class="kc-title">${esc(c.titel)}</div>
           <div class="kc-meta">
             <span class="prio-badge prio-${c.prioriteit||'Normaal'}">${c.prioriteit||'Normaal'}</span>
@@ -1909,6 +1975,9 @@ function renderKanban(){
     board.appendChild(col);
   });
 }
+let dragCardId=null;
+function dragCardStart(e,id){ dragCardId=id; e.dataTransfer.effectAllowed='move'; }
+function dropCardToFase(fase){ if(!dragCardId) return; const projs=getProjs(); const p=projs.find(x=>x.id===currentProjId); const c=p?.cards?.find(x=>x.id===dragCardId); if(c){ c.fase=fase; saveProjs(projs);} dragCardId=null; renderKanban(); }
 
 let pendingCardFase='Idee';
 function newCard(fase){
@@ -1950,13 +2019,16 @@ function renderMcChecklist(card){
   `).join('');
 }
 function addChecklistItem(){
-  const cardId=document.getElementById('mc-card-id').value;
-  const projId=document.getElementById('mc-proj-id').value;
-  const projs=getProjs(); const p=projs.find(x=>x.id===projId); if(!p) return;
-  if(cardId){const c=p.cards.find(x=>x.id===cardId);if(c){if(!c.checklist)c.checklist=[];c.checklist.push({id:uid(),tekst:'',done:false,gepland:[]});saveProjs(projs);renderMcChecklist(c);}}
+  saveCard(false); // bewaar eerst de al ingevulde subtaken voordat we een nieuwe toevoegen
+  const projs=getProjs(); const p=projs.find(x=>x.id===currentProjId); if(!p) return;
+  const cid=document.getElementById('mc-card-id').value;
+  const c=p.cards.find(x=>x.id===cid); if(!c) return;
+  if(!c.checklist) c.checklist=[];
+  c.checklist.push({id:uid(),tekst:'',done:false,gepland:[]});
+  saveProjs(projs); renderMcChecklist(c);
 }
 function toggleMcSub(i){ saveCard(false); const projs=getProjs();const p=projs.find(x=>x.id===currentProjId);const cid=document.getElementById('mc-card-id').value;const c=p?.cards?.find(x=>x.id===cid);if(c&&c.checklist[i]){c.checklist[i].done=!c.checklist[i].done;saveProjs(projs);renderMcChecklist(c);} }
-function delMcSub(i){ const projs=getProjs();const p=projs.find(x=>x.id===currentProjId);const cid=document.getElementById('mc-card-id').value;const c=p?.cards?.find(x=>x.id===cid);if(c){c.checklist.splice(i,1);saveProjs(projs);renderMcChecklist(c);} }
+function delMcSub(i){ saveCard(false); const projs=getProjs();const p=projs.find(x=>x.id===currentProjId);const cid=document.getElementById('mc-card-id').value;const c=p?.cards?.find(x=>x.id===cid);if(c){c.checklist.splice(i,1);saveProjs(projs);renderMcChecklist(c);} }
 function delSubPlanSlot(subIdx,slotId){ const projs=getProjs();const p=projs.find(x=>x.id===currentProjId);const cid=document.getElementById('mc-card-id').value;const c=p?.cards?.find(x=>x.id===cid);if(c&&c.checklist[subIdx]){c.checklist[subIdx].gepland=(c.checklist[subIdx].gepland||[]).filter(s=>s.id!==slotId);saveProjs(projs);renderMcChecklist(c);} }
 function openSubPlanModal(subIdx, subId){ currentGeplandCtx={type:'sub',subIdx}; currentSubPlanSlotId=null; openModal('modal-plan'); document.getElementById('plan-naam').value=''; document.getElementById('plan-datum').value=fmtDate(NOW); document.getElementById('plan-start').value=''; document.getElementById('plan-eind').value=''; selectedPlanCat=''; document.getElementById('plan-werktype').value='uitvoering'; renderCatOpts('plan-cat','',v=>{selectedPlanCat=v;},{agendaOnly:true}); }
 function renderMcGepland(card){
@@ -2157,12 +2229,32 @@ function saveLinkTask(){
 }
 
 // ── NEW PROJECT MODAL ─────────────────────────────────────────────
+let editingProjId=null;
 function openNewProjModal(){
+  editingProjId=null;
   selectedNpColor=PROJ_COLORS[0]; selectedNpCat='';
+  document.getElementById('np-title').textContent='Nieuw project';
+  document.getElementById('np-save-btn').textContent='Aanmaken';
   document.getElementById('np-naam').value='';
   renderColorOpts();
   renderCatOpts('np-cat','',v=>{selectedNpCat=v;});
   openModal('modal-new-proj');
+}
+function openEditProjModal(id){
+  const p=getProjs().find(x=>x.id===id); if(!p) return;
+  editingProjId=id;
+  selectedNpColor=p.kleur||PROJ_COLORS[0]; selectedNpCat=normCat(p.categorie||'');
+  document.getElementById('np-title').textContent='Project bewerken';
+  document.getElementById('np-save-btn').textContent='Opslaan';
+  document.getElementById('np-naam').value=p.naam||'';
+  renderColorOpts();
+  renderCatOpts('np-cat',selectedNpCat,v=>{selectedNpCat=v;});
+  openModal('modal-new-proj');
+}
+function deleteProj(id){
+  if(!confirm('Project verwijderen? Alle kaarten gaan verloren.')) return;
+  let projs=getProjs().filter(p=>p.id!==id); saveProjs(projs);
+  if(currentProjId===id){ currentProjId=null; showProjOverview(); } else renderProjOverview();
 }
 function renderColorOpts(){
   const el=document.getElementById('np-colors'); if(!el) return;
@@ -2171,8 +2263,18 @@ function renderColorOpts(){
 function selectColor(c){ selectedNpColor=c; renderColorOpts(); }
 function saveNewProj(){
   const naam=document.getElementById('np-naam').value.trim(); if(!naam) return;
-  const projs=getProjs(); projs.push({id:uid(),naam,kleur:selectedNpColor,categorie:selectedNpCat,cards:[]});
-  saveProjs(projs); closeModal('modal-new-proj'); renderProjOverview();
+  const projs=getProjs();
+  if(editingProjId){ const p=projs.find(x=>x.id===editingProjId); if(p){ p.naam=naam; p.kleur=selectedNpColor; p.categorie=selectedNpCat; } }
+  else { projs.push({id:uid(),naam,kleur:selectedNpColor,categorie:selectedNpCat,cards:[]}); }
+  saveProjs(projs); closeModal('modal-new-proj');
+  if(editingProjId&&currentProjId===editingProjId) document.getElementById('kanban-proj-title').textContent=naam;
+  renderProjOverview();
+}
+let dragProjIdx=null;
+function dropProjReorder(targetIdx){
+  if(dragProjIdx===null||dragProjIdx===targetIdx) return;
+  const projs=getProjs(); const [m]=projs.splice(dragProjIdx,1); projs.splice(targetIdx,0,m);
+  saveProjs(projs); dragProjIdx=null; renderProjOverview();
 }
 
 // ── MANTRA'S ─────────────────────────────────────────────────────
