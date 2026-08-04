@@ -213,6 +213,15 @@ textarea{resize:vertical;min-height:72px;line-height:1.5;}
 .prio-Laag{background:rgba(52,211,153,0.16);color:#34d399;}
 .cat-chip{font-size:0.7rem;padding:2px 6px;border-radius:6px;color:#fff;}
 .kc-progress{font-size:0.65rem;color:var(--muted);}
+.kc-subs{margin-top:7px;border-top:1px solid var(--border);padding-top:6px;display:flex;flex-direction:column;gap:4px;}
+.kc-sub{display:flex;align-items:center;gap:5px;font-size:0.72rem;}
+.kc-sub-box{width:12px;height:12px;border-radius:3px;border:1.5px solid #cdd3db;flex-shrink:0;}
+.kc-sub-txt{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.kc-sub-date{font-size:0.6rem;border-radius:4px;padding:1px 5px;white-space:nowrap;flex-shrink:0;background:var(--card2);color:var(--muted);}
+.kc-sub-date.planned{background:var(--blue-light);color:var(--blue);font-weight:600;}
+.kc-sub-date.none{color:#9aa1ac;}
+.kc-sub-more{font-size:0.62rem;color:var(--muted);padding-left:17px;}
+.kc-progress.compleet{color:var(--green);font-weight:600;}
 
 /* PROJECT OVERVIEW */
 .proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:16px;}
@@ -782,25 +791,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
       </div>
     </div>
     <div class="form-row"><label class="lbl">Beschrijving</label><textarea id="mc-beschr" rows="2"></textarea></div>
-    <div class="form-2">
-      <div class="form-row"><label class="lbl">Deadline</label><input type="date" id="mc-deadline"></div>
-      <div class="form-row"><label class="lbl">Verantwoordelijke</label><input type="text" id="mc-verantw"></div>
-    </div>
-    <div class="form-2">
-      <div class="form-row"><label class="lbl">Label</label><input type="text" id="mc-label"></div>
-      <div class="form-row"><label class="lbl">Categorie</label><div class="cat-opts" id="mc-cat"></div>
-        <select id="mc-werktype" style="display:none;margin-top:6px;"><option value="uitvoering">Uitvoering</option><option value="afspraak">Afspraak</option></select>
-      </div>
-    </div>
-    <div class="form-row"><label class="lbl">Notities</label><textarea id="mc-notities" rows="2"></textarea></div>
-    <div class="sep"></div>
-    <div class="card-title" style="margin-bottom:8px;">Checklist</div>
-    <div id="mc-checklist"></div>
-    <button class="btn btn-secondary btn-sm" onclick="addChecklistItem()" style="margin-bottom:12px;">+ Subtaak</button>
-    <div class="sep"></div>
-    <div class="card-title" style="margin-bottom:8px;">Inplannen</div>
+    <div class="form-row"><label class="lbl">Deadline</label><input type="date" id="mc-deadline" style="width:180px;"></div>
+    <div class="card-title" style="margin:6px 0 8px;">Inplannen</div>
     <div id="mc-gepland"></div>
     <button class="btn btn-secondary btn-sm" onclick="addGeplandSlot('card')" style="margin-bottom:12px;">+ Moment toevoegen</button>
+    <div class="form-row"><label class="lbl">Notities</label><textarea id="mc-notities" rows="2"></textarea></div>
+    <div class="sep"></div>
+    <div class="card-title" style="margin-bottom:8px;">Subtaken</div>
+    <div id="mc-checklist"></div>
+    <button class="btn btn-secondary btn-sm" onclick="addChecklistItem()" style="margin-bottom:12px;">+ Subtaak</button>
     <div class="sep"></div>
     <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap;">
       <div style="display:flex;gap:6px;">
@@ -1949,6 +1948,15 @@ function openKanban(projId){
   document.getElementById('kanban-proj-title').textContent=p?p.naam:'';
   renderKanban();
 }
+// Datum-chip per subtaak: gepland moment wint, anders deadline, anders 'plannen'
+const DOW_S=['zo','ma','di','wo','do','vr','za'];
+function fmtDM(ds){ if(!ds) return ''; const d=new Date(ds); if(isNaN(d)) return ds; return `${DOW_S[d.getDay()]} ${p2(d.getDate())}-${p2(d.getMonth()+1)}`; }
+function subDateChip(sub){
+  const slots=(sub.gepland||[]).filter(s=>s.datum).slice().sort((a,b)=>(a.datum+(a.start||'')).localeCompare(b.datum+(b.start||'')));
+  if(slots.length){ const s=slots[0]; return {txt:fmtDM(s.datum)+(s.start?' '+s.start:''), kind:'planned'}; }
+  if(sub.deadline){ return {txt:fmtDM(sub.deadline), kind:'deadline'}; }
+  return {txt:'plannen', kind:'none'};
+}
 function renderKanban(){
   const board=document.getElementById('kanban-board'); board.innerHTML='';
   const p=getProjs().find(x=>x.id===currentProjId); if(!p) return;
@@ -1960,15 +1968,16 @@ function renderKanban(){
     const cards=(p.cards||[]).filter(c=>c.fase===fase);
     col.innerHTML=`<div class="kanban-col-title">${fase} <span class="badge">${cards.length}</span></div>
       ${cards.map(c=>{
-        const cat=catById(c.categorie); const done=(c.checklist||[]).filter(x=>x.done).length;
+        const subs=c.checklist||[]; const done=subs.filter(x=>x.done).length;
+        const open=subs.filter(x=>!x.done); const shown=open.slice(0,3); const more=open.length-shown.length;
+        const subHtml=subs.length?`<div class="kc-subs">${shown.map(s=>{const dc=subDateChip(s);return `<div class="kc-sub"><span class="kc-sub-box"></span><span class="kc-sub-txt">${esc(s.tekst||'')}</span><span class="kc-sub-date ${dc.kind}">${dc.txt}</span></div>`;}).join('')}${more>0?`<div class="kc-sub-more">+${more} meer</div>`:''}<div class="kc-progress ${done===subs.length?'compleet':''}">${done} / ${subs.length} subtaken</div></div>`:'';
         return `<div class="kanban-card" draggable="true" ondragstart="dragCardStart(event,'${c.id}')" onclick="openCardModal('${c.id}')">
           <div class="kc-title">${esc(c.titel)}</div>
           <div class="kc-meta">
             <span class="prio-badge prio-${c.prioriteit||'Normaal'}">${c.prioriteit||'Normaal'}</span>
-            ${cat?`<span class="cat-chip" style="background:${cat.kleur}">${cat.label}${c.werktype?' · '+c.werktype:''}</span>`:''}
-            ${c.deadline?`<span style="font-size:0.65rem;color:var(--muted);">${c.deadline}</span>`:''}
+            ${c.deadline?`<span style="font-size:0.65rem;color:var(--muted);">${fmtDM(c.deadline)}</span>`:''}
           </div>
-          ${(c.checklist||[]).length?`<div class="kc-progress" style="margin-top:4px;">${done}/${c.checklist.length} subtaken</div>`:''}
+          ${subHtml}
         </div>`;
       }).join('')}
       <button class="btn btn-secondary btn-sm" onclick="newCard('${fase}')" style="width:100%;margin-top:6px;">+ Kaart</button>`;
@@ -1995,12 +2004,7 @@ function openCardModal(cardId, defaultFase){
   document.getElementById('mc-beschr').value=card?card.beschrijving||'':'';
   document.getElementById('mc-prio').value=card?card.prioriteit||'Normaal':'Normaal';
   document.getElementById('mc-deadline').value=card?card.deadline||'':'';
-  document.getElementById('mc-verantw').value=card?card.verantwoordelijke||'':'';
-  document.getElementById('mc-label').value=card?card.label||'':'';
   document.getElementById('mc-notities').value=card?card.notities||'':'';
-  selectedMcCat=card?normCat(card.categorie||''):'';
-  renderCatOpts('mc-cat',selectedMcCat,v=>{selectedMcCat=v;});
-  document.getElementById('mc-werktype').value=card?.werktype||'uitvoering';
   renderMcChecklist(card);
   renderMcGepland(card);
   openModal('modal-card');
@@ -2046,8 +2050,8 @@ function addGeplandSlot(ctx){
   document.getElementById('plan-naam').value=document.getElementById('mc-titel')?.value||'';
   document.getElementById('plan-datum').value=fmtDate(NOW);
   document.getElementById('plan-start').value=''; document.getElementById('plan-eind').value='';
-  selectedPlanCat=selectedMcCat;
-  document.getElementById('plan-werktype').value=document.getElementById('mc-werktype')?.value||'uitvoering';
+  selectedPlanCat='werk';
+  document.getElementById('plan-werktype').value='uitvoering';
   renderCatOpts('plan-cat',selectedPlanCat,v=>{selectedPlanCat=v;},{agendaOnly:true});
   openModal('modal-plan');
 }
@@ -2064,11 +2068,8 @@ function saveCard(closeAfter=true){
   c.beschrijving=document.getElementById('mc-beschr').value;
   c.prioriteit=document.getElementById('mc-prio').value;
   c.deadline=document.getElementById('mc-deadline').value;
-  c.verantwoordelijke=document.getElementById('mc-verantw').value;
-  c.label=document.getElementById('mc-label').value;
   c.notities=document.getElementById('mc-notities').value;
-  c.categorie=selectedMcCat;
-  c.werktype=selectedMcCat==='werk'?document.getElementById('mc-werktype').value:'';
+  c.categorie='werk'; // projectkaarten zijn altijd werk
   // Save checklist text
   (c.checklist||[]).forEach((sub,i)=>{ const inp=document.getElementById(`mc-sub-${i}`); if(inp) sub.tekst=inp.value; const dl=document.getElementById(`mc-sub-dl-${i}`); if(dl) sub.deadline=dl.value; });
   document.getElementById('mc-card-id').value=c.id;
