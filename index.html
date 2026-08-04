@@ -222,6 +222,7 @@ textarea{resize:vertical;min-height:72px;line-height:1.5;}
 .kc-sub-date.none{color:#9aa1ac;}
 .kc-sub-more{font-size:0.62rem;color:var(--muted);padding-left:17px;}
 .kc-progress.compleet{color:var(--green);font-weight:600;}
+.wacht-chip{font-size:0.62rem;font-weight:600;padding:2px 7px;border-radius:99px;background:rgba(217,119,6,0.14);color:#b45309;}
 
 /* PROJECT OVERVIEW */
 .proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:16px;}
@@ -786,16 +787,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
     <input type="hidden" id="mc-proj-id"><input type="hidden" id="mc-card-id">
     <div class="form-2">
       <div class="form-row"><label class="lbl">Titel</label><input type="text" id="mc-titel"></div>
-      <div class="form-row"><label class="lbl">Prioriteit</label>
-        <select id="mc-prio"><option>Hoog</option><option selected>Normaal</option><option>Laag</option></select>
-      </div>
+      <div class="form-row"><label class="lbl">In afwachting van</label><input type="text" id="mc-wacht" placeholder="Naam van wie nu aan zet is..."></div>
     </div>
-    <div class="form-row"><label class="lbl">Beschrijving</label><textarea id="mc-beschr" rows="2"></textarea></div>
+    <div class="form-row"><label class="lbl">Beschrijving</label><textarea id="mc-beschr" rows="3"></textarea></div>
     <div class="form-row"><label class="lbl">Deadline</label><input type="date" id="mc-deadline" style="width:180px;"></div>
     <div class="card-title" style="margin:6px 0 8px;">Inplannen</div>
     <div id="mc-gepland"></div>
     <button class="btn btn-secondary btn-sm" onclick="addGeplandSlot('card')" style="margin-bottom:12px;">+ Moment toevoegen</button>
-    <div class="form-row"><label class="lbl">Notities</label><textarea id="mc-notities" rows="2"></textarea></div>
     <div class="sep"></div>
     <div class="card-title" style="margin-bottom:8px;">Subtaken</div>
     <div id="mc-checklist"></div>
@@ -1974,8 +1972,8 @@ function renderKanban(){
         return `<div class="kanban-card" draggable="true" ondragstart="dragCardStart(event,'${c.id}')" onclick="openCardModal('${c.id}')">
           <div class="kc-title">${esc(c.titel)}</div>
           <div class="kc-meta">
-            <span class="prio-badge prio-${c.prioriteit||'Normaal'}">${c.prioriteit||'Normaal'}</span>
             ${c.deadline?`<span style="font-size:0.65rem;color:var(--muted);">${fmtDM(c.deadline)}</span>`:''}
+            ${(fase==='Wacht op'&&c.wachtOp&&c.wachtOp.trim())?`<span class="wacht-chip">In afwachting van ${esc(c.wachtOp)}</span>`:''}
           </div>
           ${subHtml}
         </div>`;
@@ -2001,10 +1999,10 @@ function openCardModal(cardId, defaultFase){
   document.getElementById('mc-proj-id').value=currentProjId;
   document.getElementById('mc-card-id').value=cardId||'';
   document.getElementById('mc-titel').value=card?card.titel:'';
-  document.getElementById('mc-beschr').value=card?card.beschrijving||'':'';
-  document.getElementById('mc-prio').value=card?card.prioriteit||'Normaal':'Normaal';
+  document.getElementById('mc-wacht').value=card?card.wachtOp||'':'';
+  // Beschrijving + oude losse Notities samengevoegd tot één veld
+  document.getElementById('mc-beschr').value=card?[card.beschrijving,card.notities].filter(x=>x&&x.trim()).join('\n'):'';
   document.getElementById('mc-deadline').value=card?card.deadline||'':'';
-  document.getElementById('mc-notities').value=card?card.notities||'':'';
   renderMcChecklist(card);
   renderMcGepland(card);
   openModal('modal-card');
@@ -2066,9 +2064,9 @@ function saveCard(closeAfter=true){
   if(!c){ c={id:uid(),fase:pendingCardFase||'Gepland',checklist:[],gepland:[]}; p.cards.push(c); }
   c.titel=document.getElementById('mc-titel').value;
   c.beschrijving=document.getElementById('mc-beschr').value;
-  c.prioriteit=document.getElementById('mc-prio').value;
+  c.wachtOp=document.getElementById('mc-wacht').value;
   c.deadline=document.getElementById('mc-deadline').value;
-  c.notities=document.getElementById('mc-notities').value;
+  delete c.notities; delete c.prioriteit;
   c.categorie='werk'; // projectkaarten zijn altijd werk
   // Save checklist text
   (c.checklist||[]).forEach((sub,i)=>{ const inp=document.getElementById(`mc-sub-${i}`); if(inp) sub.tekst=inp.value; const dl=document.getElementById(`mc-sub-dl-${i}`); if(dl) sub.deadline=dl.value; });
